@@ -1,10 +1,22 @@
 import loginImg from "../assets/NewLoginImage.jpg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    axios
+      .post("http://localhost:3000/home", {
+        username: username,
+        password: password,
+      })
+      .then((response) => console.log(response.data))
+      .catch((err) => console.log(err));
+  }
 
   return (
     <div className="flex md:flex-row flex-col">
@@ -12,7 +24,10 @@ export default function LoginPage() {
         <img src={loginImg} alt="" className="object-fit h-full w-full" />
       </div>
       <div className="h-screen md:h-content md:w-[50%] flex items-center justify-center">
-        <form className="bg-[#082742] min-w-fit text-[#BBE1FA] font-light rounded-lg w-[70%] p-[3rem] flex flex-col items-center justify-center">
+        <form
+          className="bg-[#082742] min-w-fit text-[#BBE1FA] font-light rounded-lg w-[70%] p-[3rem] flex flex-col items-center justify-center"
+          onSubmit={handleFormSubmit}
+        >
           <h1 className="text-5xl font-bold mb-6 text-white">Login</h1>
           <div className="flex flex-col my-4">
             <label htmlFor="name">Username</label>
@@ -28,7 +43,7 @@ export default function LoginPage() {
             <label htmlFor="name">Password</label>
             <input
               type="text"
-              name="name"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="bg-[#3282B8] w-[20rem] h-[2rem] rounded-xl p-3 text-white"
