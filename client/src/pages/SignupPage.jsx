@@ -1,11 +1,42 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+
 export default function SignupPage() {
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
   const [phone, setPhone] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const user = {
+      name: name,
+      age: age,
+      phone: phone,
+      email: email,
+      password: password,
+    };
+
+    try {
+      await axios
+        .post("http://localhost:3000/signup", user)
+        .then((res) => {
+          console.log(res);
+          toast.success("user Registered");
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("user registration failed");
+        });
+    } catch (error) {
+      console.log("Error while Signup : ", error);
+      toast.error("user not registered");
+    }
+  };
 
   return (
     <section className="h-screen">
@@ -19,7 +50,10 @@ export default function SignupPage() {
         </div>
 
         <div className="mb-12 md:mb-0 w-fit p-10 text-white">
-          <form className="rounded-lg bg-[#082742] p-6 flex flex-col items-center">
+          <form
+            className="rounded-lg bg-[#082742] p-6 flex flex-col items-center"
+            onSubmit={handleFormSubmit}
+          >
             <h1 className="text-5xl font-bold m-8">Signup</h1>
             <div className="flex space-x-6">
               <div className="flex flex-col my-4">

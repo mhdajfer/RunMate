@@ -1,22 +1,14 @@
 import loginImg from "../assets/NewLoginImage.jpg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleFormSubmit(e) {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:3000/home", {
-        username: username,
-        password: password,
-      })
-      .then((response) => console.log(response.data))
-      .catch((err) => console.log(err));
-  }
+  };
 
   return (
     <div className="flex md:flex-row flex-col">
@@ -42,7 +34,7 @@ export default function LoginPage() {
           <div className="flex flex-col my-4">
             <label htmlFor="name">Password</label>
             <input
-              type="text"
+              type="password"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
