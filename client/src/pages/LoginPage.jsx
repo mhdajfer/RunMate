@@ -1,6 +1,9 @@
 import loginImg from "../assets/NewLoginImage.jpg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import serverURL from "../../serverURL";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -8,6 +11,22 @@ export default function LoginPage() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    const userData = {
+      username: username,
+      password: password,
+    };
+
+    axios
+      .post(`${serverURL}/login`, userData)
+      .then((res) => {
+        toast.success("login successful");
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error("login error");
+        console.log(err);
+      });
   };
 
   return (

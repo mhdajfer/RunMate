@@ -15,3 +15,22 @@ exports.signUp = async (req, res, next) => {
     res.json({ message: "Internal Server Error" });
   }
 };
+
+exports.login = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!(username && password)) {
+    res.json({ message: "enter username and password" });
+  }
+
+  const user = await UserModel.findOne({ email: username });
+  console.log(user);
+
+  try {
+    if (user && (await bcrypt.compare( password, user.password))) {
+      res.json({ message: "login successful" });
+    }
+  } catch (error) {
+    console.log("error with bcrypt compare");
+  }
+};
