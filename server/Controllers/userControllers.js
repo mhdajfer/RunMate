@@ -27,9 +27,9 @@ exports.login = async (req, res) => {
   console.log(user);
 
   try {
-    if (user && (await bcrypt.compare( password, user.password))) {
-      res.json({ message: "login successful" });
-    }
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return res.json({ success: true, message: "login successful" });
+    } else return res.json({ success: false, message: "login failed" });
   } catch (error) {
     console.log("error with bcrypt compare");
   }

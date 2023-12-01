@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import serverURL from "../../serverURL";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,8 +22,14 @@ export default function LoginPage() {
     axios
       .post(`${serverURL}/login`, userData)
       .then((res) => {
-        toast.success("login successful");
-        console.log(res);
+        if (!res.data.success) {
+          toast.error("login failed");
+          console.log(res);
+        } else {
+          toast.success("login successful");
+          navigate('/home')
+          console.log(res);
+        }
       })
       .catch((err) => {
         toast.error("login error");
