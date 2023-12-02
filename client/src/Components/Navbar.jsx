@@ -1,4 +1,20 @@
+import serverURL from "../../serverURL";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 export default function Navbar() {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    axios
+      .get(`${serverURL}/logout`, { withCredentials: true })
+      .then((res) => {
+        console.log(res);
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <nav>
@@ -15,9 +31,12 @@ export default function Navbar() {
           </div>
           <div className="space-x-6">
             <button className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium">
-              Logout
+              Seller
             </button>
-            <button className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium">
+            <button
+              className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium"
+              onClick={handleLogout}
+            >
               Logout
             </button>
           </div>

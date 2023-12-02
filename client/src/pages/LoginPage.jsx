@@ -20,14 +20,14 @@ export default function LoginPage() {
     };
 
     axios
-      .post(`${serverURL}/login`, userData)
+      .post(`${serverURL}/login`, userData, { withCredentials: true })
       .then((res) => {
         if (!res.data.success) {
           toast.error("login failed");
           console.log(res);
         } else {
           toast.success("login successful");
-          navigate('/home')
+          navigate("/home");
           console.log(res);
         }
       })

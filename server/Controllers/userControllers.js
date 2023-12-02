@@ -27,8 +27,10 @@ exports.login = async (req, res) => {
   }
 
   //get user
-  const user = await UserModel.findOne({ email: username });
-  console.log(user);
+  const user = await UserModel.findOne(
+    { email: username },
+    { _id: 1, password: 1 }
+  );
 
   //check user
   if (!user) res.json({ success: false, message: "user not found" });
@@ -36,21 +38,43 @@ exports.login = async (req, res) => {
   try {
     if (await bcrypt.compare(password, user.password)) {
       //generate token
-      const token = CreateToken(user);
-      res.cookie("token", token, {
-        httpOnly: true,
-        SameSite: "None",
-      });
-
-      console.log(res.getHeaders());
-      return res
+      const token = CreateToken(user._id.toString());
+      res
         .status(200)
+        .cookie("token", token, {
+          expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          httpOnly: true,
+        })
         .json({ success: true, message: "login successful" });
     } else return res.json({ success: false, message: "login failed" });
   } catch (error) {
     console.log("error with bcrypt compare");
-    console.log(res.getHeaders());
   }
 };
 
-exports.verify = async (req, res) => {};
+exports.verify = async (req, res) => {
+  const { token } = req.cookies;
+
+  if (!token) return res.json({ success: false, message: "no token found" });
+
+  try {
+    const JwtUser = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const user = await UserModel.findOne({ _id: JwtUser.id });
+    if (!user)
+      return res.json({ success: false, message: "user not Authorized" });
+    return res.json({ success: true, message: "user authorized" });
+  } catch (error) {
+    if (error.name === "TokenExpiredError")
+      return res.json({
+        expired: true,
+        success: false,
+        message: "token expired, login again",
+      });
+  }
+};
+
+exports.logout = async (req, res) => {
+  return res
+    .cookie("token", "", { expires: new Date(0) })
+    .json({ success: true, message: "Logged out" });
+};

@@ -8,10 +8,16 @@ const userController = require("./Controllers/userControllers.js");
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(cookieParser());
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/RunMateDB")
@@ -32,6 +38,10 @@ app.post("/signup", (req, res) => {
 
 app.post("/verify-user", (req, res) => {
   userController.verify(req, res);
+});
+
+app.get("/logout", (req, res) => {
+  userController.logout(req, res);
 });
 
 app.listen(3000, () => {
