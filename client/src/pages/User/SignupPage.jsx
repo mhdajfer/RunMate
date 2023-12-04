@@ -23,10 +23,15 @@ export default function SignupPage() {
 
     try {
       await axios
-        .post("http://localhost:3000/signup", user)
+        .post("http://localhost:3000/user/signup", user)
         .then((res) => {
-          console.log(res);
-          toast.success("user Registered");
+          if (res.data.success) {
+            console.log(res);
+            toast.success(res.data.message);
+          } else {
+            console.log(res);
+            toast.success(res.data.message);
+          }
         })
         .catch((err) => {
           console.log(err);

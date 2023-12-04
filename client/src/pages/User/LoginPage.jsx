@@ -1,7 +1,7 @@
-import loginImg from "../assets/NewLoginImage.jpg";
+import loginImg from "../../assets/NewLoginImage.jpg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import serverURL from "../../serverURL";
+import serverURL from "../../../serverURL";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
