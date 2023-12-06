@@ -7,7 +7,7 @@ router.post("/add", (req, res) => {
 });
 
 router.post("/get", (req, res) => {
-  console.log("here");
+  console.log("get route called");
   productController.get(req, res);
 });
 
