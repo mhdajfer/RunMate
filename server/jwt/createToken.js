@@ -3,6 +3,6 @@ require("dotenv").config();
 
 module.exports.CreateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.MY_SECRET_KEY, {
-    expiresIn: "10m",
+    expiresIn: "1h",
   });
 };

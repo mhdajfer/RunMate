@@ -3,7 +3,10 @@ import AdminLayout from "./AdminLayout";
 import { useState } from "react";
 import axios from "axios";
 import serverURL from "../../../serverURL";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 export default function AddProduct() {
+  const navigate = useNavigate();
   const [product, setProduct] = useState({
     brand: "",
     desc: "",
@@ -33,7 +36,9 @@ export default function AddProduct() {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
+          if (res.data.success) toast.success("product added");
           console.log(res);
+          navigate("/product/add");
         });
     } catch (error) {
       console.log("error while passing the product data");
@@ -55,7 +60,7 @@ export default function AddProduct() {
   }
   return (
     <>
-      <Navbar />
+      <Navbar user="admin" />
       <div className="flex">
         <AdminLayout />
         <div className="flex justify-center w-full">
@@ -118,8 +123,11 @@ export default function AddProduct() {
                     value={product.category}
                     className="  min-w-[180px] w-[20vw] rounded-xl p-3"
                   >
-                    <option value="Running">Running</option>
-                    <option value="Sports">Sports</option>
+                    <option selected>Choose options</option>
+                    <option value="bestSelling">Best Selling</option>
+                    <option value="sports">Sports</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
                   </select>
                 </div>
                 <div className="flex flex-col my-4">

@@ -13,6 +13,10 @@ export default function HomePage() {
     axios
       .post(`${serverUrl}/verify-user`, {}, { withCredentials: true })
       .then((res) => {
+        if (res.data.message === "no token found") {
+          toast.error("You need to login");
+          navigate("/login");
+        }
         if (res.data.expired) {
           toast.error("User expired, login again");
           navigate("/login");
@@ -29,10 +33,10 @@ export default function HomePage() {
       });
   }, [navigate]);
   return (
-    <>
-      <Navbar />
+    <div className="bg-[#BBE1FA]">
+      <Navbar user="user" />
       <Products />
       <Footer />
-    </>
+    </div>
   );
 }

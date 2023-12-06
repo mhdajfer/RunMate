@@ -1,11 +1,18 @@
 const prodModel = require("../models/product");
 const upload = require("../multer");
 
+exports.allProducts = async (req, res) => {
+  try {
+    const products = await prodModel.find({});
+    res.status(200).json({ success: true, products: products });
+  } catch (error) {
+    console.log("error in allProducts controller:", error);
+  }
+};
+
 exports.addProduct = async (req, res) => {
-  console.log("here");
   try {
     upload.single("image")(req, res, async (err) => {
-      console.log(req.body);
       if (err) {
         return res.json({ success: false, message: err.message });
       }
@@ -32,10 +39,24 @@ exports.addProduct = async (req, res) => {
   }
 };
 
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prodModel.findOneAndDelete({ _id: id });
+    res.status(200).json({ success: true, message: "Product deleted" });
+  } catch (error) {
+    console.log("error while deleting product", error);
+  }
+};
+
 exports.get = async (req, res) => {
   try {
     const data = await prodModel.find({});
-    res.json({ success: true, message: "successfully retrieved product details", data: data });
+    res.json({
+      success: true,
+      message: "successfully retrieved product details",
+      data: data,
+    });
   } catch (error) {
     console.log("error :", error);
   }

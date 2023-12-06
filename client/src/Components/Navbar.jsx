@@ -1,8 +1,9 @@
 import serverURL from "../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Subnavbar from "./Subnavbar";
 
-export default function Navbar() {
+export default function Navbar(user) {
   const navigate = useNavigate();
   const handleLogout = async () => {
     axios
@@ -42,6 +43,7 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+      {user.user === "user" ? <Subnavbar /> : ""}
     </>
   );
 }

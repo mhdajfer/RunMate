@@ -3,7 +3,7 @@ import ProductCard from "../../Components/ProductCard";
 import axios from "axios";
 import serverUrl from "../../server";
 
-export default function BestSellingItems() {
+export default function MenItems() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
