@@ -5,6 +5,7 @@ import serverUrl from "../../server";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import Products from '../../Components/ProductCard'
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
+      <Products/>
       <Footer />
     </>
   );

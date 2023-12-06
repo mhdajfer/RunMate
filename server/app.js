@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const userController = require("./Controllers/userControllers.js");
 const userRouter = require("./Routes/UserRouter.js");
 const adminRouter = require("./Routes/AdminRouter.js");
+const productRouter = require("./Routes/ProductRouter.js");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static("./uploads"));
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/RunMateDB")
@@ -29,13 +31,12 @@ mongoose
   .catch((err) => {
     console.log("connection error: " + err);
   });
-function hai() {
-  console.log("hai");
-}
+
 //Routes
+app.use("/product", productRouter);
 app.use("/admin", adminRouter);
 app.use("/", userRouter);
 
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log("listening on port 3000");
 });
