@@ -3,7 +3,53 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { CreateToken } = require("../jwt/createToken");
 
-exports.signUp = async (req, res, next) => {
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find({});
+    res
+      .status(200)
+      .json({ success: true, message: "retrieved users", users: users });
+  } catch (error) {
+    console.log("error while getting users", error);
+  }
+};
+
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await UserModel.findOneAndDelete({ _id: id });
+    res.status(200).json({ success: true, message: "user deleted" });
+  } catch (error) {
+    console.log("error while deleting user", error);
+  }
+};
+
+exports.edit = async (req, res) => {
+  let user = req.body;
+  console.log("user", user);
+  if (user.password) {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    user = { ...user, password: hashedPassword };
+  }
+  // if (!user.password) {
+  //   user = {
+  //     name: user.name,
+  //     age: user.age,
+  //     phone: user.phone,
+  //     email: user.email,
+  //   };
+  // }
+  console.log(user);
+
+  try {
+    await UserModel.findOneAndUpdate({ _id: user.id }, { ...user });
+    res.status(200).json({ success: true, message: "updated successfully" });
+  } catch (error) {
+    console.log("error while editing user", error);
+  }
+};
+
+exports.signUp = async (req, res) => {
   const user = req.body;
 
   try {
@@ -14,7 +60,7 @@ exports.signUp = async (req, res, next) => {
     res.json({ success: true, message: "user registered successfully" });
   } catch (error) {
     console.log("Error while Registration : ", error);
-    res.json({ success: false,  message: "Internal Server Error" });
+    res.json({ success: false, message: "Internal Server Error" });
   }
 };
 

@@ -9,6 +9,9 @@ import AdminLayout from "./pages/Admin/AdminLayout";
 import Products from "./pages/Admin/Products";
 import AddProduct from "./pages/Admin/AddProduct";
 import BestSellingItems from "./pages/User/BestSellingItems";
+import SellerUsers from "./pages/Admin/Users";
+import SellerAddUser from "./pages/Admin/AddUser";
+import SellerEditUser from "./pages/Admin/EditUser";
 
 function App() {
   return (
@@ -24,6 +27,9 @@ function App() {
         <Route path="/admin/home" element={<AdminLayout />} />
         <Route path="/admin/products" element={<Products />} />
         <Route path="/product/add" element={<AddProduct />} />
+        <Route path="/admin/users" element={<SellerUsers />} />
+        <Route path="/admin/users/add" element={<SellerAddUser />} />
+        <Route path="/admin/users/edit" element={<SellerEditUser />} />
       </Routes>
       <Toaster position="top-center" reverseOrder={false} />
     </>

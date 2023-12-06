@@ -37,12 +37,17 @@ export default function AdminLayout() {
     switch (value) {
       case "Products":
         navigate("/admin/products");
+        break;
+      case "Users":
+        navigate("/admin/users");
+        break;
     }
   }
 
   const sideBarItems = [
     "Dashboard",
     "Orders",
+    "Users",
     "Products",
     "Coupons",
     "Banner",

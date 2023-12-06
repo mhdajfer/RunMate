@@ -37,7 +37,9 @@ export default function SignupPage() {
           console.log(err);
           toast.error("user registration failed");
         });
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.log("Error while Signup : ", error);
       toast.error("user not registered");
