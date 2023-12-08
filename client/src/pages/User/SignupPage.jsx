@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 export default function SignupPage() {
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
-  const [phone, setPhone] = useState();
+  const [phone, setPhone] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -90,7 +90,7 @@ export default function SignupPage() {
               <div className="flex flex-col my-4">
                 <label htmlFor="phone">Phone no.</label>
                 <input
-                  type="text"
+                  type="number"
                   name="phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}

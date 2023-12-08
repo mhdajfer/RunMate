@@ -4,16 +4,20 @@ import { useState } from "react";
 import axios from "axios";
 import serverURL from "../../../serverURL";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-export default function AddProduct() {
+import { useNavigate, useLocation } from "react-router-dom";
+import serverUrl from "../../server";
+
+export default function EditProduct() {
+  const location = useLocation();
+  const receivedProd = location.state?.product;
   const navigate = useNavigate();
   const [product, setProduct] = useState({
-    brand: "",
-    desc: "",
-    stock: 0,
-    category: "",
-    price: 0,
-    image: "",
+    brand: receivedProd.brand,
+    desc: receivedProd.desc,
+    stock: receivedProd.stock,
+    category: receivedProd.category,
+    price: receivedProd.price,
+    image: receivedProd.image,
   });
 
   const handleFormSubmit = async (e) => {
@@ -21,22 +25,29 @@ export default function AddProduct() {
 
     const formProd = new FormData();
     formProd.append("brand", product.brand);
-    console.log(formProd);
     formProd.append("desc", product.desc);
     formProd.append("stock", product.stock);
     formProd.append("category", product.category);
     formProd.append("price", product.price);
-    formProd.append("image", product.image);
+    formProd.append("id", receivedProd._id);
+
+    if (receivedProd.image === product.image) {
+      console.log("no image", product.image);
+      formProd.append("image", "");
+    } else {
+      console.log(" image", product.image);
+      formProd.append("image", product.image);
+    }
 
     try {
       await axios
-        .post(`${serverURL}/product/add`, formProd, {
+        .post(`${serverURL}/product/edit`, formProd, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
-          if (res.data.success) toast.success("product added");
+          if (res.data.success) toast.success(res.data.message);
           console.log(res);
-          navigate("/products");
+          navigate("/admin/products");
         });
     } catch (error) {
       console.log("error while passing the product data");
@@ -129,7 +140,10 @@ export default function AddProduct() {
                   </select>
                 </div>
                 <div className="flex flex-col my-4">
-                  <label htmlFor="image">Image</label>
+                  <label htmlFor="image">Change Image</label>
+                  <div className="w-[65px] h-[]] m-1">
+                    <img src={serverUrl + "/" + product.image} alt="" />
+                  </div>
                   <input
                     type="file"
                     name="price"
@@ -142,7 +156,7 @@ export default function AddProduct() {
             </div>
             <div className="w-full flex justify-center items-center text-white">
               <button className="bg-[#342475] w-[20vw] h-12 rounded-lg">
-                Add Product
+                Update Product
               </button>
             </div>
           </form>

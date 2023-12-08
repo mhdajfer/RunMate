@@ -8,6 +8,7 @@ import AdminSignup from "./pages/Admin/SignupPage";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import Products from "./pages/Admin/Products";
 import AddProduct from "./pages/Admin/AddProduct";
+import EditProduct from "./pages/Admin/EditProduct";
 import BestSellingItems from "./pages/User/BestSellingItems";
 import SellerUsers from "./pages/Admin/Users";
 import SellerAddUser from "./pages/Admin/AddUser";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/admin/home" element={<AdminLayout />} />
         <Route path="/admin/products" element={<Products />} />
         <Route path="/product/add" element={<AddProduct />} />
+        <Route path="/product/edit" element={<EditProduct />} />
         <Route path="/admin/users" element={<SellerUsers />} />
         <Route path="/admin/users/add" element={<SellerAddUser />} />
         <Route path="/admin/users/edit" element={<SellerEditUser />} />

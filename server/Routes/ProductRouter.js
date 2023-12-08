@@ -13,6 +13,10 @@ router.post("/get", (req, res) => {
   productController.get(req, res);
 });
 
+router.post('/edit', (req, res) => {
+  productController.edit(req, res);
+})
+
 router.get('/delete/:id', (req, res) => {
   productController.delete(req, res);
 })

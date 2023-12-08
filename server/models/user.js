@@ -35,6 +35,10 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
   },
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const UserModel = mongoose.model("user", UserSchema);

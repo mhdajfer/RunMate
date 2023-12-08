@@ -10,6 +10,10 @@ router.post("/signup", (req, res) => {
   adminController.signup(req, res);
 });
 
+router.post('/block-user', (req, res) => {
+  adminController.blockUser(req, res);
+})
+
 router.post("/verify-admin", (req, res) => {
   adminController.verify(req, res);
 });

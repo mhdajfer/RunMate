@@ -23,7 +23,7 @@ export default function LoginPage() {
       .post(`${serverURL}/login`, userData, { withCredentials: true })
       .then((res) => {
         if (!res.data.success) {
-          toast.error("login failed");
+          toast.error(res.data.message);
           console.log(res);
         } else {
           toast.success("login successful");

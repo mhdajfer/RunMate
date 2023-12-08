@@ -41,6 +41,10 @@ export default function Products() {
       .catch((err) => console.log(err));
   }
 
+  function handleEdit(product) {
+    navigate("/product/edit", { state: { product } });
+  }
+
   function AddProduct() {
     navigate("/product/add");
   }
@@ -82,7 +86,10 @@ export default function Products() {
                         >
                           Delete
                         </button>
-                        <button className="bg-green-700 px-2 m-1 rounded-md text-md text-white">
+                        <button
+                          className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
+                          onClick={() => handleEdit(product)}
+                        >
                           Edit
                         </button>
                       </td>

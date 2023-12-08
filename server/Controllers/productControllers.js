@@ -39,6 +39,50 @@ exports.addProduct = async (req, res) => {
   }
 };
 
+exports.edit = async (req, res) => {
+  const formProd = req.body.formProd;
+
+  try {
+    upload.single("image")(req, res, async (err) => {
+      if (err) {
+        return res.json({ success: false, message: err.message });
+      }
+
+      const { brand, desc, stock, price, category, id } = req.body;
+      const image = req.file?.filename;
+
+      const prodDoc = new prodModel({
+        brand,
+        desc,
+        stock,
+        price,
+        category,
+        image,
+      });
+
+      await prodModel.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            brand: brand,
+            desc: desc,
+            stock: stock,
+            price: price,
+            category: category,
+            image: image,
+          },
+        }
+      );
+
+      res
+        .status(201)
+        .json({ success: true, message: "Product updated" });
+    });
+  } catch (error) {
+    console.log("error while editing form", error);
+  }
+};
+
 exports.delete = async (req, res) => {
   const { id } = req.params;
   try {

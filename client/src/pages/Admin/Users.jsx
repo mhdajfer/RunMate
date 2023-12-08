@@ -48,6 +48,27 @@ export default function Products() {
   function AddUser() {
     navigate("/admin/users/add");
   }
+
+  const handleBlock = async (user) => {
+    try {
+      await axios
+        .post(
+          `${serverUrl}/admin/block-user`,
+          { user },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+          } else toast.error(res.data.message);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    } catch (error) {
+      console.log("error while blocking user", error);
+    }
+  };
   return (
     <>
       <Navbar />
@@ -85,6 +106,14 @@ export default function Products() {
                           onClick={() => handleEdit(user)}
                         >
                           Edit
+                        </button>
+                        <button
+                          className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
+                          onClick={() => {
+                            handleBlock(user);
+                          }}
+                        >
+                          Block
                         </button>
                       </td>
                     </tr>

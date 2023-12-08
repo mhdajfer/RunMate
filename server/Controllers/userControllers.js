@@ -75,11 +75,15 @@ exports.login = async (req, res) => {
   //get user
   const user = await UserModel.findOne(
     { email: username },
-    { _id: 1, password: 1 }
+    { _id: 1, password: 1, isBlocked: 1 }
   );
 
   //check user
   if (!user) res.json({ success: false, message: "user not found" });
+
+  //check whether blocked
+  if (user.isBlocked)
+    return res.json({ success: false, message: "user is blocked" });
 
   try {
     if (await bcrypt.compare(password, user.password)) {

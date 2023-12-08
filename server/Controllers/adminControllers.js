@@ -1,4 +1,5 @@
 const adminModel = require("../models/admin");
+const userModel = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { CreateToken } = require("../jwt/createToken");
@@ -55,6 +56,19 @@ exports.login = async (req, res) => {
     } else return res.json({ success: false, message: "login failed" });
   } catch (error) {
     console.log("error with bcrypt compare");
+  }
+};
+
+exports.blockUser = async (req, res) => {
+  const { user } = req.body;
+  try {
+    await userModel.findOneAndUpdate(
+      { _id: user._id },
+      { $set: { isBlocked: true } }
+    );
+    res.status(200).json({ success: true, message: "User Blocked" });
+  } catch (error) {
+    console.log("error while block user", error);
   }
 };
 
