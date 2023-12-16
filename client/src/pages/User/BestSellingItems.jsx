@@ -2,11 +2,16 @@ import { useState, useEffect } from "react";
 import ProductCard from "../../Components/ProductCard";
 import axios from "axios";
 import serverUrl from "../../server";
+// import { UseAuth } from "../../Utils/Auth";
+// import { useNavigate } from "react-router-dom";
 
 export default function BestSellingItems() {
   const [products, setProducts] = useState([]);
+  // const navigate = useNavigate();
+  // const auth = UseAuth();
 
   useEffect(() => {
+    // !auth.token ? navigate("/login") : null;
     try {
       axios
         .post(`${serverUrl}/product/get`, {}, { withCredentials: true })

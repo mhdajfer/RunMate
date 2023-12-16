@@ -5,11 +5,14 @@ import serverURL from "../../../serverURL";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { UseAuth } from "../../Utils/Auth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const auth = UseAuth();
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +30,7 @@ export default function LoginPage() {
           console.log(res);
         } else {
           toast.success("login successful");
+          auth.login(res.data.token);
           navigate("/home");
           console.log(res);
         }
