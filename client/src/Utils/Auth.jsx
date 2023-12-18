@@ -1,21 +1,23 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext } from "react";
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
   function login(token) {
-    setToken(token);
+    console.log("token", token);
+    setToken("Aju" + token);
   }
 
   function logout() {
+    console.log(token);
     setToken(null);
   }
 
   function display() {
-    console.log(token);
+    console.log("diplay token", token);
   }
   return (
     <AuthContext.Provider value={{ token, display, login, logout }}>
@@ -25,5 +27,6 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const UseAuth = () => {
+  // eslint-disable-next-line no-undef
   return useContext(AuthContext);
 };

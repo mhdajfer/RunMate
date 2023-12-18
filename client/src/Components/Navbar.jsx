@@ -2,10 +2,14 @@ import serverURL from "../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Subnavbar from "./Subnavbar";
+import { useContext } from "react";
+import { AuthContext } from "../Utils/Auth";
 
 export default function Navbar(user) {
+  const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const handleLogout = async () => {
+    auth.logout();
     axios
       .get(`${serverURL}/logout`, { withCredentials: true })
       .then((res) => {
