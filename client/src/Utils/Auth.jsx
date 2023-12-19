@@ -1,32 +1,26 @@
-import { useState, createContext } from "react";
+import { createContext, useState } from "react";
 
-export const AuthContext = createContext(null);
+export const AuthContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  function login(token) {
-    console.log("token", token);
-    setToken("Aju" + token);
+  function login() {
+    setIsAuthenticated(true);
   }
 
   function logout() {
-    console.log(token);
-    setToken(null);
+    setIsAuthenticated(false);
   }
 
-  function display() {
-    console.log("diplay token", token);
+  function getIsAuthenticated() {
+    return isAuthenticated;
   }
+
   return (
-    <AuthContext.Provider value={{ token, display, login, logout }}>
+    <AuthContext.Provider value={{ login, logout, getIsAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const UseAuth = () => {
-  // eslint-disable-next-line no-undef
-  return useContext(AuthContext);
 };

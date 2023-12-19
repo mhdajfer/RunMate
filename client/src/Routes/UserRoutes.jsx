@@ -1,22 +1,19 @@
 import HomePage from "../pages/User/HomePage";
 import LoginPage from "../pages/User/LoginPage";
-import PrivateRoutes from "../Utils/PrivateRoutes";
 import { Route, Routes } from "react-router-dom";
 import BestSellingItems from "../pages/User/BestSellingItems";
+import { PrivateRoutes } from "../Utils/PrivateRoutes";
+import MenItems from "../pages/User/MenItems";
 
-export function UserRoutes() {
+export default function UserRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route element={<PrivateRoutes />}>
+        <Route path="bestSelling" element={<BestSellingItems />} />
+      </Route>
+      <Route path="/men" element={<MenItems />} />
 
-      <Route
-        path="/*"
-        element={
-          <PrivateRoutes>
-            <Route path="/bestSelling" element={<BestSellingItems />} />
-          </PrivateRoutes>
-        }
-      />
       <Route path="/home" element={<HomePage />} />
     </Routes>
   );

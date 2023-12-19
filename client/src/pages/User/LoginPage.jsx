@@ -1,5 +1,5 @@
 import loginImg from "../../assets/NewLoginImage.jpg";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import serverURL from "../../../serverURL";
 import axios from "axios";
@@ -9,10 +9,14 @@ import { AuthContext } from "../../Utils/Auth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+  const authState = auth.getIsAuthenticated();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const auth = useContext(AuthContext);
+  useEffect(() => {
+    authState ? navigate("/user/home") : null;
+  }, []);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +34,7 @@ export default function LoginPage() {
           console.log(res);
         } else {
           toast.success("login successful");
-          auth.login(res.data.token);
+          auth.login();
           navigate("/user/home");
           console.log(res);
         }
