@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 import { useEffect } from "react";
@@ -5,6 +6,8 @@ import serverUrl from "../../server";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+=======
+>>>>>>> Stashed changes
 import Products from "../User/BestSellingItems";
 
 export default function HomePage() {
@@ -33,10 +36,13 @@ export default function HomePage() {
       });
   }, [navigate]);
   return (
+<<<<<<< Updated upstream
     <div className="bg-[#BBE1FA]">
       <Navbar user="user" />
+=======
+    <div className="bg-[#BBE1FA] overflow-hidden">
+>>>>>>> Stashed changes
       <Products />
-      <Footer />
     </div>
   );
 }

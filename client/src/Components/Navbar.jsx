@@ -1,7 +1,12 @@
 import serverURL from "../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+<<<<<<< Updated upstream
 import Subnavbar from "./Subnavbar";
+=======
+import { AuthContext } from "../Utils/Auth";
+import { useContext } from "react";
+>>>>>>> Stashed changes
 
 export default function Navbar(user) {
   const navigate = useNavigate();
@@ -43,7 +48,10 @@ export default function Navbar(user) {
           </div>
         </div>
       </nav>
+<<<<<<< Updated upstream
       {user.user === "user" ? <Subnavbar /> : ""}
+=======
+>>>>>>> Stashed changes
     </>
   );
 }

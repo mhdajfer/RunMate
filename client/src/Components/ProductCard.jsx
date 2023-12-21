@@ -4,11 +4,16 @@ const { heart, cart } = Icons;
 
 export default function ProductCard(item) {
   const product = item.product;
+  const navigate = useNavigate();
+
+  function handleClick(product) {
+    navigate(`/product/${product._id}`);
+  }
 
   return (
     <div className="flex space-x-6 m-4">
       <div className="bg-white mt-8  min-w-[300px] w-[350px]  rounded-lg">
-        <div className=" ">
+        <div className="">
           <img
             src={serverUrl + "/" + product.image}
             alt=""
@@ -17,7 +22,7 @@ export default function ProductCard(item) {
         </div>
         <div className="p-4">
           <h2 className="font-bold text-xl">{product.brand}</h2>
-          <p className="text-[13px]">{product.desc}</p>
+          <p className="text-[13px]">{product.subDesc}</p>
           <div className="flex space-x-1 my-2">
             {heart}
             {heart}

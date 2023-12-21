@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 
 const prodSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  subDesc: {
+    type: String,
+    required: true,
+  },
   brand: {
     type: String,
     required: true,
