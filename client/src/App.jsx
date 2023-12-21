@@ -1,7 +1,7 @@
-import { Routes, Route } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
 import UserRoutes from "./Routes/UserRoutes";
+import { Routes, Route } from "react-router-dom";
 import ProductRoutes from "./Routes/ProductRoutes";
+import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./Utils/Auth";
 
 function App() {

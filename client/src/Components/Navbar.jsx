@@ -1,7 +1,8 @@
 import serverURL from "../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Subnavbar from "./Subnavbar";
+import { useContext } from "react";
+import { AuthContext } from "../Utils/Auth";
 
 export default function Navbar() {
   const auth = useContext(AuthContext);
@@ -53,7 +54,6 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-      {user.user === "user" ? <Subnavbar /> : ""}
     </>
   );
 }
