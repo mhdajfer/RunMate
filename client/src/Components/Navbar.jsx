@@ -1,21 +1,23 @@
 import serverURL from "../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-<<<<<<< Updated upstream
 import Subnavbar from "./Subnavbar";
-=======
-import { AuthContext } from "../Utils/Auth";
-import { useContext } from "react";
->>>>>>> Stashed changes
 
-export default function Navbar(user) {
+export default function Navbar() {
+  const auth = useContext(AuthContext);
+  const authState = auth.getIsAuthenticated();
   const navigate = useNavigate();
+  function handleSeller() {
+    navigate("/user/bestSelling");
+  }
+
   const handleLogout = async () => {
+    auth.logout();
     axios
       .get(`${serverURL}/logout`, { withCredentials: true })
       .then((res) => {
         console.log(res);
-        navigate("/login");
+        navigate("/user/login");
       })
       .catch((err) => {
         console.log(err);
@@ -36,22 +38,22 @@ export default function Navbar(user) {
             />
           </div>
           <div className="space-x-6">
-            <button className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium">
+            <button
+              className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium"
+              onClick={handleSeller}
+            >
               Seller
             </button>
             <button
               className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium"
               onClick={handleLogout}
             >
-              Logout
+              {authState ? "Logout" : "Login"}
             </button>
           </div>
         </div>
       </nav>
-<<<<<<< Updated upstream
       {user.user === "user" ? <Subnavbar /> : ""}
-=======
->>>>>>> Stashed changes
     </>
   );
 }

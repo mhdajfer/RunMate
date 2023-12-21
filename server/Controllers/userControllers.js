@@ -68,8 +68,8 @@ exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   //check if the input field is empty
-  if (!(username && password)) {
-    res.json({ message: "enter username and password" });
+  if (!username || !password) {
+    return res.json({ message: "enter username and password" });
   }
 
   //get user

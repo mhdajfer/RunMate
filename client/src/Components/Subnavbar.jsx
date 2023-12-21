@@ -4,10 +4,10 @@ export default function Subnavbar() {
   return (
     <div className="my-2 flex justify-center">
       <button className="bg-white border px-10 py-1 rounded-full mx-3">
-        <Link to={"/category/bestSelling"}>Best Selling</Link>
+        <Link to={"/user/bestSelling"}>Best Selling</Link>
       </button>
       <button className="bg-white border px-10 py-1 rounded-full mx-3">
-        MEN
+        <Link to={"/user/men"}>Men</Link>
       </button>
       <button className="bg-white border px-10 py-1 rounded-full mx-3">
         WOMEN

@@ -1,6 +1,7 @@
 <<<<<<< Updated upstream
 import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
+<<<<<<< HEAD
 import { useEffect } from "react";
 import serverUrl from "../../server";
 import axios from "axios";
@@ -8,40 +9,22 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> aa5a3c2c5080afa21fd62d83662d794e988c2f3b
 import Products from "../User/BestSellingItems";
 
 export default function HomePage() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    axios
-      .post(`${serverUrl}/verify-user`, {}, { withCredentials: true })
-      .then((res) => {
-        if (res.data.message === "no token found") {
-          toast.error("You need to login");
-          navigate("/login");
-        }
-        if (res.data.expired) {
-          toast.error("User expired, login again");
-          navigate("/login");
-        }
-        if (!res.data.success) {
-          console.log(res);
-          navigate("/login");
-        } else {
-          console.log(res);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [navigate]);
   return (
 <<<<<<< Updated upstream
     <div className="bg-[#BBE1FA]">
+<<<<<<< HEAD
       <Navbar user="user" />
 =======
     <div className="bg-[#BBE1FA] overflow-hidden">
 >>>>>>> Stashed changes
+=======
+      <Navbar />
+>>>>>>> aa5a3c2c5080afa21fd62d83662d794e988c2f3b
       <Products />
     </div>
   );

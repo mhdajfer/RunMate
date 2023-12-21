@@ -1,6 +1,7 @@
 import Icons from "../assets/Icons";
 import serverUrl from "../server";
 const { heart, cart } = Icons;
+import { useNavigate } from "react-router-dom";
 
 export default function ProductCard(item) {
   const product = item.product;
@@ -15,6 +16,9 @@ export default function ProductCard(item) {
       <div className="bg-white mt-8  min-w-[300px] w-[350px]  rounded-lg">
         <div className="">
           <img
+            onClick={() => {
+              handleClick(product);
+            }}
             src={serverUrl + "/" + product.image}
             alt=""
             className="w-full h-[30vh] object-fit rounded-lg"
