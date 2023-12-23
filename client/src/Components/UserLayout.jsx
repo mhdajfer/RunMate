@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 function UserLayout() {
   return (
     <div className="bg-[#BBE1FA]">
-      <Navbar />
+      <Navbar role="user" />
       <Subnavbar />
       <div>
         <Outlet />

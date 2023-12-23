@@ -17,5 +17,8 @@ router.post('/block-user', (req, res) => {
 router.post("/verify-admin", (req, res) => {
   adminController.verify(req, res);
 });
+router.logout('/logout', (req, res) => {
+  adminController.logout(req, res);
+})
 
 module.exports = router;

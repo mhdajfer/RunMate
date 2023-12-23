@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../Utils/Auth";
 
-export default function Navbar() {
+// eslint-disable-next-line react/prop-types
+export default function Navbar({ role }) {
+  console.log(role);
   const auth = useContext(AuthContext);
   const authState = auth.getIsAuthenticated();
   const navigate = useNavigate();
