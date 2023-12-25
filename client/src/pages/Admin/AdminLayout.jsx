@@ -32,7 +32,7 @@ export default function AdminLayout() {
       <Navbar role="admin" />
 
       <div className="flex">
-        <div className="h-screen w-[33vw] p-4 bg-[#BBE1FA]">
+        <div className="h-screen w-[33vw] max-w-[380px] p-4 bg-[#BBE1FA]">
           {sideBarItems.map((item, i) => (
             <div key={i}>
               <button

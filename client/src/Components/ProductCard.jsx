@@ -12,7 +12,7 @@ export default function ProductCard(item) {
   }
 
   return (
-    <div className="flex space-x-6 m-4">
+    <div className="flex space-x-6 m-4 h-[480px]">
       <div className="bg-white mt-8  min-w-[300px] w-[350px]  rounded-lg">
         <div className="">
           <img

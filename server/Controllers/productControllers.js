@@ -16,11 +16,24 @@ exports.addProduct = async (req, res) => {
       if (err) {
         return res.json({ success: false, message: err.message });
       }
-
-      const { brand, desc, stock, price, category } = req.body;
-      const image = req.file.filename;
+      const image = req.file?.filename;
+      const { brand, desc, stock, price, category, name, subDesc } = req.body;
+      if (
+        !brand ||
+        !desc ||
+        !stock ||
+        !price ||
+        !category ||
+        !name ||
+        !subDesc ||
+        !image
+      ) {
+        return res.json({ success: false, message: "fill all fields" });
+      }
 
       const prodDoc = new prodModel({
+        name,
+        subDesc,
         brand,
         desc,
         stock,
@@ -40,15 +53,14 @@ exports.addProduct = async (req, res) => {
 };
 
 exports.edit = async (req, res) => {
-  const formProd = req.body.formProd;
-
   try {
     upload.single("image")(req, res, async (err) => {
       if (err) {
         return res.json({ success: false, message: err.message });
       }
 
-      const { brand, desc, stock, price, category, id } = req.body;
+      const { brand, desc, stock, price, category, id, name, subDesc } =
+        req.body;
       const image = req.file?.filename;
 
       const prodDoc = new prodModel({
@@ -58,6 +70,8 @@ exports.edit = async (req, res) => {
         price,
         category,
         image,
+        name,
+        subDesc,
       });
 
       await prodModel.findOneAndUpdate(
@@ -70,13 +84,13 @@ exports.edit = async (req, res) => {
             price: price,
             category: category,
             image: image,
+            name: name,
+            subDesc: subDesc,
           },
         }
       );
 
-      res
-        .status(201)
-        .json({ success: true, message: "Product updated" });
+      res.status(201).json({ success: true, message: "Product updated" });
     });
   } catch (error) {
     console.log("error while editing form", error);

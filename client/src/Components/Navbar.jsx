@@ -1,15 +1,19 @@
 import serverURL from "../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../Utils/Auth";
 
 // eslint-disable-next-line react/prop-types
 export default function Navbar({ role }) {
-  console.log(role);
   const auth = useContext(AuthContext);
   const authState = auth.getIsAuthenticated();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("state : " + authState);
+  });
+
   function handleSeller() {
     navigate("/user/bestSelling");
   }
@@ -17,10 +21,12 @@ export default function Navbar({ role }) {
   const handleLogout = async () => {
     auth.logout();
     axios
-      .get(`${serverURL}/logout`, { withCredentials: true })
+      .get(`${serverURL}/${role === "admin" ? "admin/logout" : "logout"}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res);
-        navigate("/user/login");
+        navigate(`/${role === "admin" ? "admin" : "user"}/login`);
       })
       .catch((err) => {
         console.log(err);

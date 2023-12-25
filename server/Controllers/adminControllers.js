@@ -61,14 +61,21 @@ exports.login = async (req, res) => {
 
 exports.blockUser = async (req, res) => {
   const { user } = req.body;
+  let msg = "";
+  if (user.isBlocked) {
+    msg = "User Unblocked";
+  } else {
+    msg = "User Blocked";
+  }
   try {
     await userModel.findOneAndUpdate(
       { _id: user._id },
-      { $set: { isBlocked: true } }
+      { $set: { isBlocked: !user.isBlocked } }
     );
-    res.status(200).json({ success: true, message: "User Blocked" });
+    res.status(200).json({ success: true, message: msg });
   } catch (error) {
     console.log("error while block user", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
@@ -101,3 +108,8 @@ exports.verify = async (req, res) => {
   }
 };
 
+exports.logout = async (req, res) => {
+  return res
+    .cookie("token", "", { expires: new Date(0) })
+    .json({ success: true, message: "Logged out" });
+};

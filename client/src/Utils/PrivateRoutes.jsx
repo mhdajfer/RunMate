@@ -3,7 +3,7 @@ import { AuthContext } from "./Auth";
 import { Outlet, Navigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export function PrivateRoutes() {
+export default function PrivateRoutes() {
   const auth = useContext(AuthContext);
   const authState = auth.getIsAuthenticated();
 

@@ -22,7 +22,6 @@ export default function BestSellingItems() {
       {products.map((product, i) => {
         return (
           <div key={i}>
-            {console.log(product)}
             <ProductCard product={product} />
           </div>
         );
