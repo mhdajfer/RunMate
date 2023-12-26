@@ -4,14 +4,14 @@ import ProductRoutes from "./Routes/ProductRoutes";
 import AdminRoutes from "./Routes/AdminRoutes";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./Utils/Auth";
-import EditProduct from "./pages/Admin/EditProduct";
+import DialogBox from "./Components/DialogBox";
 
 function App() {
   return (
     <>
       <AuthProvider>
         <Routes>
-          <Route path="/layout" element={<EditProduct />} />
+          <Route path="/layout" element={<DialogBox />} />
           <Route path="/product/*" element={<ProductRoutes />} />
           <Route path="/user/*" element={<UserRoutes />} />
           <Route path="/admin/*" element={<AdminRoutes />} />

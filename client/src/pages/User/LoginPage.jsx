@@ -85,7 +85,7 @@ export default function LoginPage() {
           <p className="text-xs">
             Dont have an account?
             <span className="text-blue-500 underline">
-              <Link to={"/signup"}>Signup</Link>
+              <Link to={"/user/signup"}>Signup</Link>
             </span>
           </p>
         </form>

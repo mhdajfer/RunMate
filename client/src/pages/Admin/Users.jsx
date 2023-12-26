@@ -3,11 +3,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import serverUrl from "../../server";
+import DialogBox from "../../Components/DialogBox";
 
 export default function Products() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [isBlocked, setIsBlocked] = useState(Boolean);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [Oneuser, setOneUser] = useState("");
 
   useEffect(() => {
     try {
@@ -25,11 +28,18 @@ export default function Products() {
     }
   }, [isBlocked]);
 
-  function handleDelete(user) {
+  function handleCancelDelete() {
+    setIsDialogOpen(false);
+    setOneUser(null);
+  }
+
+  function confirmDelete(user) {
     axios
       .get(`${serverUrl}/users/delete/${user._id}`)
       .then((res) => {
         if (res.data.success) {
+          setIsDialogOpen(false);
+          setOneUser(null);
           toast.success(res.data.message);
           setTimeout(() => {
             window.location.reload();
@@ -38,6 +48,11 @@ export default function Products() {
         }
       })
       .catch((err) => console.log(err));
+  }
+
+  function handleDelete(user) {
+    setIsDialogOpen(true);
+    setOneUser(user);
   }
 
   function handleEdit(user) {
@@ -110,7 +125,8 @@ export default function Products() {
                         className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
                         onClick={() => {
                           handleBlocks(user);
-                        }} value={user.isBlocked ? "UnBlocked" : "Blocked"}
+                        }}
+                        value={user.isBlocked ? "UnBlocked" : "Blocked"}
                       >
                         {user.isBlocked ? "UnBlock" : "Block"}
                       </button>
@@ -127,6 +143,16 @@ export default function Products() {
             Add User
           </button>
         </div>
+      </div>
+      <div className="fixed top-[20%] right-[25%]">
+        {/* Dialog box */}
+        {isDialogOpen && (
+          <DialogBox
+            user={Oneuser}
+            onConfirmDelete={confirmDelete}
+            onCancel={handleCancelDelete}
+          />
+        )}
       </div>
     </>
   );
