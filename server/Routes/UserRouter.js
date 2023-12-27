@@ -30,4 +30,8 @@ router.get("/logout", (req, res) => {
   userController.logout(req, res);
 });
 
+router.post('/images', (req, res) => {
+  userController.addImage(req, res);
+})
+
 module.exports = router;

@@ -16,7 +16,7 @@ function SingleProductCard(item) {
           </div>
           <div className="">
             <img
-              src={serverURL + "/" + product.image}
+              src={serverURL + "/" + product.images[0]}
               alt=""
               className="h-[30rem]"
             />

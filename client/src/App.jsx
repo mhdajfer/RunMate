@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import AdminRoutes from "./Routes/AdminRoutes";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./Utils/Auth";
-import AddCategory from "./pages/Admin/AddCategory";
 import ProductRoutes from "./Routes/ProductRoutes";
 
 function App() {
@@ -11,7 +10,7 @@ function App() {
     <>
       <AuthProvider>
         <Routes>
-          <Route path="/layout" element={<AddCategory />} />
+          {/* <Route path="/layout" element={<DummyUpload />} /> */}
           <Route path="/product/*" element={<ProductRoutes />} />
           <Route path="/user/*" element={<UserRoutes />} />
           <Route path="/admin/*" element={<AdminRoutes />} />

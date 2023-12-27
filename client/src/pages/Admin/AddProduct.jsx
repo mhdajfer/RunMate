@@ -11,7 +11,7 @@ export default function AddProduct() {
     stock: 0,
     category: "",
     price: 0,
-    image: "",
+    images: [],
     subDesc: "",
     name: "",
   });
@@ -39,10 +39,9 @@ export default function AddProduct() {
     formProd.append("stock", product.stock);
     formProd.append("category", product.category);
     formProd.append("price", product.price);
-    formProd.append("image", product.image);
+    product.images.forEach((file) => formProd.append("files", file));
     formProd.append("name", product.name);
     formProd.append("subDesc", product.subDesc);
-    console.log(formProd);
     try {
       await axios
         .post(`${serverURL}/product/add`, formProd, {
@@ -55,6 +54,7 @@ export default function AddProduct() {
             navigate("/products");
           } else {
             toast.error(res.data.message);
+            console.log("here");
           }
         });
     } catch (error) {
@@ -72,7 +72,7 @@ export default function AddProduct() {
   function handleImageChange(e) {
     setProduct((prevProduct) => ({
       ...prevProduct,
-      image: e.target.files[0],
+      images: [...e.target.files],
     }));
   }
   return (
@@ -169,6 +169,8 @@ export default function AddProduct() {
                 <input
                   type="file"
                   name="price"
+                  required
+                  multiple
                   accept="image/*"
                   onChange={handleImageChange}
                   className="  min-w-[180px] w-[20vw] bg-white text-[10px]  border border-teal-700 rounded-lg p-3"

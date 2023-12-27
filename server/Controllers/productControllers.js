@@ -12,11 +12,12 @@ exports.allProducts = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
   try {
-    upload.single("image")(req, res, async (err) => {
+    upload.array("files")(req, res, async (err) => {
       if (err) {
         return res.json({ success: false, message: err.message });
       }
-      const image = req.file?.filename;
+      const images = req.files;
+      const filenames = images.map((file) => file.originalname);
       const { brand, desc, stock, price, category, name, subDesc } = req.body;
       if (
         !brand ||
@@ -26,7 +27,7 @@ exports.addProduct = async (req, res) => {
         !category ||
         !name ||
         !subDesc ||
-        !image
+        !filenames
       ) {
         return res.json({ success: false, message: "fill all fields" });
       }
@@ -39,7 +40,7 @@ exports.addProduct = async (req, res) => {
         stock,
         price,
         category,
-        image,
+        images: filenames,
       });
       await prodDoc.save();
 

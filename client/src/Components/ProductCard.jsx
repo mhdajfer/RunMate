@@ -19,7 +19,7 @@ export default function ProductCard(item) {
             onClick={() => {
               handleClick(product);
             }}
-            src={serverUrl + "/" + product.image}
+            src={serverUrl + "/" + product.images[0]}
             alt=""
             className="w-full h-[30vh] object-fit rounded-lg"
           />

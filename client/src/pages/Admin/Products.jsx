@@ -67,7 +67,7 @@ export default function Products() {
                   <td>
                     <img
                       className="w-[60px]"
-                      src={serverUrl + "/" + product.image}
+                      src={serverUrl + "/" + product.images[0]}
                       alt=""
                     />
                   </td>
