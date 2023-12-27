@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import serverURL from "../../../serverURL";
 import toast from "react-hot-toast";
@@ -15,6 +15,20 @@ export default function AddProduct() {
     subDesc: "",
     name: "",
   });
+  const [categoryList, setCategoryList] = useState([]);
+
+  useEffect(() => {
+    try {
+      axios.get(`${serverURL}/admin/category`).then((res) => {
+        if (res.data.success) {
+          setCategoryList(res.data.data);
+        }
+      });
+    } catch (error) {
+      toast.error("white while loading categories");
+      console.log(error);
+    }
+  }, []);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +77,7 @@ export default function AddProduct() {
   }
   return (
     <>
-      <div className="flex justify-center w-full">
+      <div className="flex justify-center">
         <form
           className="bg-[#ffffff] h-fit  p-8 rounded-lg m-8"
           onSubmit={handleFormSubmit}
@@ -142,10 +156,12 @@ export default function AddProduct() {
                   className="  min-w-[180px] w-[20vw]  border border-teal-700 rounded-xl p-2 text-sm"
                 >
                   <option value="">----Choose options----</option>
-                  <option value="bestSelling">Best Selling</option>
-                  <option value="sports">Sports</option>
-                  <option value="men">Men</option>
-                  <option value="women">Women</option>
+
+                  {categoryList.map((category, i) => (
+                    <option key={i} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="flex flex-col my-4">

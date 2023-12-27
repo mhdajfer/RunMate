@@ -15,6 +15,9 @@ export default function AdminLayout() {
       case "Users":
         navigate("/admin/users");
         break;
+      case "Category":
+        navigate("/admin/category");
+        break;
     }
   }
 
@@ -24,6 +27,7 @@ export default function AdminLayout() {
     "Users",
     "Products",
     "Coupons",
+    "Category",
     "Banner",
     "Profile",
   ];
@@ -48,7 +52,7 @@ export default function AdminLayout() {
             </div>
           ))}
         </div>
-        <div>
+        <div className="w-full">
           <Outlet />
         </div>
       </div>

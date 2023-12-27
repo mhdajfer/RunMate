@@ -1,4 +1,5 @@
 const adminController = require("../Controllers/adminControllers");
+const categoryController = require("../Controllers/categoryControllers");
 const express = require("express");
 const router = express.Router();
 
@@ -19,6 +20,14 @@ router.post("/verify-admin", (req, res) => {
 });
 router.get("/logout", (req, res) => {
   adminController.logout(req, res);
+});
+
+router.get("/category", (req, res) => {
+  categoryController.listCategory(req, res);
+});
+
+router.post("/category/add", (req, res) => {
+  categoryController.addCategory(req, res);
 });
 
 module.exports = router;

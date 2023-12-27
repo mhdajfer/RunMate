@@ -1,16 +1,17 @@
 import { Routes, Route } from "react-router-dom";
-import SingleProduct from "../pages/Product/SingleProduct";
-import UserLayout from "../Components/UserLayout";
+import AdminLayout from "../pages/Admin/AdminLayout";
 import AddProduct from "../pages/Admin/AddProduct";
 import EditProduct from "../pages/Admin/EditProduct";
+import PrivateRoutes from "../Utils/PrivateRoutes";
 
 function ProductRoutes() {
   return (
     <Routes>
-      <Route element={<UserLayout />}>
-        <Route path="/:id" element={<SingleProduct />} />
-        <Route path="/add" element={<AddProduct />} />
-        <Route path="/edit" element={<EditProduct />} />
+      <Route element={<PrivateRoutes />}>
+        <Route element={<AdminLayout />}>
+          <Route path="/add" element={<AddProduct />} />
+          <Route path="/edit" element={<EditProduct />} />
+        </Route>
       </Route>
     </Routes>
   );

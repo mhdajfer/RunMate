@@ -49,59 +49,57 @@ export default function Products() {
   return (
     <>
       <div className="w-full flex flex-col items-center p-16">
-        <div className="">
-          <table className="my-12">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, i) => {
-                return (
-                  <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
-                    <td>
-                      <img
-                        className="w-[60px]"
-                        src={serverUrl + "/" + product.image}
-                        alt=""
-                      />
-                    </td>
-                    <td className="p-6">{product._id}</td>
-                    <td className="p-2">{product.desc}</td>
-                    <td className="p-2">{product.price}</td>
-                    <td className="p-2">{product.stock}</td>
-                    <td className="p-2">
-                      <button
-                        className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
-                        onClick={() => handleDelete(product)}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
-                        onClick={() => handleEdit(product)}
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <button
-            onClick={AddProduct}
-            className="bg-[#0F4C75] text-white px-4 py-1 rounded-lg self-end me-64"
-          >
-            New product
-          </button>
-        </div>
+        <table className="my-12">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Id</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product, i) => {
+              return (
+                <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
+                  <td>
+                    <img
+                      className="w-[60px]"
+                      src={serverUrl + "/" + product.image}
+                      alt=""
+                    />
+                  </td>
+                  <td className="p-6">{product._id}</td>
+                  <td className="p-2">{product.desc}</td>
+                  <td className="p-2">{product.price}</td>
+                  <td className="p-2">{product.stock}</td>
+                  <td className="p-2">
+                    <button
+                      className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
+                      onClick={() => handleDelete(product)}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
+                      onClick={() => handleEdit(product)}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <button
+          onClick={AddProduct}
+          className="bg-[#0F4C75] text-white px-4 py-1 rounded-lg self-end me-64"
+        >
+          New product
+        </button>
       </div>
     </>
   );
