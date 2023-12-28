@@ -15,7 +15,7 @@ const UserSchema = mongoose.Schema({
   phone: {
     type: Number,
   },
-  addresses: {
+  addresses: [{
     address1: {
       type: String,
     },
@@ -31,7 +31,7 @@ const UserSchema = mongoose.Schema({
     pincode: {
       type: Number,
     },
-  },
+  }],
   password: {
     type: String,
   },
@@ -39,6 +39,26 @@ const UserSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  cart: [{
+    productId: {
+      type: String,
+      required: true,
+    },
+    productName: {
+      type: String,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      defaultValue: 1,
+    },
+    price: {
+      type: Number,
+    },
+    image: {
+      type: String,
+    }
+  }]
 });
 
 const UserModel = mongoose.model("user", UserSchema);

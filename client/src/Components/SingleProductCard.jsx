@@ -1,6 +1,6 @@
 import serverURL from "../../serverURL";
 import Icons from "../assets/Icons";
-const { star_filled, heart, star, cart } = Icons;
+const { star_filled, heart, star, bag } = Icons;
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
@@ -80,7 +80,7 @@ function SingleProductCard(item) {
                   className="bg-[#003355] flex items-center justify-center font-semibold text-xl  w-full h-14 py-2 rounded-sm text-white"
                   onClick={() => handleCart(product, quantity)}
                 >
-                  <span className="me-4">{cart}</span>Add to Cart
+                  <span className="me-4">{bag}</span>Add to Cart
                 </button>
               </div>
               <button className="bg-[#003355] flex items-center justify-center font-semibold text-xl  w-full h-14 py-2 rounded-sm text-white">

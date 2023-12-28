@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../Utils/Auth";
+import Icons from "../assets/Icons";
+const { cart } = Icons;
 
 // eslint-disable-next-line react/prop-types
 export default function Navbar({ role }) {
@@ -13,6 +15,10 @@ export default function Navbar({ role }) {
   useEffect(() => {
     console.log("state : " + authState);
   });
+
+  function handleCart() {
+    navigate("/user/cart");
+  }
 
   function handleSeller() {
     navigate("/user/bestSelling");
@@ -46,7 +52,9 @@ export default function Navbar({ role }) {
               placeholder="Search"
             />
           </div>
-          <div className="space-x-6">
+          <div className="space-x-6 flex">
+            <div onClick={handleCart}>{cart}</div>
+            {/* <div onClick={handleCart}>{cart}</div> */}
             <button
               className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium"
               onClick={handleSeller}

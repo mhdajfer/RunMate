@@ -39,4 +39,8 @@ router.post("/cart/add", (req, res) => {
   cartController.add(req, res);
 });
 
+router.post("/cart/get", (req, res) => {
+  cartController.get(req, res);
+});
+
 module.exports = router;
