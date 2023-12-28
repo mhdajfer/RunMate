@@ -1,4 +1,5 @@
 const userController = require("../Controllers/userControllers");
+const cartController = require("../Controllers/cartControllers");
 const express = require("express");
 const router = express.Router();
 
@@ -30,8 +31,12 @@ router.get("/logout", (req, res) => {
   userController.logout(req, res);
 });
 
-router.post('/images', (req, res) => {
+router.post("/images", (req, res) => {
   userController.addImage(req, res);
-})
+});
+
+router.post("/cart/add", (req, res) => {
+  cartController.add(req, res);
+});
 
 module.exports = router;

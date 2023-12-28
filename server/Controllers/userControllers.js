@@ -79,7 +79,7 @@ exports.login = async (req, res) => {
   );
 
   //check user
-  if (!user) res.json({ success: false, message: "user not found" });
+  if (!user) return res.json({ success: false, message: "user not found" });
 
   //check whether blocked
   if (user.isBlocked)
