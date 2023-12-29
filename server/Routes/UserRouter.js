@@ -43,4 +43,8 @@ router.post("/cart/get", (req, res) => {
   cartController.get(req, res);
 });
 
+router.post('/cart/remove', (req, res) => {
+  cartController.remove(req, res);
+})
+
 module.exports = router;

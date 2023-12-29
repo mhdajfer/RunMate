@@ -7,6 +7,7 @@ import MenItems from "../pages/User/MenItems";
 import SignupPage from "../pages/User/SignupPage";
 import UserLayout from "../Components/UserLayout";
 import Cart from "../pages/User/Cart";
+import Checkout from "../pages/User/Checkout";
 
 export default function UserRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function UserRoutes() {
         <Route element={<PrivateRoutes />}>
           <Route path="bestSelling" element={<BestSellingItems />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
         <Route path="/men" element={<MenItems />} />
 

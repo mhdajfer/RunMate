@@ -49,3 +49,22 @@ exports.get = async (req, res) => {
   const cart = userData[0].cart;
   res.status(200).json({ success: true, data: cart });
 };
+
+exports.remove = async (req, res) => {
+  const { item } = req.body;
+  const token = req.cookies.token;
+  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+
+  try {
+    await UserModel.updateOne(
+      { _id: user.id },
+      { $pull: { cart: { _id: item._id } } }
+    );
+    return res.status(200).json({ success: true, message: "Item Removed" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "error white deleting: backend error" });
+  }
+};
