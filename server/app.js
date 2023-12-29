@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const userRouter = require("./Routes/UserRouter.js");
 const adminRouter = require("./Routes/AdminRouter.js");
 const productRouter = require("./Routes/ProductRouter.js");
+const orderRouter = require("./Routes/OrderRouter.js");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ mongoose
 //Routes
 app.use("/product", productRouter);
 app.use("/admin", adminRouter);
+app.use("/order", orderRouter);
 app.use("/", userRouter);
 
 app.listen(port, () => {

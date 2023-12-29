@@ -1,13 +1,57 @@
 import serverUrl from "../../server";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 function Checkout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [address2, setAddress2] = useState("");
+  const [state, setState] = useState("");
+  const [zip, setZip] = useState(0);
+  const [phone, setPhone] = useState(0);
   const cartItems = location.state?.cartItems;
+  const productIds = cartItems.map((item) => item.productId);
   const subTotal = cartItems.reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
   );
+  const shipping = (subTotal * 3) / 100;
+  const total = shipping + subTotal;
+
+  function handleCheckout() {
+    try {
+      axios
+        .post(
+          `${serverUrl}/order/add`,
+          {
+            productIds,
+            subTotal,
+            shipping,
+            total,
+            name,
+            address1,
+            address2,
+            state,
+            zip,
+            phone,
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+            navigate("/user/payment", { state: { total } });
+          }
+        });
+    } catch (error) {
+      toast.error("Error while checkout");
+      console.log(error);
+    }
+  }
   return (
     <>
       <div className="flex flex-col items-center py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
@@ -189,8 +233,12 @@ function Checkout() {
                 type="text"
                 id="name"
                 name="name"
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
                 className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                 placeholder="Enter your name here..."
+                value={name}
               />
               <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3"></div>
             </div>
@@ -205,8 +253,12 @@ function Checkout() {
                 type="text"
                 id="address1"
                 name="address1"
+                onChange={(e) => {
+                  setAddress1(e.target.value);
+                }}
                 className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                 placeholder="Your Address here..."
+                value={address1}
               />
               <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                 <svg
@@ -237,8 +289,12 @@ function Checkout() {
                   type="text"
                   id="street-address"
                   name="street-address"
+                  onChange={(e) => {
+                    setAddress2(e.target.value);
+                  }}
                   className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Street Address"
+                  value={address2}
                 />
                 <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                   <img
@@ -251,6 +307,9 @@ function Checkout() {
               <select
                 type="text"
                 name="state"
+                onChange={(e) => {
+                  setState(e.target.value);
+                }}
                 className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
               >
                 <option value="">State</option>
@@ -260,8 +319,12 @@ function Checkout() {
               <input
                 type="text"
                 name="zip"
+                onChange={(e) => {
+                  setZip(e.target.value);
+                }}
                 className="flex-shrink-0 rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                 placeholder="ZIPCODE"
+                value={zip}
               />
             </div>
             <label
@@ -276,8 +339,12 @@ function Checkout() {
                   type="text"
                   id="card-no"
                   name="card-no"
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                  }}
                   className="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="xxxx-xxxx-xx"
+                  value={phone}
                 />
                 <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                   <svg
@@ -302,19 +369,18 @@ function Checkout() {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">Shipping</p>
-                <p className="font-semibold text-gray-900">
-                  $ {(subTotal * 3) / 100}
-                </p>
+                <p className="font-semibold text-gray-900">$ {shipping}</p>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between">
               <p className="text-sm font-medium text-gray-900">Total</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                ${subTotal + (subTotal * 3) / 100}
-              </p>
+              <p className="text-2xl font-semibold text-gray-900">${total}</p>
             </div>
           </div>
-          <button className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">
+          <button
+            className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+            onClick={handleCheckout}
+          >
             Place Order
           </button>
         </div>

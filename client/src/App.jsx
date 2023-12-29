@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <Routes>
+        <Routes>=
           <Route path="/product/*" element={<ProductRoutes />} />
           <Route path="/user/*" element={<UserRoutes />} />
           <Route path="/admin/*" element={<AdminRoutes />} />
