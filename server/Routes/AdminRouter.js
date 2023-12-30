@@ -30,4 +30,8 @@ router.post("/category/add", (req, res) => {
   categoryController.addCategory(req, res);
 });
 
+router.post("/category/delete", (req, res) => {
+  categoryController.delete(req, res);
+});
+
 module.exports = router;

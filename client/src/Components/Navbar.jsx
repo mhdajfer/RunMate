@@ -43,7 +43,14 @@ export default function Navbar({ role }) {
       <nav>
         <div className="h-[80px] bg-[#1B262C] text-white flex items-center justify-between px-12">
           <div>
-            <h1 className="text-3xl font-bold">RunMate</h1>
+            <h1
+              className="text-3xl font-bold cursor-pointer"
+              onClick={() => {
+                navigate("/user/home");
+              }}
+            >
+              RunMate
+            </h1>
           </div>
           <div>
             <input

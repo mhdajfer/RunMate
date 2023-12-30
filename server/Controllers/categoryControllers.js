@@ -25,4 +25,19 @@ exports.listCategory = async (req, res) => {
   }
 };
 
-exports.deleteCategory = async (req, res) => {};
+exports.delete = async (req, res) => {
+  const { category } = req.body;
+
+  try {
+    await categoryModel.findOneAndDelete({ _id: category._id });
+    return res
+      .status(200)
+      .json({ success: true, message: "Category deleted " });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error while deleting category - backend",
+    });
+  }
+};

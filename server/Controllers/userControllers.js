@@ -26,19 +26,12 @@ exports.delete = async (req, res) => {
 
 exports.edit = async (req, res) => {
   let user = req.body;
-  console.log("user", user);
   if (user.password) {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     user = { ...user, password: hashedPassword };
+  } else {
+    delete user.password;
   }
-  // if (!user.password) {
-  //   user = {
-  //     name: user.name,
-  //     age: user.age,
-  //     phone: user.phone,
-  //     email: user.email,
-  //   };
-  // }
   console.log(user);
 
   try {
@@ -96,7 +89,7 @@ exports.login = async (req, res) => {
           httpOnly: true,
         })
         .json({ success: true, message: "login successful", token: token });
-    } else return res.json({ success: false, message: "login failed" });
+    } else return res.json({ success: false, message: "Incorrect Password" });
   } catch (error) {
     console.log("error with bcrypt compare");
   }

@@ -2,10 +2,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import serverUrl from "../../server";
+import { useNavigate } from "react-router-dom";
 
 function AddCategory() {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
+  const navigate = useNavigate();
 
   function handleFormSubmit(e) {
     e.preventDefault();
@@ -19,9 +21,7 @@ function AddCategory() {
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);
-            setTimeout(() => {
-              window.location.reload();
-            }, 700);
+            navigate("/admin/category");
           }
         });
     } catch (error) {

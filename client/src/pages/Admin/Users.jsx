@@ -26,7 +26,7 @@ export default function Products() {
     } catch (error) {
       console.log("error while fetching products", error);
     }
-  }, [isBlocked]);
+  }, [isBlocked, Oneuser]);
 
   function handleCancelDelete() {
     setIsDialogOpen(false);
@@ -41,9 +41,6 @@ export default function Products() {
           setIsDialogOpen(false);
           setOneUser(null);
           toast.success(res.data.message);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
           console.log(res.data);
         }
       })
@@ -57,10 +54,6 @@ export default function Products() {
 
   function handleEdit(user) {
     navigate("/admin/users/edit", { state: { user } });
-  }
-
-  function AddUser() {
-    navigate("/admin/users/add");
   }
 
   const handleBlocks = async (user) => {
@@ -126,7 +119,6 @@ export default function Products() {
                         onClick={() => {
                           handleBlocks(user);
                         }}
-                        value={user.isBlocked ? "UnBlocked" : "Blocked"}
                       >
                         {user.isBlocked ? "UnBlock" : "Block"}
                       </button>
@@ -136,19 +128,13 @@ export default function Products() {
               })}
             </tbody>
           </table>
-          <button
-            onClick={AddUser}
-            className="bg-[#0F4C75] text-white px-4 py-1 rounded-lg self-end me-64"
-          >
-            Add User
-          </button>
         </div>
       </div>
       <div className="fixed top-[20%] right-[25%]">
         {/* Dialog box */}
         {isDialogOpen && (
           <DialogBox
-            user={Oneuser}
+            data={Oneuser}
             onConfirmDelete={confirmDelete}
             onCancel={handleCancelDelete}
           />

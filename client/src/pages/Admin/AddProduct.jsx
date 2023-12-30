@@ -51,7 +51,7 @@ export default function AddProduct() {
           if (res.data.success) {
             toast.success("product added");
             console.log(res);
-            navigate("/products");
+            navigate("/admin/products");
           } else {
             toast.error(res.data.message);
             console.log("here");

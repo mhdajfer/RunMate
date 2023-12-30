@@ -1,5 +1,5 @@
 // eslint-disable-next-line react/prop-types
-function DialogBox({ user, onConfirmDelete, onCancel }) {
+function DialogBox({ data, onConfirmDelete, onCancel }) {
   return (
     <div className="bg-white rounded-lg md:max-w-md border mx-auto p-4 z-50">
       <div className="md:flex items-center">
@@ -17,7 +17,7 @@ function DialogBox({ user, onConfirmDelete, onCancel }) {
       <div className="text-center md:text-right mt-4 md:flex md:justify-end">
         <button
           className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-red-200 text-red-700 rounded-lg font-semibold text-sm md:ml-2 md:order-2"
-          onClick={() => onConfirmDelete(user)}
+          onClick={() => onConfirmDelete(data)}
         >
           Delete Account
         </button>

@@ -31,12 +31,18 @@ function SingleProductCard(item) {
   const product = item.product;
   return (
     <>
-      <div className=" w-screen p-12 px-[6rem] flex justify-evenly space-x-12">
+      <div className=" w-screen p-12 px-[6rem] flex h-full justify-evenly space-x-12">
         <div className="flex ">
-          <div className="bg-yellow-500 space-y-1 flex flex-col">
-            <div className="bg-blue-500 w-12 h-12"></div>
-            <div className="bg-blue-500 w-12 h-12"></div>
-            <div className="bg-blue-500 w-12 h-12"></div>
+          <div className=" space-y-3 flex mx-6 flex-col">
+            {product.images.map((image, i) => (
+              <div key={i} className="bg-white rounded-lg">
+                <img
+                  src={serverURL + "/" + image}
+                  alt=""
+                  className="h-[3rem] object-contain"
+                />
+              </div>
+            ))}
           </div>
           <div className="">
             <img

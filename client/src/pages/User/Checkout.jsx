@@ -43,7 +43,6 @@ function Checkout() {
         )
         .then((res) => {
           if (res.data.success) {
-            toast.success(res.data.message);
             navigate("/user/payment", { state: { total } });
           }
         });

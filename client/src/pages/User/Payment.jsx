@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Payment() {
   const [card, setCard] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
   const total = location.state?.total;
-  console.log(total);
+
+  function handleCOD() {
+    toast.success("You Order Placed.");
+    setTimeout(() => {
+      navigate("/user/home");
+    }, 700);
+  }
   return (
     <>
       <section className="antialiased bg-gray-100 text-gray-600 min-h-screen p-4">
@@ -73,7 +81,7 @@ function Payment() {
                   <div className="mt-6">
                     <div className="mb-4">
                       <button className="font-medium text-sm inline-flex items-center justify-center px-3 py-2 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out w-full bg-indigo-500 hover:bg-indigo-600 text-white focus:outline-none focus-visible:ring-2">
-                        Pay $253.00
+                        Pay ${total}
                       </button>
                     </div>
                     <div className="text-xs text-gray-500 italic text-center">
@@ -84,8 +92,11 @@ function Payment() {
                 <div style={{ display: !card ? "block" : "none" }}>
                   <div>
                     <div className="mb-4">
-                      <button className="font-medium text-sm inline-flex items-center justify-center px-3 py-2 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out w-full hover:bg-indigo-500 bg-indigo-600 text-white focus:outline-none focus-visible:ring-2">
-                        Pay - $253.00
+                      <button
+                        className="font-medium text-sm inline-flex items-center justify-center px-3 py-2 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out w-full hover:bg-indigo-500 bg-indigo-600 text-white focus:outline-none focus-visible:ring-2"
+                        onClick={handleCOD}
+                      >
+                        Pay - ${total}
                       </button>
                     </div>
                     <div className="text-xs text-gray-500 italic text-center">

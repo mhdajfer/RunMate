@@ -22,7 +22,7 @@ export default function Products() {
     } catch (error) {
       console.log("error while fetching products", error);
     }
-  }, []);
+  }, [products]);
 
   function handleDelete(product) {
     axios
@@ -30,10 +30,6 @@ export default function Products() {
       .then((res) => {
         if (res.data.success) {
           toast.success(res.data.message);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-          console.log(res.data);
         }
       })
       .catch((err) => console.log(err));
@@ -49,6 +45,12 @@ export default function Products() {
   return (
     <>
       <div className="w-full flex flex-col items-center p-16">
+        <button
+          onClick={AddProduct}
+          className="bg-[#0F4C75] hover:text-teal-600 text-white px-4 py-1 rounded-lg self-end me-6"
+        >
+          New product
+        </button>
         <table className="my-12">
           <thead>
             <tr>
@@ -94,12 +96,6 @@ export default function Products() {
             })}
           </tbody>
         </table>
-        <button
-          onClick={AddProduct}
-          className="bg-[#0F4C75] text-white px-4 py-1 rounded-lg self-end me-64"
-        >
-          New product
-        </button>
       </div>
     </>
   );
