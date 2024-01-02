@@ -2,7 +2,7 @@ const adminModel = require("../models/admin");
 const userModel = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { CreateToken } = require("../jwt/createToken");
+const { CreateToken } = require("../Utils/Jwt/createToken");
 
 exports.signup = async (req, res) => {
   const user = req.body;

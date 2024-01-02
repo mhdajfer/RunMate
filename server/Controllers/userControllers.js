@@ -1,7 +1,8 @@
 const UserModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { CreateToken } = require("../jwt/createToken");
+const { CreateToken } = require("../Utils/Jwt/createToken");
+const sendMail = require("../Utils/NodeMailer/sendMail");
 
 exports.getUsers = async (req, res) => {
   try {
@@ -42,19 +43,38 @@ exports.edit = async (req, res) => {
   }
 };
 
+exports.activate = async (req, res) => {
+  const token = req.params?.token;
+
+  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+
+  const hashedPassword = await bcrypt.hash(user.password, 10);
+
+  const userDoc = new UserModel({ ...user, password: hashedPassword });
+  await userDoc.save();
+  res.send("User id Activated");
+};
+
 exports.signUp = async (req, res) => {
   const user = req.body;
 
-  try {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-
-    const userDoc = new UserModel({ ...user, password: hashedPassword });
-    await userDoc.save();
-    res.json({ success: true, message: "user registered successfully" });
-  } catch (error) {
-    console.log("Error while Registration : ", error);
-    res.json({ success: false, message: "Internal Server Error" });
+  if (!user.name || !user.age || !user.phone || !user.email || !user.password) {
+    return res.json({ success: false, message: "Fill all fields" });
   }
+
+  const existUser = await UserModel.find({ email: user.email });
+  if (existUser)
+    return res.json({ success: false, message: "User already exists" });
+
+  const token = jwt.sign(user, process.env.MY_SECRET_KEY, {
+    expiresIn: "5m",
+  });
+
+  const url = `${process.env.SERVER_URL}/user/activate/${token}`;
+
+  sendMail(user.email, url);
+
+  res.json({ success: true, message: "Check your mail" });
 };
 
 exports.login = async (req, res) => {

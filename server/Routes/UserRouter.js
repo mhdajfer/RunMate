@@ -23,6 +23,10 @@ router.get("/users", (req, res) => {
   userController.getUsers(req, res);
 });
 
+router.get("/user/activate/:token", (req, res) => {
+  userController.activate(req, res);
+});
+
 router.post("/verify-user", (req, res) => {
   userController.verify(req, res);
 });
@@ -43,8 +47,8 @@ router.post("/cart/get", (req, res) => {
   cartController.get(req, res);
 });
 
-router.post('/cart/remove', (req, res) => {
+router.post("/cart/remove", (req, res) => {
   cartController.remove(req, res);
-})
+});
 
 module.exports = router;
