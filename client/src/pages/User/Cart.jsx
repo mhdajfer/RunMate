@@ -21,7 +21,7 @@ function Cart() {
       toast.error("Error while loading Cart");
       console.log(error);
     }
-  }, []);
+  }, [cartItems]);
 
   function handleRemove(item) {
     try {
@@ -143,7 +143,9 @@ function Cart() {
             type="button"
             className="focus:outline-none text-white bg-indigo-600 hover:bg-indigo-500 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 "
             onClick={() => {
-              navigate("/user/checkout", { state: { cartItems } });
+              cartItems.length
+                ? navigate("/user/checkout", { state: { cartItems } })
+                : toast.error("Add items to cart");
             }}
           >
             Checkout

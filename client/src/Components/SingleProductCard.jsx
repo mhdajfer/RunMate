@@ -31,7 +31,7 @@ function SingleProductCard(item) {
   const product = item.product;
   return (
     <>
-      <div className=" w-screen p-12 px-[6rem] flex h-full justify-evenly space-x-12">
+      <div className=" w-screen p-12 px-[6rem] flex h-fit justify-evenly space-x-12">
         <div className="flex ">
           <div className=" space-y-3 flex mx-6 flex-col">
             {product.images.map((image, i) => (
@@ -52,7 +52,7 @@ function SingleProductCard(item) {
             />
           </div>
         </div>
-        <div className=" p-12 w-[50rem] h-[20rem]">
+        <div className=" p-12 w-[50rem]">
           <h1 className="font-bold text-3xl">{product.brand}</h1>
           <p className="my-6 ">{product.subDesc}</p>
           <h1 className="text-6xl font-semibold text-[#003355]">

@@ -23,6 +23,8 @@ function Checkout() {
   const total = shipping + subTotal;
 
   function handleCheckout() {
+    if (!name || !address1 || !address2 || !state || !zip || !phone)
+      return toast.error("Please fill all fields");
     try {
       axios
         .post(
