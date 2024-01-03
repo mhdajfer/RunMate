@@ -42,6 +42,7 @@ exports.add = async (req, res) => {
 
 exports.get = async (req, res) => {
   const token = req.cookies.token;
+  if (!token) return res.json({ success: false, message: "token is missing" });
   const user = jwt.verify(token, process.env.MY_SECRET_KEY);
 
   const userData = await UserModel.find({ _id: user.id }, { cart: 1 });

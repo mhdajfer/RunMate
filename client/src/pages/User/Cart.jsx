@@ -8,6 +8,7 @@ function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
+    console.log("useEffect is runing");
     try {
       axios
         .post(`${serverUrl}/cart/get`, {}, { withCredentials: true })
@@ -20,7 +21,7 @@ function Cart() {
       toast.error("Error while loading Cart");
       console.log(error);
     }
-  }, [cartItems]);
+  }, []);
 
   function handleRemove(item) {
     try {

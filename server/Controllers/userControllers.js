@@ -104,10 +104,6 @@ exports.login = async (req, res) => {
       const token = CreateToken(user._id.toString());
       res
         .status(200)
-        .cookie("token", token, {
-          expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-          httpOnly: true,
-        })
         .json({ success: true, message: "login successful", token: token });
     } else return res.json({ success: false, message: "Incorrect Password" });
   } catch (error) {

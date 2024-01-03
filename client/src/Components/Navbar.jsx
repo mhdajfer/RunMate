@@ -1,20 +1,13 @@
 import serverURL from "../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "../Utils/Auth";
+import Cookie from "js-cookie";
 import Icons from "../assets/Icons";
 const { cart } = Icons;
 
 // eslint-disable-next-line react/prop-types
 export default function Navbar({ role }) {
-  const auth = useContext(AuthContext);
-  const authState = auth.getIsAuthenticated();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("state : " + authState);
-  });
 
   function handleCart() {
     navigate("/user/cart");
@@ -25,7 +18,7 @@ export default function Navbar({ role }) {
   }
 
   const handleLogout = async () => {
-    auth.logout();
+    Cookie.remove("token");
     axios
       .get(`${serverURL}/${role === "admin" ? "admin/logout" : "logout"}`, {
         withCredentials: true,
@@ -72,7 +65,7 @@ export default function Navbar({ role }) {
               className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium"
               onClick={handleLogout}
             >
-              {authState ? "Logout" : "Login"}
+              {Cookie.get("token") ? "Logout" : "Login"}
             </button>
           </div>
         </div>

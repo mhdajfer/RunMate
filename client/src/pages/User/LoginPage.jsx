@@ -1,22 +1,20 @@
 import loginImg from "../../assets/NewLoginImage.jpg";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import serverURL from "../../../serverURL";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../Utils/Auth";
+import Cookie from "js-cookie";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const auth = useContext(AuthContext);
-  const authState = auth.getIsAuthenticated();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    authState ? navigate("/user/home") : null;
-  }, []);
+    Cookie.get("token") ? navigate("/user/home") : null;
+  });
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -32,9 +30,9 @@ export default function LoginPage() {
         if (!res.data.success) {
           toast.error(res.data.message);
           console.log(res);
-        } else {
+        } else if (res.data.success) {
           toast.success("login successful");
-          auth.login();
+          Cookie.set("token", res.data.token);
           navigate("/user/home");
           console.log(res);
         }

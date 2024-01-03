@@ -1,20 +1,18 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import serverURL from "../../../serverURL";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { AuthContext } from "../../Utils/Auth";
 import { useNavigate } from "react-router-dom";
+import Cookie from "js-cookie";
 
 export default function LoginPage() {
-  const auth = useContext(AuthContext);
-  const authState = auth.getIsAuthenticated();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    authState ? navigate("/admin/dashboard") : null;
+    Cookie.get("token") ? navigate("/admin/dashboard") : null;
   });
 
   const handleFormSubmit = async (e) => {
@@ -33,7 +31,6 @@ export default function LoginPage() {
           console.log(res);
         } else {
           toast.success("login successful");
-          auth.login();
           navigate("/admin/dashboard");
           console.log(res);
         }
