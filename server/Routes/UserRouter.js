@@ -35,6 +35,10 @@ router.get("/logout", (req, res) => {
   userController.logout(req, res);
 });
 
+router.post("/getOneUser", (req, res) => {
+  userController.getOneUser(req, res);
+});
+
 router.post("/images", (req, res) => {
   userController.addImage(req, res);
 });

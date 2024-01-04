@@ -9,6 +9,7 @@ import UserLayout from "../Components/UserLayout";
 import Cart from "../pages/User/Cart";
 import Checkout from "../pages/User/Checkout";
 import Payment from "../pages/User/Payment";
+import UserProfile from "../pages/User/UserProfile";
 
 export default function UserRoutes() {
   return (
@@ -22,6 +23,7 @@ export default function UserRoutes() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Route>
         <Route path="/men" element={<MenItems />} />
 

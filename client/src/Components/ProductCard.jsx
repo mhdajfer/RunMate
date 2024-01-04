@@ -2,10 +2,39 @@ import Icons from "../assets/Icons";
 import serverUrl from "../server";
 const { heart, cart } = Icons;
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import serverURL from "../../serverURL";
+import toast from "react-hot-toast";
+import Cookie from "js-cookie";
 
 export default function ProductCard(item) {
   const product = item.product;
   const navigate = useNavigate();
+
+  function handleCart(product) {
+    if (!Cookie.get("token")) {
+      toast.error("Not Authenticated");
+      return;
+    }
+    try {
+      axios
+        .post(
+          `${serverURL}/cart/add`,
+          { ...product, quantity: 1 },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+    } catch (error) {
+      toast.error("Can't send to cart");
+      console.log(error);
+    }
+  }
 
   function handleClick(product) {
     navigate(`/product/${product._id}`, { state: product });
@@ -40,7 +69,12 @@ export default function ProductCard(item) {
             ${product.price}
           </h1>
           <div className="flex justify-evenly my-4">
-            <button className="bg-[#003355] flex items-center justify-center  w-[18vw] py-2 rounded-full text-white">
+            <button
+              className="bg-[#003355] flex items-center justify-center  w-[18vw] py-2 rounded-full text-white"
+              onClick={() => {
+                handleCart(product);
+              }}
+            >
               <span className="me-4">{cart}</span>Add to Cart
             </button>
             <button className="bg-[#003355] flex items-center justify-center  w-10 py-2 rounded-full text-white">

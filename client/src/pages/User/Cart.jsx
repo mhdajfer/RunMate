@@ -105,6 +105,7 @@ function Cart() {
                   className="mx-2 border text-center w-8"
                   type="text"
                   value={item.quantity}
+                  onChange={() => {}}
                 />
 
                 <svg

@@ -102,9 +102,11 @@ exports.login = async (req, res) => {
     if (await bcrypt.compare(password, user.password)) {
       //generate token
       const token = CreateToken(user._id.toString());
-      res
-        .status(200)
-        .json({ success: true, message: "login successful", token: token });
+      res.status(200).cookie("tokenn", token).json({
+        success: true,
+        message: "login successful",
+        token: token,
+      });
     } else return res.json({ success: false, message: "Incorrect Password" });
   } catch (error) {
     console.log("error with bcrypt compare");
@@ -129,6 +131,28 @@ exports.verify = async (req, res) => {
         success: false,
         message: "token expired, login again",
       });
+  }
+};
+
+exports.getOneUser = async (req, res) => {
+  const { token } = req.body;
+
+  if (!token) return res.json({ success: false });
+
+  try {
+    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const userDetails = await UserModel.find({ _id: user.id });
+    res.json({ success: true, message: "got user details", user: userDetails });
+  } catch (error) {
+    if (error.name === "TokenExpiredError")
+      return res.json({
+        expired: true,
+        success: false,
+        message: "token expired, login again",
+      })
+      else {
+        console.log(error)
+      }
   }
 };
 

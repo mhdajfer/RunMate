@@ -4,6 +4,7 @@ const { star_filled, heart, star, bag } = Icons;
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
+// import ReactImageMagnify from "react-image-magnify";
 
 function SingleProductCard(item) {
   const [quantity, setQuantity] = useState(1);
@@ -50,6 +51,22 @@ function SingleProductCard(item) {
               alt=""
               className="h-[30rem]"
             />
+            {/* <ReactImageMagnify
+              className="w-full h-full"
+              {...{
+                smallImage: {
+                  alt: "Wristwatch by Ted Baker London",
+                  isFluidWidth: true,
+                  src: serverURL + "/" + product.images[0],
+                  height: 1500,
+                },
+                largeImage: {
+                  src: serverURL + "/" + product.images[0],
+                  width: 1200,
+                  height: 1800,
+                },
+              }}
+            /> */}
           </div>
         </div>
         <div className=" p-12 w-[50rem]">
