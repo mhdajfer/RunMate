@@ -1,28 +1,31 @@
 const orderModel = require("../models/order");
+const jwt = require("jsonwebtoken");
 
 exports.add = async (req, res) => {
+  const {
+    productIds,
+    productNames,
+    subTotal,
+    shipping,
+    total,
+    name,
+    address1,
+    state,
+    zip,
+    phone,
+    token,
+  } = req.body;
   try {
-    const {
-      productIds,
-      subTotal,
-      shipping,
-      total,
-      name,
-      address1,
-      address2,
-      state,
-      zip,
-      phone,
-    } = req.body;
-
+    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
     const orderDoc = new orderModel({
+      userId: user.id,
       productIds,
+      productNames,
       subTotal,
       shipping,
       total,
       name,
       address1,
-      address2,
       state,
       zip,
       phone,
@@ -37,5 +40,15 @@ exports.add = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Error while placing order" });
+  }
+};
+
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await orderModel.find({});
+    return res.json({ success: true, data: orders });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
   }
 };

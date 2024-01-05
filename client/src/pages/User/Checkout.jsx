@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Cookie from "js-cookie";
 
 function Checkout() {
   const location = useLocation();
@@ -13,7 +14,9 @@ function Checkout() {
   const [zip, setZip] = useState();
   const [phone, setPhone] = useState();
   const cartItems = location.state?.cartItems;
+  const token = Cookie.get("token");
   const productIds = cartItems.map((item) => item.productId);
+  const productNames = cartItems.map((item) => item.productName);
   const subTotal = cartItems.reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
@@ -30,6 +33,7 @@ function Checkout() {
           `${serverUrl}/order/add`,
           {
             productIds,
+            productNames,
             subTotal,
             shipping,
             total,
@@ -38,6 +42,7 @@ function Checkout() {
             state,
             zip,
             phone,
+            token,
           },
           { withCredentials: true }
         )
@@ -290,7 +295,7 @@ function Checkout() {
               </select>
             </div>
             <label
-              htmlFor="street-address"
+              htmlFor="zip"
               className="mt-4 mb-2 block text-sm font-medium"
             >
               Zip code
@@ -299,6 +304,7 @@ function Checkout() {
               <input
                 type="text"
                 name="zip"
+                id="zip"
                 onChange={(e) => {
                   setZip(e.target.value);
                 }}
@@ -307,7 +313,6 @@ function Checkout() {
                 value={zip}
               />
             </div>
-
             <label
               htmlFor="card-no"
               className="mt-4 mb-2 block text-sm font-medium"

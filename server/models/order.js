@@ -2,7 +2,15 @@ const mongoose = require("mongoose");
 const { array } = require("../multer");
 
 const orderSchema = mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
   productIds: {
+    type: Array,
+    required: true,
+  },
+  productNames: {
     type: Array,
     required: true,
   },
@@ -10,9 +18,7 @@ const orderSchema = mongoose.Schema({
     type: String,
     reuired: true,
   },
-  address2: {
-    type: String,
-  },
+
   state: {
     type: String,
   },

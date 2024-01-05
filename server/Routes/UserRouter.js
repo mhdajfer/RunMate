@@ -35,6 +35,10 @@ router.post("/user/address/delete", (req, res) => {
   userController.deleteAddress(req, res);
 });
 
+router.post('/user/password/change', (req, res) => {
+  userController.changePassword(req, res);
+})
+
 router.get("/user/activate/:token", (req, res) => {
   userController.activate(req, res);
 });

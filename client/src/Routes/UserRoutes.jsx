@@ -10,6 +10,8 @@ import Cart from "../pages/User/Cart";
 import Checkout from "../pages/User/Checkout";
 import Payment from "../pages/User/Payment";
 import UserProfile from "../pages/User/UserProfile";
+import Orders from "../pages/User/Orders";
+import PasswordChange from "../pages/User/PasswordChange";
 
 export default function UserRoutes() {
   return (
@@ -24,6 +26,8 @@ export default function UserRoutes() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/password/change" element={<PasswordChange />} />
         </Route>
         <Route path="/men" element={<MenItems />} />
 

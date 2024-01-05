@@ -103,6 +103,26 @@ exports.deleteAddress = async (req, res) => {
   }
 };
 
+exports.changePassword = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    UserModel.updateOne({ email: email }, { password: hashedPassword })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return res.json({ success: true, message: "Password Updated" });
+  } catch (error) {
+    console.log("error while changing password", error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 exports.activate = async (req, res) => {
   const token = req.params?.token;
 
