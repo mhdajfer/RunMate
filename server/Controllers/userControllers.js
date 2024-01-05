@@ -28,13 +28,13 @@ exports.delete = async (req, res) => {
 
 exports.edit = async (req, res) => {
   let user = req.body;
+  console.log(user);
   if (user.password) {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     user = { ...user, password: hashedPassword };
   } else {
     delete user.password;
   }
-  console.log(user);
 
   try {
     await UserModel.findOneAndUpdate({ _id: user.id }, { ...user });
@@ -62,6 +62,7 @@ exports.getAddress = async (req, res) => {
 
 exports.addAddress = async (req, res) => {
   const address = req.body;
+  console.log(address);
   const userId = address.id;
   delete address.id;
   try {
@@ -76,6 +77,28 @@ exports.addAddress = async (req, res) => {
     return res.json({ success: true, message: "Address Updated" });
   } catch (error) {
     console.log("error while adding address", error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+exports.deleteAddress = async (req, res) => {
+  const { address, userId } = req.body;
+
+  try {
+    UserModel.updateOne(
+      { _id: userId },
+      { $pull: { addresses: { _id: address._id } } }
+    )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return res.json({ success: true, message: "Address Deleted" });
+  } catch (error) {
+    console.log("error while deleting one address: " + error);
     return res.json({ success: false, message: error.message });
   }
 };

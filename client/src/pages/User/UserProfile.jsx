@@ -1,14 +1,15 @@
-import { useLocation } from "react-router-dom";
+import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import serverURL from "../../../serverURL";
 import toast from "react-hot-toast";
 
 function UserProfile() {
-  const location = useLocation();
-  const user = location.state?.user;
+  const token = Cookie.get("token");
+  const [user, setUser] = useState({});
+  const userId = user._id;
   const [address, setAddress] = useState({
-    id: user._id,
+    id: userId,
     address1: "",
     city: "",
     state: "",
@@ -16,7 +17,7 @@ function UserProfile() {
   });
   const [savedAddress, setSavedAddress] = useState([]);
   const [newUser, setNewUser] = useState({
-    id: user._id,
+    id: userId,
     name: "",
     lastname: "",
     phone: "",
@@ -27,21 +28,41 @@ function UserProfile() {
   useEffect(() => {
     try {
       axios
+        .post(`${serverURL}/getOneUser`, { token }, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            const [user] = res.data.user;
+            setUser(user);
+            setSavedAddress(user.addresses);
+          }
+        });
+    } catch (error) {
+      console.log("error file fetching data", error);
+    }
+  }, [token, savedAddress]);
+
+  function handleDeleteAddress(address) {
+    try {
+      axios
         .post(
-          `${serverURL}/user/getAddress`,
-          { userId: user._id },
+          `${serverURL}/user/address/delete`,
+          { address, userId },
           { withCredentials: true }
         )
         .then((res) => {
           if (res.data.success) {
-            setSavedAddress(res.data.address);
+            toast.success(res.data.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 800);
+          } else {
+            toast.error(res.data.message);
           }
         });
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.log("error deleting address", error);
     }
-  }, [user._id]);
+  }
 
   function handleAddAddress(address) {
     if (
@@ -52,6 +73,7 @@ function UserProfile() {
     )
       return toast.error("Fill all Address fields");
     try {
+      address.id = userId;
       axios
         .post(`${serverURL}/user/address/add`, address, {
           withCredentials: true,
@@ -72,12 +94,12 @@ function UserProfile() {
   }
 
   function handleUpdate(user) {
-    console.log(user);
     !user.name ? delete user.name : null;
     !user.lastname ? delete user.lastname : null;
     !user.email ? delete user.email : null;
     !user.phone ? delete user.phone : null;
     !user.age ? delete user.age : null;
+    user.id = userId;
     console.log(user);
     try {
       axios
@@ -144,6 +166,15 @@ function UserProfile() {
                 </ul>
               </div>
               <div className="my-4"></div>
+              <div className="bg-white p-3 border-t-2 border-teal-500">
+                <h1 className="mb-4 text-xl font-medium">Actions</h1>
+                <div className="bg-gray-200 p-2 border-b border-gray-400 cursor-pointer hover:bg-white">
+                  <span>Orders</span>
+                </div>
+                <div className="bg-gray-200 p-2 hover:bg-white cursor-pointer">
+                  <span>Change password</span>
+                </div>
+              </div>
             </div>
             {/* main body */}
             <div className="h-full md:w-9/12 mx-2">
@@ -190,7 +221,7 @@ function UserProfile() {
                         type="text"
                         name="lastname"
                         className="px-4 py-1 h-8 border  rounded-lg"
-                        value={user.lastname}
+                        defaultValue={user.lastname}
                         onChange={(e) =>
                           setNewUser((prevUser) => ({
                             ...prevUser,
@@ -416,8 +447,11 @@ function UserProfile() {
                         key={i}
                         className="grid grid-cols-4 h-12 text-center items-center"
                       >
-                        <div className="">
-                          <span className="">{add.address1}</span>
+                        <div className="relative">
+                          <span className="">
+                            <span className="absolute left-0">{i + 1}</span>{" "}
+                            {add.address1}
+                          </span>
                         </div>
                         <div className="">
                           <span className="">{add.city}</span>
@@ -425,8 +459,22 @@ function UserProfile() {
                         <div className="">
                           <span className="">{add.state}</span>
                         </div>
-                        <div className="">
+                        <div className="relative">
                           <span className="">{add.pincode}</span>
+                          <span
+                            className="absolute right-0 cursor-pointer "
+                            onClick={() => {
+                              handleDeleteAddress(add);
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-4 h-4 hover:fill-red-600"
+                              viewBox="0 0 329.26933 329"
+                            >
+                              <path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0" />
+                            </svg>
+                          </span>
                         </div>
                       </div>
                     ))}
