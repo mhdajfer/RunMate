@@ -1,14 +1,110 @@
 import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import serverURL from "../../../serverURL";
+import toast from "react-hot-toast";
 
 function UserProfile() {
   const location = useLocation();
-  const user = location.state.user;
-  console.log(user);
+  const user = location.state?.user;
+  const [address, setAddress] = useState({
+    id: user._id,
+    address1: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+  const [savedAddress, setSavedAddress] = useState([]);
+  const [newUser, setNewUser] = useState({
+    id: user._id,
+    name: "",
+    lastname: "",
+    phone: "",
+    age: "",
+    email: "",
+  });
+
+  useEffect(() => {
+    try {
+      axios
+        .post(
+          `${serverURL}/user/getAddress`,
+          { userId: user._id },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            setSavedAddress(res.data.address);
+          }
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  }, [user._id]);
+
+  function handleAddAddress(address) {
+    if (
+      !address.address1 ||
+      !address.city ||
+      !address.state ||
+      !address.pincode
+    )
+      return toast.error("Fill all Address fields");
+    try {
+      axios
+        .post(`${serverURL}/user/address/add`, address, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+          } else {
+            toast.error(res.data.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 800);
+          }
+        });
+    } catch (error) {
+      console.log("error while adding address", error);
+    }
+  }
+
+  function handleUpdate(user) {
+    console.log(user);
+    !user.name ? delete user.name : null;
+    !user.lastname ? delete user.lastname : null;
+    !user.email ? delete user.email : null;
+    !user.phone ? delete user.phone : null;
+    !user.age ? delete user.age : null;
+    console.log(user);
+    try {
+      axios
+        .post(`${serverURL}/user/edit`, user, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 800);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+    } catch (error) {
+      console.log("error while updating data", error);
+    }
+  }
+
+  // console.log(savedAddress);
+
   return (
     <>
-      <div>
+      <div className="h-fit">
         <div className="container mx-auto my-5 p-5">
-          <div className="md:flex no-wrap md:-mx-2 ">
+          <div className=" md:flex no-wrap md:-mx-2 ">
+            {/* left side profile */}
             <div className="w-full md:w-3/12 md:mx-2">
               <div className="bg-white p-3 border-t-4 border-green-400">
                 <div className="text-center my-2">
@@ -18,11 +114,11 @@ function UserProfile() {
                     alt=""
                   />
                   <a href="#" className="text-main-color">
-                    Kojstantin
+                    {user.name}
                   </a>
                 </div>
                 <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
-                  Jane Doe
+                  {user.name}
                 </h1>
                 <h3 className="text-gray-600 font-lg text-semibold leading-6">
                   Owner at Her Company Inc.
@@ -49,7 +145,8 @@ function UserProfile() {
               </div>
               <div className="my-4"></div>
             </div>
-            <div className="w-full md:w-9/12 mx-2 h-64">
+            {/* main body */}
+            <div className="h-full md:w-9/12 mx-2">
               <div className="bg-white p-3 shadow-sm rounded-sm">
                 <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
                   <span className="text-green-500">
@@ -74,46 +171,79 @@ function UserProfile() {
                   <div className="grid md:grid-cols-2 text-sm">
                     <div className="grid grid-cols-2">
                       <div className="px-4 py-2 font-semibold">First Name</div>
-                      <div className="px-4 py-2">Jane</div>
+                      <input
+                        type="text"
+                        name="name"
+                        className="px-4 py-1 h-8 border  rounded-lg"
+                        defaultValue={user.name}
+                        onChange={(e) =>
+                          setNewUser((prevUser) => ({
+                            ...prevUser,
+                            [e.target.name]: e.target.value,
+                          }))
+                        }
+                      />
                     </div>
                     <div className="grid grid-cols-2">
                       <div className="px-4 py-2 font-semibold">Last Name</div>
-                      <div className="px-4 py-2">Doe</div>
-                    </div>
-                    <div className="grid grid-cols-2">
-                      <div className="px-4 py-2 font-semibold">Gender</div>
-                      <div className="px-4 py-2">Female</div>
+                      <input
+                        type="text"
+                        name="lastname"
+                        className="px-4 py-1 h-8 border  rounded-lg"
+                        value={user.lastname}
+                        onChange={(e) =>
+                          setNewUser((prevUser) => ({
+                            ...prevUser,
+                            [e.target.name]: e.target.value,
+                          }))
+                        }
+                      />
                     </div>
                     <div className="grid grid-cols-2">
                       <div className="px-4 py-2 font-semibold">Contact No.</div>
-                      <div className="px-4 py-2">+11 998001001</div>
+                      <input
+                        type="text"
+                        name="phone"
+                        className="px-4 py-1 h-8 border  rounded-lg"
+                        defaultValue={user.phone}
+                        onChange={(e) =>
+                          setNewUser((prevUser) => ({
+                            ...prevUser,
+                            [e.target.name]: e.target.value,
+                          }))
+                        }
+                      />
                     </div>
+
                     <div className="grid grid-cols-2">
-                      <div className="px-4 py-2 font-semibold">
-                        Current Address
-                      </div>
-                      <div className="px-4 py-2">
-                        Beech Creek, PA, Pennsylvania
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2">
-                      <div className="px-4 py-2 font-semibold">
-                        Permanant Address
-                      </div>
-                      <div className="px-4 py-2">
-                        Arlington Heights, IL, Illinois
-                      </div>
+                      <div className="px-4 py-2 font-semibold">Age</div>
+                      <input
+                        type="text"
+                        name="age"
+                        className="px-4 py-1 h-8 border  rounded-lg"
+                        defaultValue={user.age}
+                        onChange={(e) =>
+                          setNewUser((prevUser) => ({
+                            ...prevUser,
+                            [e.target.name]: e.target.value,
+                          }))
+                        }
+                      />
                     </div>
                     <div className="grid grid-cols-2">
                       <div className="px-4 py-2 font-semibold">Email.</div>
-                      <div className="px-4 py-2">
-                        <a
-                          className="text-blue-800"
-                          href="mailto:jane@example.com"
-                        >
-                          jane@example.com
-                        </a>
-                      </div>
+                      <input
+                        type="text"
+                        name="email"
+                        className="px-4 py-1 h-8 border  rounded-lg"
+                        defaultValue={user.email}
+                        onChange={(e) =>
+                          setNewUser((prevUser) => ({
+                            ...prevUser,
+                            [e.target.name]: e.target.value,
+                          }))
+                        }
+                      />
                     </div>
                     <div className="grid grid-cols-2">
                       <div className="px-4 py-2 font-semibold">Birthday</div>
@@ -121,113 +251,185 @@ function UserProfile() {
                     </div>
                   </div>
                 </div>
-                <button className="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4">
-                  Show Full Information
+                <button
+                  className="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4"
+                  onClick={() => {
+                    handleUpdate(newUser);
+                  }}
+                >
+                  Update Information
                 </button>
               </div>
 
               <div className="my-4"></div>
 
               <div className="bg-white p-3 shadow-sm rounded-sm">
-                <div className="grid grid-cols-2">
-                  <div>
-                    <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3">
-                      <span className="text-green-500">
-                        <svg
-                          className="h-5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
-                      </span>
-                      <span className="tracking-wide">Experience</span>
-                    </div>
-                    <ul className="list-inside space-y-2">
-                      <li>
-                        <div className="text-teal-600">
-                          Owner at Her Company Inc.
-                        </div>
-                        <div className="text-gray-500 text-xs">
-                          March 2020 - Now
-                        </div>
-                      </li>
-                      <li>
-                        <div className="text-teal-600">
-                          Owner at Her Company Inc.
-                        </div>
-                        <div className="text-gray-500 text-xs">
-                          March 2020 - Now
-                        </div>
-                      </li>
-                      <li>
-                        <div className="text-teal-600">
-                          Owner at Her Company Inc.
-                        </div>
-                        <div className="text-gray-500 text-xs">
-                          March 2020 - Now
-                        </div>
-                      </li>
-                      <li>
-                        <div className="text-teal-600">
-                          Owner at Her Company Inc.
-                        </div>
-                        <div className="text-gray-500 text-xs">
-                          March 2020 - Now
-                        </div>
-                      </li>
-                    </ul>
+                <div className="">
+                  <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3">
+                    <span className="text-green-500">
+                      <svg
+                        className="h-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      </svg>
+                    </span>
+                    <span className="tracking-wide">Address</span>
                   </div>
                   <div>
-                    <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3">
-                      <span className="text-green-500">
-                        <svg
-                          className="h-5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                    <div>
+                      <label
+                        htmlFor="address1"
+                        className="mt-4 mb-2 block text-sm font-medium"
+                      >
+                        Address
+                      </label>
+                      <div className="flex flex-col sm:flex-row">
+                        <div className="relative flex-shrink-0 sm:w-7/12">
+                          <input
+                            type="text"
+                            id="address1"
+                            name="address1"
+                            className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="Street Address"
+                            onChange={(e) => {
+                              setAddress((prevAddress) => ({
+                                ...prevAddress,
+                                [e.target.name]: e.target.value,
+                              }));
+                            }}
+                          />
+                          <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                            <img
+                              className="h-4 w-4 object-contain"
+                              src="https://uxwing.com/wp-content/themes/uxwing/download/flags-landmarks/india-flag-icon.png"
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="city"
+                          className="mt-4 mb-2 block text-sm font-medium"
                         >
-                          <path fill="#fff" d="M12 14l9-5-9-5-9 5 9 5z" />
-                          <path
-                            fill="#fff"
-                            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                          City
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="city"
+                            name="city"
+                            className="rounded-md  border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none  focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="Your City"
+                            onChange={(e) => {
+                              setAddress((prevAddress) => ({
+                                ...prevAddress,
+                                [e.target.name]: e.target.value,
+                              }));
+                            }}
                           />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
+                        </div>
+                        <label
+                          htmlFor="state"
+                          className="mt-4 mb-2 block text-sm font-medium"
+                        >
+                          State
+                        </label>
+                        <div className="relative">
+                          <select
+                            type="text"
+                            name="state"
+                            id="state"
+                            onChange={(e) => {
+                              setAddress((prevAddress) => ({
+                                ...prevAddress,
+                                [e.target.name]: e.target.value,
+                              }));
+                            }}
+                            className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                          >
+                            <option value="">State</option>
+                            <option value="kerala"> Kerala</option>
+                            <option value="Delhi">Delhi</option>
+                          </select>
+                        </div>
+                        <label
+                          htmlFor="pincode"
+                          className="mt-4 mb-2 block text-sm font-medium"
+                        >
+                          Zip code
+                        </label>
+                        <div>
+                          <input
+                            type="text"
+                            name="pincode"
+                            id="pincode"
+                            onChange={(e) => {
+                              setAddress((prevAddress) => ({
+                                ...prevAddress,
+                                [e.target.name]: e.target.value,
+                              }));
+                            }}
+                            className="rounded-md  border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none  focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="ZIPCODE"
                           />
-                        </svg>
-                      </span>
-                      <span className="tracking-wide">Education</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="my-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                          onClick={() => {
+                            handleAddAddress(address);
+                          }}
+                        >
+                          Add Address
+                        </button>
+                      </div>
                     </div>
-                    <ul className="list-inside space-y-2">
-                      <li>
-                        <div className="text-teal-600">
-                          Masters Degree in Oxford
+                    {/* saved address display */}
+                    <h3 className="mt-4 mb-2">Saved Addresses</h3>
+                    <div className="grid grid-cols-4 h-12 border-b border-teal-600 text-center items-center">
+                      <div className="">
+                        <span className="">Address</span>
+                      </div>
+                      <div className="">
+                        <span className="">City</span>
+                      </div>
+                      <div className="">
+                        <span className="">State</span>
+                      </div>
+                      <div className="">
+                        <span className="">Zip Code</span>
+                      </div>
+                    </div>
+
+                    {savedAddress.map((add, i) => (
+                      <div
+                        key={i}
+                        className="grid grid-cols-4 h-12 text-center items-center"
+                      >
+                        <div className="">
+                          <span className="">{add.address1}</span>
                         </div>
-                        <div className="text-gray-500 text-xs">
-                          March 2020 - Now
+                        <div className="">
+                          <span className="">{add.city}</span>
                         </div>
-                      </li>
-                      <li>
-                        <div className="text-teal-600">
-                          Bachelors Degreen in LPU
+                        <div className="">
+                          <span className="">{add.state}</span>
                         </div>
-                        <div className="text-gray-500 text-xs">
-                          March 2020 - Now
+                        <div className="">
+                          <span className="">{add.pincode}</span>
                         </div>
-                      </li>
-                    </ul>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

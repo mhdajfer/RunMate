@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { CreateToken } = require("../Utils/Jwt/createToken");
 const sendMail = require("../Utils/NodeMailer/sendMail");
+const { add } = require("./cartControllers");
 
 exports.getUsers = async (req, res) => {
   try {
@@ -43,6 +44,42 @@ exports.edit = async (req, res) => {
   }
 };
 
+exports.getAddress = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    let address = await UserModel.find({ _id: userId }, { addresses: 1 });
+    address = address[0].addresses;
+    return res.json({
+      success: true,
+      message: "successfully found address",
+      address: address,
+    });
+  } catch (error) {
+    console.log("error while getting address", error);
+    return res.json({ success: false, message: "error while getting address" });
+  }
+};
+
+exports.addAddress = async (req, res) => {
+  const address = req.body;
+  const userId = address.id;
+  delete address.id;
+  try {
+    UserModel.updateOne({ _id: userId }, { $push: { addresses: address } })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return res.json({ success: true, message: "Address Updated" });
+  } catch (error) {
+    console.log("error while adding address", error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 exports.activate = async (req, res) => {
   const token = req.params?.token;
 
@@ -63,8 +100,11 @@ exports.signUp = async (req, res) => {
   }
 
   const existUser = await UserModel.find({ email: user.email });
-  if (existUser)
+  if (existUser._id) {
+    console.log(existUser);
+
     return res.json({ success: false, message: "User already exists" });
+  }
 
   const token = jwt.sign(user, process.env.MY_SECRET_KEY, {
     expiresIn: "5m",
@@ -149,10 +189,10 @@ exports.getOneUser = async (req, res) => {
         expired: true,
         success: false,
         message: "token expired, login again",
-      })
-      else {
-        console.log(error)
-      }
+      });
+    else {
+      console.log(error);
+    }
   }
 };
 

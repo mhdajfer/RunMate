@@ -5,6 +5,9 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  lastname: {
+    type: String,
+  },
   age: {
     type: Number,
     required: true,
@@ -15,23 +18,22 @@ const UserSchema = mongoose.Schema({
   phone: {
     type: Number,
   },
-  addresses: [{
-    address1: {
-      type: String,
+  addresses: [
+    {
+      address1: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      state: {
+        type: String,
+      },
+      pincode: {
+        type: Number,
+      },
     },
-    address2: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    state: {
-      type: String,
-    },
-    pincode: {
-      type: Number,
-    },
-  }],
+  ],
   password: {
     type: String,
   },
@@ -39,26 +41,28 @@ const UserSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  cart: [{
-    productId: {
-      type: String,
-      required: true,
+  cart: [
+    {
+      productId: {
+        type: String,
+        required: true,
+      },
+      productName: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        defaultValue: 1,
+      },
+      price: {
+        type: Number,
+      },
+      image: {
+        type: String,
+      },
     },
-    productName: {
-      type: String,
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      defaultValue: 1,
-    },
-    price: {
-      type: Number,
-    },
-    image: {
-      type: String,
-    }
-  }]
+  ],
 });
 
 const UserModel = mongoose.model("user", UserSchema);

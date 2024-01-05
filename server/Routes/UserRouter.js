@@ -19,8 +19,16 @@ router.post("/user/signup", (req, res) => {
   userController.signUp(req, res);
 });
 
+router.post("/user/getAddress", (req, res) => {
+  userController.getAddress(req, res);
+});
+
 router.get("/users", (req, res) => {
   userController.getUsers(req, res);
+});
+
+router.post("/user/address/add", (req, res) => {
+  userController.addAddress(req, res);
 });
 
 router.get("/user/activate/:token", (req, res) => {
