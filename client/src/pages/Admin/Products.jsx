@@ -3,9 +3,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import serverUrl from "../../server";
+import DialogBox from "../../Components/DialogBox";
 
 export default function Products() {
   const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [prodForDelete, setProdForDelete] = useState("");
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -25,11 +28,21 @@ export default function Products() {
   }, [products]);
 
   function handleDelete(product) {
+    setIsDialogOpen(true);
+    setProdForDelete(product);
+  }
+  function CancelDelete() {
+    setProdForDelete(null);
+    setIsDialogOpen(false);
+  }
+
+  function confirmDelete(product) {
     axios
       .get(`${serverUrl}/product/delete/${product._id}`)
       .then((res) => {
         if (res.data.success) {
           toast.success(res.data.message);
+          setIsDialogOpen(false);
         }
       })
       .catch((err) => console.log(err));
@@ -96,6 +109,16 @@ export default function Products() {
             })}
           </tbody>
         </table>
+      </div>
+      <div className="fixed top-[20%] right-[25%]">
+        {/* Dialog box */}
+        {isDialogOpen && (
+          <DialogBox
+            data={prodForDelete}
+            onConfirmDelete={confirmDelete}
+            onCancel={CancelDelete}
+          />
+        )}
       </div>
     </>
   );

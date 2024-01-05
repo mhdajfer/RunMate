@@ -18,6 +18,10 @@ const orderSchema = mongoose.Schema({
     type: String,
     reuired: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
 
   state: {
     type: String,

@@ -7,6 +7,10 @@ router.post("/login", (req, res) => {
   adminController.login(req, res);
 });
 
+router.get("/orders", (req, res) => {
+  adminController.getOrders(req, res);
+});
+
 router.post("/signup", (req, res) => {
   adminController.signup(req, res);
 });

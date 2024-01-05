@@ -7,6 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import Category from "../pages/Admin/Category";
 import AddCategory from "../pages/Admin/AddCategory";
 import EditUser from "../pages/Admin/EditUser";
+import Orders from "../pages/Admin/Orders";
 
 function AdminRoutes() {
   return (
@@ -17,9 +18,10 @@ function AdminRoutes() {
           <Route path="/dashboard" element={<Products />} />
           <Route path="/products" element={<Products />} />
           <Route path="/users" element={<Users />} />
-          <Route path='/users/edit' element={<EditUser/>} />
+          <Route path="/users/edit" element={<EditUser />} />
           <Route path="/category" element={<Category />} />
           <Route path="/category/add" element={<AddCategory />} />
+          <Route path="/orders/" element={<Orders />} />
         </Route>
       </Route>
     </Routes>

@@ -18,6 +18,9 @@ export default function AdminLayout() {
       case "Category":
         navigate("/admin/category");
         break;
+      case "Orders":
+        navigate("/admin/orders");
+        break;
     }
   }
 

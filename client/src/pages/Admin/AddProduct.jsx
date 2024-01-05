@@ -33,6 +33,9 @@ export default function AddProduct() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    if (product.stock < 1 || product.price < 1)
+      return toast.error("Please give valid numbers");
+
     const formProd = new FormData();
     formProd.append("brand", product.brand);
     formProd.append("desc", product.desc);

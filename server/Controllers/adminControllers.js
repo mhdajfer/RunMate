@@ -1,5 +1,6 @@
 const adminModel = require("../models/admin");
 const userModel = require("../models/user");
+const ordersModel = require("../models/order");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { CreateToken } = require("../Utils/Jwt/createToken");
@@ -43,19 +44,25 @@ exports.login = async (req, res) => {
     if (await bcrypt.compare(password, user.password)) {
       //generate token
       const token = CreateToken(user._id.toString());
-      res
-        .status(200)
-        .cookie("token", token, {
-          expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-          httpOnly: true,
-        })
-        .json({
-          success: true,
-          message: "login successful",
-        });
+      res.status(200).json({
+        success: true,
+        message: "login successful",
+        data: token,
+      });
     } else return res.json({ success: false, message: "login failed" });
   } catch (error) {
     console.log("error with bcrypt compare");
+  }
+};
+
+exports.getOrders = async (req, res) => {
+  try {
+    const orders = await ordersModel.find({});
+
+    return res.json({ success: true, message: "got orders", data: orders });
+  } catch (error) {
+    console.log("error while getting orders", error);
+    return res.json({ success: false, message: error.message });
   }
 };
 

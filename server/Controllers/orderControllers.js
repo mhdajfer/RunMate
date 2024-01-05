@@ -1,4 +1,5 @@
 const orderModel = require("../models/order");
+const userModel = require("../models/user");
 const jwt = require("jsonwebtoken");
 
 exports.add = async (req, res) => {
@@ -32,6 +33,15 @@ exports.add = async (req, res) => {
     });
 
     orderDoc.save();
+
+    userModel
+      .updateOne({ _id: user.id }, { $set: { cart: [] } })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     return res
       .status(200)
       .json({ success: true, message: "Your Order is placed" });

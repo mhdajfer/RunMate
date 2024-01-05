@@ -302,7 +302,7 @@ function Checkout() {
             </label>
             <div>
               <input
-                type="text"
+                type="number"
                 name="zip"
                 id="zip"
                 onChange={(e) => {
@@ -322,7 +322,7 @@ function Checkout() {
             <div className="flex">
               <div className="relative w-7/12 flex-shrink-0">
                 <input
-                  type="text"
+                  type="number"
                   id="card-no"
                   name="card-no"
                   onChange={(e) => {

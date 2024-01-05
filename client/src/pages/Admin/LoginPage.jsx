@@ -31,6 +31,7 @@ export default function LoginPage() {
           console.log(res);
         } else {
           toast.success("login successful");
+          Cookie.set("token", res.data.token);
           navigate("/admin/dashboard");
           console.log(res);
         }

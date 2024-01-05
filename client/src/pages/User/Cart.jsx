@@ -6,6 +6,7 @@ import serverUrl from "../../server";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  // const [quantity, setQuantity] = useState();
   const navigate = useNavigate();
   useEffect(() => {
     console.log("useEffect is runing");
@@ -94,26 +95,64 @@ function Cart() {
                 </div>
               </div>
               <div className="flex justify-center w-1/5">
-                <svg
-                  className="fill-current text-gray-600 w-3"
-                  viewBox="0 0 448 512"
-                >
-                  <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-                </svg>
+                <form className="max-w-xs mx-auto">
+                  <div className="relative flex items-center">
+                    <button
+                      type="button"
+                      id="decrement-button"
+                      data-input-counter-decrement="counter-input"
+                      className="flex-shrink-0 bg-gray-100    hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100"
+                    >
+                      <svg
+                        className="w-2.5 h-2.5 text-gray-900 "
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 18 2"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M1 1h16"
+                        />
+                      </svg>
+                    </button>
 
-                <input
-                  className="mx-2 border text-center w-8"
-                  type="text"
-                  value={item.quantity}
-                  onChange={() => {}}
-                />
-
-                <svg
-                  className="fill-current text-gray-600 w-3"
-                  viewBox="0 0 448 512"
-                >
-                  <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-                </svg>
+                    <input
+                      type="text"
+                      id="counter-input"
+                      data-input-counter
+                      className="flex-shrink-0 text-gray-900  border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
+                      placeholder=""
+                      value={item.quantity}
+                      required
+                    />
+                    <button
+                      type="button"
+                      id="increment-button"
+                      data-input-counter-increment="counter-input"
+                      className="flex-shrink-0 bg-gray-100    hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100"
+                    >
+                      <svg
+                        className="w-2.5 h-2.5 text-gray-900 "
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 18 18"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 1v16M1 9h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </form>
               </div>
               <span className="text-center w-1/5 font-semibold text-sm">
                 ${item.price}
