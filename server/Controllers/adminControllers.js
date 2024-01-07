@@ -4,6 +4,7 @@ const ordersModel = require("../models/order");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { CreateToken } = require("../Utils/Jwt/createToken");
+const fs = require("fs");
 
 exports.signup = async (req, res) => {
   const user = req.body;
@@ -54,6 +55,8 @@ exports.login = async (req, res) => {
     console.log("error with bcrypt compare");
   }
 };
+
+
 
 exports.getOrders = async (req, res) => {
   try {

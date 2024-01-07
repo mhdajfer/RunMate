@@ -49,7 +49,9 @@ export default function Products() {
   }
 
   function handleEdit(product) {
-    navigate("/product/edit", { state: { product } });
+    navigate("/product/edit", {
+      state: { productId: product._id, images: product.images },
+    });
   }
 
   function AddProduct() {

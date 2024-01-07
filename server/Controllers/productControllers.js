@@ -1,5 +1,7 @@
 const prodModel = require("../models/product");
 const upload = require("../multer");
+const path = require("path");
+const fs = require("fs");
 
 exports.allProducts = async (req, res) => {
   try {
@@ -7,6 +9,18 @@ exports.allProducts = async (req, res) => {
     res.status(200).json({ success: true, products: products });
   } catch (error) {
     console.log("error in allProducts controller:", error);
+  }
+};
+
+exports.getOneProduct = async (req, res) => {
+  const { productId } = req.body;
+  try {
+    const products = await prodModel.find({ _id: productId });
+    console.log(products[0]);
+    return res.json({ success: true, data: products[0] });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: "Products not found" });
   }
 };
 
@@ -105,6 +119,30 @@ exports.delete = async (req, res) => {
     res.status(200).json({ success: true, message: "Product deleted" });
   } catch (error) {
     console.log("error while deleting product", error);
+  }
+};
+
+exports.deleteImage = async (req, res) => {
+  const { image, productId } = req.body;
+  const filePath = path.join("uploads", image);
+
+  try {
+    if (fs.existsSync(filePath)) {
+      // Delete the file
+      fs.unlinkSync(filePath);
+    } else {
+      res.status(404).json({ success: false, message: "File not found" });
+    }
+
+    await prodModel.updateOne({ _id: productId }, { $pull: { images: image } });
+    res
+      .status(200)
+      .json({ success: true, message: "image deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(404)
+      .json({ success: false, message: "Backend error in deleting image" });
   }
 };
 

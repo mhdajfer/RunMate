@@ -22,10 +22,15 @@ function Cart() {
       toast.error("Error while loading Cart");
       console.log(error);
     }
-  }, [cartItems]);
+  }, []);
 
   function handleRemove(item) {
     try {
+      // updating state locally to relect in i
+      const updatedCart = cartItems.filter(
+        (cartItem) => cartItem._id !== item._id
+      );
+      setCartItems(updatedCart);
       axios
         .post(
           `${serverUrl}/cart/remove`,
@@ -35,12 +40,34 @@ function Cart() {
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);
+          } else if (!res.data.success) {
+            // If the server request fails, revert the local update
+            setCartItems(cartItems);
           }
         });
     } catch (error) {
       toast.error("error while removing");
       console.log(error);
     }
+  }
+
+  function handleQuantityChange(e, item) {
+    const newQuantity = parseInt(e.target.value);
+
+    const updatedCart = cartItems.map((cartItem) => {
+      if (cartItem._id === item._id) {
+        return { ...cartItem, quantity: newQuantity };
+      }
+      return cartItem;
+    });
+
+    setCartItems(updatedCart);
+  }
+
+  function handleSubmit(cartItems) {
+    cartItems.length
+      ? navigate("/user/checkout", { state: { cartItems } })
+      : toast.error("Add items to cart");
   }
 
   return (
@@ -94,7 +121,7 @@ function Cart() {
                   </a>
                 </div>
               </div>
-              <div className="flex justify-center w-1/5">
+              {/* <div className="flex justify-center w-1/5">
                 <form className="max-w-xs mx-auto">
                   <div className="relative flex items-center">
                     <button
@@ -153,6 +180,20 @@ function Cart() {
                     </button>
                   </div>
                 </form>
+              </div> */}
+              <div>
+                <select
+                  name="qty"
+                  id="qty"
+                  defaultValue={item.quantity}
+                  onChange={(e) => {
+                    handleQuantityChange(e, item);
+                  }}
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
               </div>
               <span className="text-center w-1/5 font-semibold text-sm">
                 ${item.price}
@@ -183,9 +224,7 @@ function Cart() {
             type="button"
             className="focus:outline-none text-white bg-indigo-600 hover:bg-indigo-500 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 "
             onClick={() => {
-              cartItems.length
-                ? navigate("/user/checkout", { state: { cartItems } })
-                : toast.error("Add items to cart");
+              handleSubmit(cartItems);
             }}
           >
             Checkout

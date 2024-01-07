@@ -13,12 +13,20 @@ router.post("/get", (req, res) => {
   productController.get(req, res);
 });
 
-router.post('/edit', (req, res) => {
-  productController.edit(req, res);
-})
+router.post("/getOneProduct", (req, res) => {
+  productController.getOneProduct(req, res);
+});
 
-router.get('/delete/:id', (req, res) => {
+router.post("/image/delete", (req, res) => {
+  productController.deleteImage(req, res);
+});
+
+router.post("/edit", (req, res) => {
+  productController.edit(req, res);
+});
+
+router.get("/delete/:id", (req, res) => {
   productController.delete(req, res);
-})
+});
 
 module.exports = router;

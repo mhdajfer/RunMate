@@ -6,22 +6,27 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 export default function EditProduct() {
   const location = useLocation();
-  const receivedProd = location.state?.product;
+  const productId = location.state?.productId;
+  let productImages = location.state?.images;
   const navigate = useNavigate();
   const [categoryList, setCategoryList] = useState([]);
-  const [product, setProduct] = useState({
-    brand: receivedProd.brand,
-    desc: receivedProd.desc,
-    stock: receivedProd.stock,
-    category: receivedProd.category,
-    price: receivedProd.price,
-    image: receivedProd.image,
-    name: receivedProd.name,
-    subDesc: receivedProd.subDesc,
-  });
+  const [product, setProduct] = useState({});
 
   useEffect(() => {
     try {
+      axios
+        .post(
+          `${serverURL}/product/getOneProduct`,
+          { productId },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            setProduct(res.data.data);
+          }
+        });
       axios.get(`${serverURL}/admin/category`).then((res) => {
         if (res.data.success) {
           setCategoryList(res.data.data);
@@ -31,7 +36,39 @@ export default function EditProduct() {
       toast.error("white while loading categories");
       console.log(error);
     }
-  }, []);
+  }, [productId]);
+
+  function handleImageDelete(image) {
+    console.log("product images - ", product.images);
+
+    let index = product.images.indexOf(image);
+    console.log("images - ", productImages);
+    console.log("delete - ", image);
+
+    try {
+      axios
+        .post(
+          `${serverURL}/product/image/delete`,
+          { image, productId },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            product.images.splice(index, 1);
+            productImages = product.images;
+            toast.success(res.data.message);
+            console.log("after deleting = ", product.images);
+            console.log("after deleting = ", productImages);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -42,11 +79,11 @@ export default function EditProduct() {
     formProd.append("stock", product.stock);
     formProd.append("category", product.category);
     formProd.append("price", product.price);
-    formProd.append("id", receivedProd._id);
+    formProd.append("id", productId);
     formProd.append("name", product.name);
     formProd.append("subDesc", product.subDesc);
 
-    if (receivedProd.image === product.image) {
+    if (productImages === product.images) {
       console.log("no image", product.image);
       formProd.append("image", "");
     } else {
@@ -170,6 +207,31 @@ export default function EditProduct() {
               </div>
               <div className="flex flex-col my-4">
                 <label htmlFor="image">Image</label>
+                <div className="flex space-x-2 mb-2 ">
+                  {productImages.map((image, i) => (
+                    <div key={i} className="w-fit relative">
+                      <img
+                        className="w-10 h-10 object-fit"
+                        src={serverURL + "/" + image}
+                        alt=""
+                      />
+                      <a
+                        className="bg-gray-300 absolute top-0 right-0"
+                        onClick={() => {
+                          handleImageDelete(image);
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-3 h-3 hover:fill-red-600"
+                          viewBox="0 0 329.26933 329"
+                        >
+                          <path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0" />
+                        </svg>
+                      </a>
+                    </div>
+                  ))}
+                </div>
                 <input
                   type="file"
                   name="price"

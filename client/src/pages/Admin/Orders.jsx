@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import serverUrl from "../../server";
-import toast from "react-hot-toast";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
