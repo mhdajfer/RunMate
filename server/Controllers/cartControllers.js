@@ -13,6 +13,23 @@ exports.add = async (req, res) => {
     images,
   } = req.body;
   const image = images[0];
+
+  const itemExists = await UserModel.findOne({
+    cart: { $elemMatch: { productId: productId } },
+  });
+  if (itemExists) {
+    console.log("another one");
+    try {
+      await UserModel.updateOne(
+        { _id: user.id, "cart.productId": productId },
+        { $inc: { "cart.$.quantity": 1 } }
+      );
+      return res.status(200).json({ success: true, message: "Added to cart" });
+    } catch (error) {
+      console.log("error while incrementing the quantity", error);
+      return res.json({ success: false, message: "Error while incrementing" });
+    }
+  }
   const cartItems = {
     productId,
     productName,

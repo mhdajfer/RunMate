@@ -47,10 +47,6 @@ const UserSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
-      productName: {
-        type: String,
-        required: true,
-      },
       quantity: {
         type: Number,
         defaultValue: 1,

@@ -181,8 +181,9 @@ function Cart() {
                   </div>
                 </form>
               </div> */}
-              <div>
+              <div className="w-1/5 text-center">
                 <select
+                  className="border rounded-md"
                   name="qty"
                   id="qty"
                   defaultValue={item.quantity}
@@ -196,10 +197,10 @@ function Cart() {
                 </select>
               </div>
               <span className="text-center w-1/5 font-semibold text-sm">
-                ${item.price}
+                ₹ {item.price}
               </span>
               <span className="text-center w-1/5 font-semibold text-sm">
-                ${item.price * item.quantity}
+                ₹ {item.price * item.quantity}
               </span>
             </div>
           ))
