@@ -147,8 +147,20 @@ exports.deleteImage = async (req, res) => {
 };
 
 exports.get = async (req, res) => {
+  const { category } = req.body;
+  let data;
   try {
-    const data = await prodModel.find({});
+    if (category === "Men") {
+      data = await prodModel.find({ category: category });
+    } else if (category === "all") {
+      data = await prodModel.find({});
+    } else if (category === "Best Selling") {
+      data = await prodModel.find({ category: category });
+    } else if (category === "Women") {
+      data = await prodModel.find({ category: category });
+    } else if (category === "Sports") {
+      data = await prodModel.find({ category: category });
+    }
     res.json({
       success: true,
       message: "successfully retrieved product details",

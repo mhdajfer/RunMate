@@ -4,11 +4,10 @@ import axios from "axios";
 import serverUrl from "../../server";
 
 // eslint-disable-next-line react/prop-types
-export default function MenItems({ category }) {
+export default function Women({ category }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    console.log("running");
     try {
       axios
         .post(
@@ -25,6 +24,7 @@ export default function MenItems({ category }) {
   }, [category]);
   return (
     <div className="flex w-screen flex-wrap">
+      <h1>women</h1>
       {products.map((product, i) => {
         return (
           <div key={i}>

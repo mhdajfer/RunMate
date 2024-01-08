@@ -1,9 +1,11 @@
-import BestSelllingItems from "./BestSellingItems";
+import AllProducts from "./AllProducts";
 
-export default function HomePage() {
+// eslint-disable-next-line react/prop-types
+export default function HomePage({ category }) {
+  
   return (
     <div className="bg-[#BBE1FA]">
-      <BestSelllingItems />
+      <AllProducts category={category} />
     </div>
   );
 }

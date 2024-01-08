@@ -4,11 +4,10 @@ import axios from "axios";
 import serverUrl from "../../server";
 
 // eslint-disable-next-line react/prop-types
-export default function MenItems({ category }) {
+export default function AllProducts({ category }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    console.log("running");
     try {
       axios
         .post(

@@ -36,10 +36,10 @@ export default function Subnavbar() {
           <Link to={"/user/men"}>Men</Link>
         </button>
         <button className="bg-white border px-10 py-1 rounded-full mx-3">
-          WOMEN
+          <Link to={"/user/women"}>Women</Link>
         </button>
         <button className="bg-white border px-10 py-1 rounded-full mx-3">
-          Sports
+          <Link to={"/user/sports"}>Sports</Link>
         </button>
       </div>
       <div>
