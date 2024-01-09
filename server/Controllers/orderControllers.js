@@ -16,6 +16,7 @@ exports.add = async (req, res) => {
     phone,
     token,
   } = req.body;
+  console.log("products", productNames);
   try {
     const user = jwt.verify(token, process.env.MY_SECRET_KEY);
     const orderDoc = new orderModel({

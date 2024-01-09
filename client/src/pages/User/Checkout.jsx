@@ -1,9 +1,8 @@
 import serverUrl from "../../server";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import Cookie from "js-cookie";
 
 function Checkout() {
   const location = useLocation();
@@ -11,10 +10,12 @@ function Checkout() {
   const [name, setName] = useState("");
   const [address1, setAddress1] = useState("");
   const [state, setState] = useState("");
+  const [city, setCity] = useState("");
   const [zip, setZip] = useState();
   const [phone, setPhone] = useState();
+  const [savedAddress, setSavedAddress] = useState([]);
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
   const cartItems = location.state?.cartItems;
-  const token = Cookie.get("token");
   const productIds = cartItems.map((item) => item.productId);
   const productNames = cartItems.map((item) => item.productName);
   const subTotal = cartItems.reduce(
@@ -24,37 +25,48 @@ function Checkout() {
   const shipping = (subTotal * 3) / 100;
   const total = shipping + subTotal;
 
-  function handleCheckout() {
-    if (!name || !address1 || !state || !zip || !phone)
-      return toast.error("Please fill all fields");
+  useEffect(() => {
     try {
       axios
-        .post(
-          `${serverUrl}/order/add`,
-          {
-            productIds,
-            productNames,
-            subTotal,
-            shipping,
-            total,
-            name,
-            address1,
-            state,
-            zip,
-            phone,
-            token,
-          },
-          { withCredentials: true }
-        )
+        .post(`${serverUrl}/getAllAddress`, {}, { withCredentials: true })
         .then((res) => {
           if (res.data.success) {
-            navigate("/user/payment", { state: { total } });
+            setSavedAddress(res.data.data);
+          } else {
+            toast.error(res.data.message);
           }
         });
     } catch (error) {
-      toast.error("Error while checkout");
-      console.log(error);
+      console.log("error while loading saved address", error);
     }
+  }, []);
+
+  function handleSavedAddress(e, address) {
+    setAddress1(address.address1);
+    setCity(address.city);
+    setState(address.state);
+    setZip(address.pincode);
+    setDropdownVisible(false);
+  }
+
+  function handleCheckout() {
+    if (!name || !address1 || !state || !zip || !phone)
+      return toast.error("Please fill all fields");
+
+    navigate("/user/payment", {
+      state: {
+        productIds,
+        productNames,
+        subTotal,
+        shipping,
+        total,
+        name,
+        address1,
+        state,
+        zip,
+        phone,
+      },
+    });
   }
   return (
     <>
@@ -181,8 +193,8 @@ function Checkout() {
                 htmlFor="radio_1"
               >
                 <img
-                  className="w-14 object-contain"
-                  src="/images/naorrAeygcJzX0SyNI4Y0.png"
+                  className="z-6 w-14 h-14 object-contain"
+                  src="../../assets/Logos/fedexLogo.png"
                   alt=""
                 />
                 <div className="ml-5">
@@ -232,7 +244,7 @@ function Checkout() {
             >
               Full name
             </label>
-            <div className="relative">
+            <div className="relative mb-4">
               <input
                 type="text"
                 id="name"
@@ -245,6 +257,69 @@ function Checkout() {
                 value={name}
               />
               <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3"></div>
+            </div>
+            <label className="">Saved Address</label>
+            <div>
+              {/* Saved Addresses */}
+
+              <button
+                id="dropdownCheckboxButton"
+                onClick={() => {
+                  setDropdownVisible(!isDropdownVisible);
+                }}
+                className="text-white justify-center mt-3 w-[30rem] bg-blue-600  hover:bg-blue-800  focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
+                type="button"
+              >
+                Select from Saved Address{" "}
+                <svg
+                  className="w-2.5 h-2.5 ms-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+
+              {isDropdownVisible && (
+                <div
+                  id="dropdownDefaultCheckbox"
+                  className="z-10  bg-white divide-y divide-gray-100 rounded-lg shadow  dark:divide-gray-600"
+                >
+                  <ul
+                    className=" space-y-3 text-sm text-gray-700 dark:text-gray-200 cursor-pointer"
+                    aria-labelledby="dropdownCheckboxButton"
+                  >
+                    {savedAddress.map((address, i) => (
+                      <li
+                        key={i}
+                        className="hover:bg-gray-50 p-3"
+                        onClick={(e) => {
+                          handleSavedAddress(e, address);
+                        }}
+                      >
+                        <span className="ms-2 text-sm font-medium text-black ">
+                          {i + 1}
+                          &nbsp;address:{address.address1}, state:{" "}
+                          {address.state}, city: {address.city}, pincode:{" "}
+                          {address.pincode}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="relative my-6 flex items-center">
+              <span className="text-gray-400 me-2">or</span>
+              <hr className="w-full" />
             </div>
 
             <label
@@ -284,6 +359,7 @@ function Checkout() {
               <select
                 type="text"
                 name="state"
+                value={state}
                 onChange={(e) => {
                   setState(e.target.value);
                 }}
@@ -294,24 +370,49 @@ function Checkout() {
                 <option value="Delhi">Delhi</option>
               </select>
             </div>
-            <label
-              htmlFor="zip"
-              className="mt-4 mb-2 block text-sm font-medium"
-            >
-              Zip code
-            </label>
-            <div>
-              <input
-                type="number"
-                name="zip"
-                id="zip"
-                onChange={(e) => {
-                  setZip(e.target.value);
-                }}
-                className="rounded-md  border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none  focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                placeholder="ZIPCODE"
-                value={zip}
-              />
+            <div className="flex space-x-12">
+              <div>
+                <label
+                  htmlFor="city"
+                  className="mt-4 mb-2 block text-sm font-medium"
+                >
+                  City
+                </label>
+                <div>
+                  <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    onChange={(e) => {
+                      setCity(e.target.value);
+                    }}
+                    className="rounded-md  border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none  focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="City"
+                    value={city}
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="zip"
+                  className="mt-4 mb-2 block text-sm font-medium"
+                >
+                  Zip code
+                </label>
+                <div>
+                  <input
+                    type="number"
+                    name="zip"
+                    id="zip"
+                    onChange={(e) => {
+                      setZip(e.target.value);
+                    }}
+                    className="rounded-md  border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none  focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="ZIPCODE"
+                    value={zip}
+                  />
+                </div>
+              </div>
             </div>
             <label
               htmlFor="card-no"
@@ -344,62 +445,6 @@ function Checkout() {
                     <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1z" />
                     <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1z" />
                   </svg>
-                </div>
-              </div>
-            </div>
-            <label htmlFor="">Saved Address</label>
-            <div className="relative my-4">
-              <div className="hs-dropdown relative inline-flex">
-                <button
-                  id="hs-dropdown-default"
-                  type="button"
-                  className="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none  dark:focus:ring-1 dark:focus:ring-gray-600"
-                >
-                  Addresses
-                  <svg
-                    className="hs-dropdown-open:rotate-180 w-4 h-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-
-                <div
-                  className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-[15rem] bg-white shadow-md rounded-lg p-2 mt-2 dark:bg-gray-800 dark:border dark:border-gray-700 dark:divide-gray-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                  aria-labelledby="hs-dropdown-default"
-                >
-                  <a
-                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
-                    href="#"
-                  >
-                    Newsletter
-                  </a>
-                  <a
-                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
-                    href="#"
-                  >
-                    Purchases
-                  </a>
-                  <a
-                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
-                    href="#"
-                  >
-                    Downloads
-                  </a>
-                  <a
-                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
-                    href="#"
-                  >
-                    Team Account
-                  </a>
                 </div>
               </div>
             </div>

@@ -1,18 +1,61 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import Cookie from "js-cookie";
+import serverUrl from "../../../serverURL";
+import axios from "axios";
 
 function Payment() {
   const [card, setCard] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const total = location.state?.total;
+  const shipping = location.state?.shipping;
+  const productIds = location.state?.productIds;
+  const productNames = location.state?.productNames;
+  const address1 = location.state?.address1;
+  const name = location.state?.name;
+  const state = location.state?.state;
+  const zip = location.state?.zip;
+  const phone = location.state?.phone;
+  const subTotal = location.state?.subTotal;
+  const token = Cookie.get("token");
+  console.log(productNames);
 
   function handleCOD() {
-    toast.success("You Order Placed.");
-    setTimeout(() => {
-      navigate("/user/home");
-    }, 700);
+    try {
+      axios
+        .post(
+          `${serverUrl}/order/add`,
+          {
+            productIds,
+            productNames,
+            subTotal,
+            shipping,
+            total,
+            name,
+            address1,
+            state,
+            zip,
+            phone,
+            token,
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            toast.success("You Order Placed.");
+            setTimeout(() => {
+              navigate("/user/home");
+            }, 700);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+    } catch (error) {
+      toast.error("Error while checkout");
+      console.log(error);
+    }
   }
   return (
     <>

@@ -47,6 +47,8 @@ exports.add = async (req, res) => {
         console.log(err);
       });
 
+    console.log(productName);
+
     return res.status(200).json({ success: true, message: "Added to cart" });
   } catch (error) {
     console.log(error);

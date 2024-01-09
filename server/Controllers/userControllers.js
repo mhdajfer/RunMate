@@ -62,7 +62,6 @@ exports.getAddress = async (req, res) => {
 
 exports.addAddress = async (req, res) => {
   const address = req.body;
-  console.log(address);
   const userId = address.id;
   delete address.id;
   try {
@@ -236,6 +235,26 @@ exports.getOneUser = async (req, res) => {
     else {
       console.log(error);
     }
+  }
+};
+
+exports.getAllAddress = async (req, res) => {
+  const token = req.cookies.token;
+  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+
+  try {
+    const data = await UserModel.find(
+      { _id: user.id },
+      { addresses: 1, _id: 0 }
+    );
+    const addresses = data[0].addresses;
+    return res.json({ success: true, data: addresses });
+  } catch (error) {
+    console.log("error while getting all addresses", error);
+    return res.json({
+      success: false,
+      message: "error while getting all addresses",
+    });
   }
 };
 

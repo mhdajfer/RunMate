@@ -47,6 +47,9 @@ const UserSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
+      productName: {
+        type: String,
+      },
       quantity: {
         type: Number,
         defaultValue: 1,
