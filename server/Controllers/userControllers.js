@@ -137,9 +137,7 @@ exports.activate = async (req, res) => {
 exports.signUp = async (req, res) => {
   const user = req.body;
 
-  if (!user.name || !user.age || !user.phone || !user.email || !user.password) {
-    return res.json({ success: false, message: "Fill all fields" });
-  }
+
 
   const existUser = await UserModel.find({ email: user.email });
   if (existUser._id) {

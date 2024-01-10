@@ -108,23 +108,31 @@ function Orders() {
             <p className="text-lg md:text-xl mb-8 mx-auto font-semibold leading-6 xl:leading-5 text-gray-800">
               Order Book
             </p>
-            <div className="grid grid-cols-5 w-full border-b border-gray-100 pb-4">
-              <div className="flex col-span-2 ">
-                <span className="mx-auto">Order</span>
+            {!orders.length ? (
+              <h1 className="text-center mx-auto ">No Orders</h1>
+            ) : (
+              <div>
+                <div className="grid grid-cols-5 w-full border-b border-gray-100 pb-4">
+                  <div className="flex col-span-2 ">
+                    <span className="mx-auto">Order</span>
+                  </div>
+                  <div className="flex justify-center ">
+                    <span className="mx-auto">Status</span>
+                  </div>
+                  <div className="flex justify-center ">
+                    <span className="mx-auto">Order</span>
+                  </div>
+                  <div className="flex justify-center ">
+                    <span className="mx-auto">Order</span>
+                  </div>
+                </div>
+                <div>
+                  {orders.map((order, i) => (
+                    <OrderList key={i} order={order} />
+                  ))}
+                </div>
               </div>
-              <div className="flex justify-center ">
-                <span className="mx-auto">Status</span>
-              </div>
-              <div className="flex justify-center ">
-                <span className="mx-auto">Order</span>
-              </div>
-              <div className="flex justify-center ">
-                <span className="mx-auto">Order</span>
-              </div>
-            </div>
-            {orders.map((order, i) => (
-              <OrderList key={i} order={order} />
-            ))}
+            )}
           </div>
         </div>
       </div>

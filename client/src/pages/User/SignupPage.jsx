@@ -2,16 +2,34 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import ProgressBar from "../../Components/ProgressBar";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
-  const [phone, setPhone] = useState(0);
+  const [age, setAge] = useState();
+  const [phone, setPhone] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState(0);
+
+  function handleStrengthCheck(password) {
+    setPasswordStrength(0);
+    password.match(/\d+/g) ? setPasswordStrength((prev) => prev + 25) : null;
+    password.match(/[A-Z]+/g) ? setPasswordStrength((prev) => prev + 25) : null;
+    password.match(/[a-z]+/g) ? setPasswordStrength((prev) => prev + 25) : null;
+    password.length > 7 ? setPasswordStrength((prev) => prev + 25) : null;
+  }
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (!name || !password || !confirmPassword || !age || !phone || !email)
+      return toast.error("fill all fields");
+
+    if (password != confirmPassword) return toast.error("password mismatch");
+
+    if (!(passwordStrength >= 75)) return toast.error("passwod strength low!!");
 
     const user = {
       name: name,
@@ -92,6 +110,7 @@ export default function SignupPage() {
                 <input
                   type="number"
                   name="phone"
+                  defaultValue={""}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
@@ -113,7 +132,23 @@ export default function SignupPage() {
                   type="password"
                   name="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    handleStrengthCheck(e.target.value);
+                  }}
+                  className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
+                />
+                <ProgressBar progress={passwordStrength} />
+              </div>
+              <div className="flex flex-col my-4">
+                <label htmlFor="password2">Confirm Password</label>
+                <input
+                  type="password"
+                  name="password2"
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                  }}
                   className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
                 />
               </div>

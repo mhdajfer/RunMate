@@ -56,8 +56,6 @@ exports.login = async (req, res) => {
   }
 };
 
-
-
 exports.getOrders = async (req, res) => {
   try {
     const orders = await ordersModel.find({});

@@ -4,11 +4,14 @@ import axios from "axios";
 import serverURL from "../../../serverURL";
 import toast from "react-hot-toast";
 import ProfileSideBar from "../../Components/ProfileSideBar";
+import DialogBox from "../../Components/DialogBox";
 
 function UserProfile() {
   const token = Cookie.get("token");
   const [user, setUser] = useState({});
   const userId = user._id;
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dataToDialogBox, setDataToDialogBox] = useState("");
   const [address, setAddress] = useState({
     id: userId,
     address1: "",
@@ -65,6 +68,10 @@ function UserProfile() {
     }
   }
 
+  function CancelDelete() {
+    setIsDialogOpen(false);
+  }
+
   function handleAddAddress(address) {
     if (
       !address.address1 ||
@@ -82,6 +89,7 @@ function UserProfile() {
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);
+            setAddress(null);
           } else {
             toast.error(res.data.message);
             setTimeout(() => {
@@ -355,7 +363,7 @@ function UserProfile() {
                         </label>
                         <div>
                           <input
-                            type="text"
+                            type="Number"
                             name="pincode"
                             id="pincode"
                             onChange={(e) => {
@@ -364,7 +372,7 @@ function UserProfile() {
                                 [e.target.name]: e.target.value,
                               }));
                             }}
-                            className="rounded-md  border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none  focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                            className="rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none  focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                             placeholder="ZIPCODE"
                           />
                         </div>
@@ -381,63 +389,85 @@ function UserProfile() {
                     </div>
                     {/* saved address display */}
                     <h3 className="mt-4 mb-2">Saved Addresses</h3>
-                    <div className="grid grid-cols-4 h-12 border-b border-teal-600 text-center items-center">
-                      <div className="">
-                        <span className="">Address</span>
-                      </div>
-                      <div className="">
-                        <span className="">City</span>
-                      </div>
-                      <div className="">
-                        <span className="">State</span>
-                      </div>
-                      <div className="">
-                        <span className="">Zip Code</span>
-                      </div>
-                    </div>
-
-                    {savedAddress.map((add, i) => (
-                      <div
-                        key={i}
-                        className="grid grid-cols-4 h-12 text-center items-center"
-                      >
-                        <div className="relative">
-                          <span className="">
-                            <span className="absolute left-0">{i + 1}</span>{" "}
-                            {add.address1}
-                          </span>
+                    {!savedAddress.length ? (
+                      <h1 className="text-center mx-auto">
+                        Not saved any addresses yet!!!
+                      </h1>
+                    ) : (
+                      <div>
+                        <div className="grid grid-cols-4 h-12 border-b border-teal-600 text-center items-center">
+                          <div className="">
+                            <span className="">Address</span>
+                          </div>
+                          <div className="">
+                            <span className="">City</span>
+                          </div>
+                          <div className="">
+                            <span className="">State</span>
+                          </div>
+                          <div className="">
+                            <span className="">Zip Code</span>
+                          </div>
                         </div>
-                        <div className="">
-                          <span className="">{add.city}</span>
-                        </div>
-                        <div className="">
-                          <span className="">{add.state}</span>
-                        </div>
-                        <div className="relative">
-                          <span className="">{add.pincode}</span>
-                          <span
-                            className="absolute right-0 cursor-pointer "
-                            onClick={() => {
-                              handleDeleteAddress(add);
-                            }}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-4 h-4 hover:fill-red-600"
-                              viewBox="0 0 329.26933 329"
+                        <div>
+                          {savedAddress.map((add, i) => (
+                            <div
+                              key={i}
+                              className="grid grid-cols-4 h-12 text-center items-center"
                             >
-                              <path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0" />
-                            </svg>
-                          </span>
+                              <div className="relative">
+                                <span className="">
+                                  <span className="absolute left-0">
+                                    {i + 1}
+                                  </span>{" "}
+                                  {add.address1}
+                                </span>
+                              </div>
+                              <div className="">
+                                <span className="">{add.city}</span>
+                              </div>
+                              <div className="">
+                                <span className="">{add.state}</span>
+                              </div>
+                              <div className="relative">
+                                <span className="">{add.pincode}</span>
+                                <span
+                                  className="absolute right-0 cursor-pointer "
+                                  onClick={() => {
+                                    setDataToDialogBox(add);
+                                    setIsDialogOpen(true);
+                                  }}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-4 h-4 hover:fill-red-600"
+                                    viewBox="0 0 329.26933 329"
+                                  >
+                                    <path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0" />
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div className="fixed top-[20%] right-[25%]">
+        {/* Dialog box */}
+        {isDialogOpen && (
+          <DialogBox
+            data={dataToDialogBox}
+            onConfirmDelete={handleDeleteAddress}
+            onCancel={CancelDelete}
+          />
+        )}
       </div>
     </>
   );
