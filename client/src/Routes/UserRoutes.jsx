@@ -22,7 +22,7 @@ export default function UserRoutes() {
       <Route path="/signup" element={<SignupPage />} />
 
       <Route element={<UserLayout />}>
-        <Route element={<PrivateRoutes />}>
+        <Route element={<PrivateRoutes role={"user"} />}>
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<Payment />} />

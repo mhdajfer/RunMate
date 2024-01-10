@@ -45,6 +45,7 @@ exports.login = async (req, res) => {
     if (await bcrypt.compare(password, user.password)) {
       //generate token
       const token = CreateToken(user._id.toString());
+      console.log("token", token);
       res.status(200).json({
         success: true,
         message: "login successful",
@@ -120,4 +121,25 @@ exports.logout = async (req, res) => {
   return res
     .cookie("token", "", { expires: new Date(0) })
     .json({ success: true, message: "Logged out" });
+};
+
+exports.isUserBlocked = async (req, res) => {
+  const token = req.cookies.token;
+
+  try {
+    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const isBlocked = await adminModel.find(
+      { _id: user.id },
+      { isBlocked: 1, _id: 0 }
+    );
+    if (isBlocked[0].isBlocked)
+      return res.json({ success: false, message: "User is blocked" });
+    else return res.json({ success: true });
+  } catch (error) {
+    console.log("error while checking the user is blocked", error);
+    return res.json({
+      success: false,
+      message: "Something went wrong in server",
+    });
+  }
 };

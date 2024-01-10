@@ -75,4 +75,8 @@ router.post("/getAllAddress", (req, res) => {
   userController.getAllAddress(req, res);
 });
 
+router.post("/isUserBlocked", (req, res) => {
+  userController.isUserBlocked(req, res);
+});
+
 module.exports = router;

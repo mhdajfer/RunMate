@@ -13,7 +13,7 @@ function AdminRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route element={<PrivateRoutes />}>
+      <Route element={<PrivateRoutes role={"admin"} />}>
         <Route element={<AdminLayout />}>
           <Route path="/dashboard" element={<Products />} />
           <Route path="/products" element={<Products />} />

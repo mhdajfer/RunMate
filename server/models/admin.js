@@ -15,6 +15,10 @@ const adminSchema = mongoose.Schema({
   phone: {
     type: Number,
   },
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
   addresses: {
     address1: {
       type: String,

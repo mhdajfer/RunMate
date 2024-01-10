@@ -11,8 +11,6 @@ router.get("/orders", (req, res) => {
   adminController.getOrders(req, res);
 });
 
-
-
 router.post("/signup", (req, res) => {
   adminController.signup(req, res);
 });
@@ -38,6 +36,10 @@ router.post("/category/add", (req, res) => {
 
 router.post("/category/delete", (req, res) => {
   categoryController.delete(req, res);
+});
+
+router.post("/isUserBlocked", (req, res) => {
+  adminController.isUserBlocked(req, res);
 });
 
 module.exports = router;

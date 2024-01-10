@@ -29,11 +29,10 @@ export default function LoginPage() {
         if (!res.data.success) {
           toast.error(res.data.message);
           console.log(res);
-        } else {
+        } else if (res.data.success) {
           toast.success("login successful");
-          Cookie.set("token", res.data.token);
+          Cookie.set("token", res.data.data);
           navigate("/admin/dashboard");
-          console.log(res);
         }
       })
       .catch((err) => {
