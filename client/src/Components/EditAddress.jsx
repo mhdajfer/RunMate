@@ -26,6 +26,7 @@ function EditAddress({ address, cancelFn, updateAddress, setAddress }) {
               type="text"
               id="address1"
               name="address1"
+              // eslint-disable-next-line react/prop-types
               defaultValue={address.address1}
               onChange={(e) => {
                 handleOnchange(e);
@@ -42,6 +43,7 @@ function EditAddress({ address, cancelFn, updateAddress, setAddress }) {
               type="text"
               id="city"
               name="city"
+              // eslint-disable-next-line react/prop-types
               defaultValue={address.city}
               onChange={(e) => {
                 handleOnchange(e);
@@ -60,6 +62,7 @@ function EditAddress({ address, cancelFn, updateAddress, setAddress }) {
               type="text"
               name="state"
               id="state"
+              // eslint-disable-next-line react/prop-types
               defaultValue={address.state}
               onChange={(e) => {
                 handleOnchange(e);
@@ -82,6 +85,7 @@ function EditAddress({ address, cancelFn, updateAddress, setAddress }) {
               type="number"
               id="pincode"
               name="pincode"
+              // eslint-disable-next-line react/prop-types
               defaultValue={address.pincode}
               onChange={(e) => {
                 handleOnchange(e);

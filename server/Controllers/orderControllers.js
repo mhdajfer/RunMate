@@ -1,6 +1,7 @@
 const orderModel = require("../models/order");
 const userModel = require("../models/user");
 const jwt = require("jsonwebtoken");
+const prodModel = require("../models/product");
 
 exports.add = async (req, res) => {
   const {
@@ -16,8 +17,28 @@ exports.add = async (req, res) => {
     phone,
     token,
   } = req.body;
-  console.log("products", productNames);
+
   try {
+    //checking the stocks of products
+    for (const id of productIds) {
+      const stock = await prodModel.find(
+        { _id: id },
+        { _id: 0, stock: 1, name: 1 }
+      );
+      if (stock[0].stock <= 0)
+        return res.json({
+          success: false,
+          message: `${stock[0].name} is out of stock, please remove from cart`,
+        });
+    }
+
+    //reducing the stock of the product
+    productIds.forEach((id) => {
+      prodModel.updateOne({ _id: id }, { $inc: { stock: -1 } }).then((res) => {
+        console.log(res);
+      });
+    });
+
     const user = jwt.verify(token, process.env.MY_SECRET_KEY);
     const orderDoc = new orderModel({
       userId: user.id,
@@ -38,7 +59,7 @@ exports.add = async (req, res) => {
     userModel
       .updateOne({ _id: user.id }, { $set: { cart: [] } })
       .then((response) => {
-        console.log(response);
+        console.log("saved");
       })
       .catch((error) => {
         console.log(error);

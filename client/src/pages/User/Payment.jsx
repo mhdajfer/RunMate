@@ -50,6 +50,7 @@ function Payment() {
             }, 700);
           } else {
             toast.error(res.data.message);
+            navigate("/user/cart");
           }
         });
     } catch (error) {
