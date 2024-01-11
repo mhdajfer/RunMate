@@ -5,15 +5,15 @@ import serverURL from "../../../serverURL";
 import toast from "react-hot-toast";
 import ProfileSideBar from "../../Components/ProfileSideBar";
 import DialogBox from "../../Components/DialogBox";
+import EditAddress from "../../Components/EditAddress";
 
 function UserProfile() {
   const token = Cookie.get("token");
   const [user, setUser] = useState({});
   const userId = user._id;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [dataToDialogBox, setDataToDialogBox] = useState("");
+  const [addressUpdateBoxOpen, setAddressUpdateBoxOpen] = useState(false);
   const [address, setAddress] = useState({
-    id: userId,
     address1: "",
     city: "",
     state: "",
@@ -45,6 +45,28 @@ function UserProfile() {
     }
   }, [token, savedAddress]);
 
+  function handleUpdateAddress(e) {
+    e.preventDefault();
+    try {
+      axios
+        .post(`${serverURL}/user/address/edit`, address, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+            setAddressUpdateBoxOpen(false);
+          } else {
+            toast.success(res.data.message);
+            setAddressUpdateBoxOpen(false);
+          }
+        });
+    } catch (error) {
+      console.log("error updating address", error);
+      return toast.error(error.message);
+    }
+  }
+
   function handleDeleteAddress(address) {
     try {
       axios
@@ -56,9 +78,8 @@ function UserProfile() {
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);
-            setTimeout(() => {
-              window.location.reload();
-            }, 800);
+            setIsDialogOpen(false);
+            setAddress(null);
           } else {
             toast.error(res.data.message);
           }
@@ -74,10 +95,10 @@ function UserProfile() {
 
   function handleAddAddress(address) {
     if (
-      !address.address1 ||
-      !address.city ||
-      !address.state ||
-      !address.pincode
+      !address.address1.length ||
+      !address.city.length ||
+      !address.state.length ||
+      !address.pincode.length
     )
       return toast.error("Fill all Address fields");
     try {
@@ -239,8 +260,10 @@ function UserProfile() {
                       />
                     </div>
                     <div className="grid grid-cols-2">
-                      <div className="px-4 py-2 font-semibold">Birthday</div>
-                      <div className="px-4 py-2">Feb 06, 1998</div>
+                      <div className="px-4 py-2 font-semibold">
+                        Year of Born
+                      </div>
+                      <div className="px-4 py-2">{2023 - user.age}</div>
                     </div>
                   </div>
                 </div>
@@ -395,7 +418,7 @@ function UserProfile() {
                       </h1>
                     ) : (
                       <div>
-                        <div className="grid grid-cols-4 h-12 border-b border-teal-600 text-center items-center">
+                        <div className="grid grid-cols-5 h-12 border-b border-teal-600 text-center items-center">
                           <div className="">
                             <span className="">Address</span>
                           </div>
@@ -408,12 +431,15 @@ function UserProfile() {
                           <div className="">
                             <span className="">Zip Code</span>
                           </div>
+                          <div className="">
+                            <span className="">Actions</span>
+                          </div>
                         </div>
                         <div>
                           {savedAddress.map((add, i) => (
                             <div
                               key={i}
-                              className="grid grid-cols-4 h-12 text-center items-center"
+                              className="grid grid-cols-5 h-12 text-center items-center"
                             >
                               <div className="relative">
                                 <span className="">
@@ -429,12 +455,32 @@ function UserProfile() {
                               <div className="">
                                 <span className="">{add.state}</span>
                               </div>
-                              <div className="relative">
+                              <div className="">
                                 <span className="">{add.pincode}</span>
+                              </div>
+                              <div className="flex items-center justify-evenly">
                                 <span
-                                  className="absolute right-0 cursor-pointer "
                                   onClick={() => {
-                                    setDataToDialogBox(add);
+                                    setAddressUpdateBoxOpen(true);
+                                    setAddress(add);
+                                  }}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    x="0px"
+                                    y="0px"
+                                    className="hover:fill-red-600 cursor-pointer"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path d="M 19.171875 2 C 18.448125 2 17.724375 2.275625 17.171875 2.828125 L 16 4 L 20 8 L 21.171875 6.828125 C 22.275875 5.724125 22.275875 3.933125 21.171875 2.828125 C 20.619375 2.275625 19.895625 2 19.171875 2 z M 14.5 5.5 L 3 17 L 3 21 L 7 21 L 18.5 9.5 L 14.5 5.5 z"></path>
+                                  </svg>
+                                </span>
+                                <span
+                                  className=" cursor-pointer "
+                                  onClick={() => {
+                                    setAddress(add);
                                     setIsDialogOpen(true);
                                   }}
                                 >
@@ -459,11 +505,22 @@ function UserProfile() {
           </div>
         </div>
       </div>
+      <div className="fixed top-[25%] right-[35%]  ">
+        {/* Address Update Box */}
+        {addressUpdateBoxOpen && (
+          <EditAddress
+            address={address}
+            cancelFn={setAddressUpdateBoxOpen}
+            updateAddress={handleUpdateAddress}
+            setAddress={setAddress}
+          />
+        )}
+      </div>
       <div className="fixed top-[20%] right-[25%]">
         {/* Dialog box */}
         {isDialogOpen && (
           <DialogBox
-            data={dataToDialogBox}
+            data={address}
             onConfirmDelete={handleDeleteAddress}
             onCancel={CancelDelete}
           />

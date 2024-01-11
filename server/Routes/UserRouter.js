@@ -19,12 +19,12 @@ router.post("/user/signup", (req, res) => {
   userController.signUp(req, res);
 });
 
-router.post("/user/getAddress", (req, res) => {
-  userController.getAddress(req, res);
-});
-
 router.get("/users", (req, res) => {
   userController.getUsers(req, res);
+});
+
+router.post("/user/getAddress", (req, res) => {
+  userController.getAddress(req, res);
 });
 
 router.post("/user/address/add", (req, res) => {
@@ -33,6 +33,10 @@ router.post("/user/address/add", (req, res) => {
 
 router.post("/user/address/delete", (req, res) => {
   userController.deleteAddress(req, res);
+});
+
+router.post("/user/address/edit", (req, res) => {
+  userController.editAddress(req, res);
 });
 
 router.post("/user/password/change", (req, res) => {

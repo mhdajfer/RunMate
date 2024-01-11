@@ -9,8 +9,8 @@ function DialogBox({ data, onConfirmDelete, onCancel }) {
         <div className="mt-4 md:mt-0 md:ml-6 text-center md:text-left">
           <p className="font-bold">Delete your account</p>
           <p className="text-sm text-gray-700 mt-1">
-            You will lose all of your data by deleting your account. This action
-            cannot be undone.
+            You will lose all of your data by deleting. This action cannot be
+            undone.
           </p>
         </div>
       </div>
@@ -19,7 +19,7 @@ function DialogBox({ data, onConfirmDelete, onCancel }) {
           className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-red-200 text-red-700 rounded-lg font-semibold text-sm md:ml-2 md:order-2"
           onClick={() => onConfirmDelete(data)}
         >
-          Delete Account
+          Delete
         </button>
         <button
           className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-gray-200 rounded-lg font-semibold text-sm mt-4

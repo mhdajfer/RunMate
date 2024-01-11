@@ -30,31 +30,29 @@ function Orders() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, i) => {
-              return (
-                <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
-                  <td className="p-6">{order._id}</td>
-                  <td className="p-2">{order.name}</td>
-                  <td className="p-2">{order.phone}</td>
-                  <td className="p-2">{order.address1}</td>
-                  <td className="p-2">{order.subTotal}</td>
-                  {/* <td className="p-2">
-                    <button
-                      className="bg{-red-500 px-2 m-1 rounded-md text-md text-white"
-                      onClick={() => {}}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
-                      onClick={() => {}}
-                    >
-                      Edit
-                    </button>
-                  </td> */}
-                </tr>
-              );
-            })}
+            {!orders.length ? (
+              <h1>No Orders yet!!</h1>
+            ) : (
+              orders.map((order, i) => {
+                return (
+                  <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
+                    <td className="p-6">{order._id}</td>
+                    <td className="p-2">{order.name}</td>
+                    <td className="p-2">{order.phone}</td>
+                    <td className="p-2">{order.address1}</td>
+                    <td className="p-2">{order.subTotal}</td>
+                    <td className="p-2">
+                      <button
+                        className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
+                        onClick={() => {}}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>

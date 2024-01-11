@@ -60,6 +60,33 @@ exports.getAddress = async (req, res) => {
   }
 };
 
+exports.editAddress = async (req, res) => {
+  const token = req.cookies.token;
+  const address = req.body;
+
+  try {
+    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const result = await UserModel.updateOne(
+      { _id: user.id, "addresses._id": address._id },
+      {
+        $set: {
+          "addresses.$.address1": address.address1,
+          "addresses.$.city": address.city,
+          "addresses.$.state": address.state,
+          "addresses.$.pincode": address.pincode,
+        },
+      }
+    );
+
+    return result.modifiedCount > 0
+      ? res.json({ success: true, message: "Address Updated" })
+      : res.json({ success: false, message: "No Change in Address" });
+  } catch (error) {
+    console.log("error while editing address", error);
+    return res.json({ success: false, message: "error while editing address" });
+  }
+};
+
 exports.addAddress = async (req, res) => {
   const address = req.body;
   const userId = address.id;
@@ -273,6 +300,11 @@ exports.isUserBlocked = async (req, res) => {
       return res.json({ success: false, message: "User is blocked" });
     else return res.json({ success: true });
   } catch (error) {
+    if (error.name === "TokenExpiredError")
+      return res.json({
+        success: false,
+        message: "token expired, login again",
+      });
     console.log("error while checking the user is blocked", error);
     return res.json({
       success: false,

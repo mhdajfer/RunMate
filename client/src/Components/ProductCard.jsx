@@ -66,18 +66,18 @@ export default function ProductCard(item) {
             {heart}
           </div>
           <h1 className="text-3xl font-medium text-[#003355]">
-            ${product.price}
+            ₹ {product.price}
           </h1>
           <div className="flex justify-evenly my-4">
             <button
-              className="bg-[#003355] flex items-center justify-center  w-[18vw] py-2 rounded-full text-white"
+              className="bg-[#003355] hover:bg-[#003377] hover:mt-[-1px] flex items-center justify-center  w-[18vw] py-2 rounded-full text-white"
               onClick={() => {
                 handleCart(product);
               }}
             >
               <span className="me-4">{cart}</span>Add to Cart
             </button>
-            <button className="bg-[#003355] flex items-center justify-center  w-10 py-2 rounded-full text-white">
+            <button className="bg-[#003355] flex items-center hover:bg-[#003377] justify-center  w-10 h-12 py-2 rounded-full text-white">
               <span className="mx-4">{heart}</span>
             </button>
           </div>

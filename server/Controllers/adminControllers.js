@@ -132,10 +132,21 @@ exports.isUserBlocked = async (req, res) => {
       { _id: user.id },
       { isBlocked: 1, _id: 0 }
     );
+    if (isBlocked.length === 0)
+      return res.json({
+        success: false,
+        message: "User Not found with the token in cookie",
+      });
     if (isBlocked[0].isBlocked)
       return res.json({ success: false, message: "User is blocked" });
     else return res.json({ success: true });
   } catch (error) {
+    if (error.name === "TokenExpiredError")
+      return res.json({
+        expired: true,
+        success: false,
+        message: "token expired, login again",
+      });
     console.log("error while checking the user is blocked", error);
     return res.json({
       success: false,

@@ -9,7 +9,6 @@ import { useEffect } from "react";
 export default function PrivateRoutes({ role }) {
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("private routes");
     try {
       axios
         .post(
