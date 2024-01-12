@@ -158,7 +158,7 @@ exports.activate = async (req, res) => {
 
   const userDoc = new UserModel({ ...user, password: hashedPassword });
   await userDoc.save();
-  res.send("User id Activated");
+  res.redirect("http://localhost:5173/activation");
 };
 
 exports.signUp = async (req, res) => {

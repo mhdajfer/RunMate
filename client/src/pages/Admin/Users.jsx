@@ -83,49 +83,55 @@ export default function Products() {
         <div className="">
           <table className="my-12">
             <thead>
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Email Address</th>
-                <th>Phone no.</th>
-                <th>Action</th>
-              </tr>
+              {users.length ? (
+                <tr>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Email Address</th>
+                  <th>Phone no.</th>
+                  <th>Action</th>
+                </tr>
+              ) : null}
             </thead>
             <tbody>
-              {users.map((user, i) => {
-                return (
-                  <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
-                    <td className="p-6">{user._id}</td>
-                    <td className="p-2">{user.name}</td>
-                    <td className="p-2">{user.age}</td>
-                    <td className="p-2">{user.email}</td>
-                    <td className="p-2">{user.phone}</td>
-                    <td className="p-2">
-                      <button
-                        className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
-                        onClick={() => handleDelete(user)}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
-                        onClick={() => handleEdit(user)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
-                        onClick={() => {
-                          handleBlocks(user);
-                        }}
-                      >
-                        {user.isBlocked ? "UnBlock" : "Block"}
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {!users.length ? (
+                <h1>No Users!!</h1>
+              ) : (
+                users.map((user, i) => {
+                  return (
+                    <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
+                      <td className="p-6">{user._id}</td>
+                      <td className="p-2">{user.name}</td>
+                      <td className="p-2">{user.age}</td>
+                      <td className="p-2">{user.email}</td>
+                      <td className="p-2">{user.phone}</td>
+                      <td className="p-2">
+                        <button
+                          className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
+                          onClick={() => handleDelete(user)}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
+                          onClick={() => handleEdit(user)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
+                          onClick={() => {
+                            handleBlocks(user);
+                          }}
+                        >
+                          {user.isBlocked ? "UnBlock" : "Block"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
