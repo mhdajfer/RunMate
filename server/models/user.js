@@ -41,6 +41,10 @@ const UserSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
   cart: [
     {
       productId: {

@@ -12,6 +12,8 @@ export default function Products() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [Oneuser, setOneUser] = useState("");
 
+  console.log(users);
+
   useEffect(() => {
     try {
       axios
@@ -48,6 +50,7 @@ export default function Products() {
   }
 
   function handleDelete(user) {
+    if (user.isDeleted) return toast("User Already Deleted");
     setIsDialogOpen(true);
     setOneUser(user);
   }
@@ -111,7 +114,7 @@ export default function Products() {
                           className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
                           onClick={() => handleDelete(user)}
                         >
-                          Delete
+                          {user.isDeleted ? "Deleted" : "Delete"}
                         </button>
                         <button
                           className="bg-green-700 px-2 m-1 rounded-md text-md text-white"

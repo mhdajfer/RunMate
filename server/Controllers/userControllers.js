@@ -19,7 +19,7 @@ exports.getUsers = async (req, res) => {
 exports.delete = async (req, res) => {
   const { id } = req.params;
   try {
-    await UserModel.findOneAndDelete({ _id: id });
+    await UserModel.updateOne({ _id: id }, { $set: { isDeleted: true } });
     res.status(200).json({ success: true, message: "user deleted" });
   } catch (error) {
     console.log("error while deleting user", error);
@@ -193,8 +193,12 @@ exports.login = async (req, res) => {
   //get user
   const user = await UserModel.findOne(
     { email: username },
-    { _id: 1, password: 1, isBlocked: 1 }
+    { _id: 1, password: 1, isBlocked: 1, isDeleted: 1 }
   );
+
+  //check user deleted
+  if (user.isDeleted)
+    return res.json({ success: false, message: "User deleted" });
 
   //check user
   if (!user) return res.json({ success: false, message: "user not found" });
