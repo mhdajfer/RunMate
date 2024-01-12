@@ -12,7 +12,7 @@ function ProductRoutes() {
       <Route element={<UserLayout />}>
         <Route path="/:id" element={<SingleProduct />} />
       </Route>
-      <Route element={<PrivateRoutes role={'user'}/>}>
+      <Route element={<PrivateRoutes role={"admin"} />}>
         <Route element={<AdminLayout />}>
           <Route path="/add" element={<AddProduct />} />
           <Route path="/edit" element={<EditProduct />} />

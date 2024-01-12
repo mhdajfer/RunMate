@@ -45,7 +45,6 @@ exports.login = async (req, res) => {
     if (await bcrypt.compare(password, user.password)) {
       //generate token
       const token = CreateToken(user._id.toString());
-      console.log("token", token);
       res.status(200).json({
         success: true,
         message: "login successful",

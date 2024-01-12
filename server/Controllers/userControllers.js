@@ -292,6 +292,7 @@ exports.isUserBlocked = async (req, res) => {
   const token = req.cookies.token;
   try {
     const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    if (!user) return res.json({ success: false, message: "user not found" });
     const isBlocked = await UserModel.find(
       { _id: user.id },
       { isBlocked: 1, _id: 0 }

@@ -16,7 +16,7 @@ exports.getOneProduct = async (req, res) => {
   const { productId } = req.body;
   try {
     const products = await prodModel.find({ _id: productId });
-    console.log(products[0]);
+
     return res.json({ success: true, data: products[0] });
   } catch (error) {
     console.log(error);
@@ -78,17 +78,6 @@ exports.edit = async (req, res) => {
         req.body;
       const image = req.file?.filename;
 
-      const prodDoc = new prodModel({
-        brand,
-        desc,
-        stock,
-        price,
-        category,
-        image,
-        name,
-        subDesc,
-      });
-
       await prodModel.findOneAndUpdate(
         { _id: id },
         {
@@ -98,12 +87,13 @@ exports.edit = async (req, res) => {
             stock: stock,
             price: price,
             category: category,
-            image: image,
             name: name,
             subDesc: subDesc,
           },
         }
       );
+
+      await prodModel.updateOne({ _id: id }, { $push: { images: image } });
 
       res.status(201).json({ success: true, message: "Product updated" });
     });
@@ -125,13 +115,16 @@ exports.delete = async (req, res) => {
 exports.deleteImage = async (req, res) => {
   const { image, productId } = req.body;
   const filePath = path.join("uploads", image);
+  console.log("hai");
 
   try {
     if (fs.existsSync(filePath)) {
       // Delete the file
       fs.unlinkSync(filePath);
     } else {
-      res.status(404).json({ success: false, message: "File not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "File not found" });
     }
 
     await prodModel.updateOne({ _id: productId }, { $pull: { images: image } });

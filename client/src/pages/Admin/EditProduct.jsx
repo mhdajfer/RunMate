@@ -3,14 +3,27 @@ import axios from "axios";
 import serverURL from "../../../serverURL";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
+import DialogBox from "../../Components/DialogBox";
 
 export default function EditProduct() {
   const location = useLocation();
   const productId = location.state?.productId;
-  let productImages = location.state?.images;
+  const productImages = location.state?.productImages;
   const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dataToDialogBox, setDataToDialogBox] = useState("");
   const [categoryList, setCategoryList] = useState([]);
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState({
+    name: "",
+    subDesc: "",
+    brand: "",
+    desc: "",
+    stock: "",
+    price: "",
+    category: "",
+    images: [],
+    image: "",
+  });
 
   useEffect(() => {
     try {
@@ -24,6 +37,7 @@ export default function EditProduct() {
         )
         .then((res) => {
           if (res.data.success) {
+            console.log(res.data.data);
             setProduct(res.data.data);
           }
         });
@@ -39,11 +53,7 @@ export default function EditProduct() {
   }, [productId]);
 
   function handleImageDelete(image) {
-    console.log("product images - ", product.images);
-
-    let index = product.images.indexOf(image);
-    console.log("images - ", productImages);
-    console.log("delete - ", image);
+    const UpdatedImages = product.images.filter((img) => img != image);
 
     try {
       axios
@@ -56,13 +66,18 @@ export default function EditProduct() {
         )
         .then((res) => {
           if (res.data.success) {
-            product.images.splice(index, 1);
-            productImages = product.images;
+            setProduct((prev) => ({
+              ...prev,
+              images: UpdatedImages,
+            }));
             toast.success(res.data.message);
-            console.log("after deleting = ", product.images);
-            console.log("after deleting = ", productImages);
+            setIsDialogOpen(false);
           } else {
             toast.error(res.data.message);
+            setProduct((prev) => ({
+              ...prev,
+              images: [...UpdatedImages, image],
+            }));
           }
         });
     } catch (error) {
@@ -70,8 +85,18 @@ export default function EditProduct() {
     }
   }
 
+  function cancelDelete() {
+    setIsDialogOpen(false);
+  }
+
+  function handleDeleteDialogBox() {
+    setIsDialogOpen(true);
+  }
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (product.stock <= 0) return toast.error("Increase stock limit");
+    if (product.price <= 0) return toast.error("Set Price limit correctly");
 
     const formProd = new FormData();
     formProd.append("brand", product.brand);
@@ -208,7 +233,7 @@ export default function EditProduct() {
               <div className="flex flex-col my-4">
                 <label htmlFor="image">Image</label>
                 <div className="flex space-x-2 mb-2 ">
-                  {productImages.map((image, i) => (
+                  {product.images.map((image, i) => (
                     <div key={i} className="w-fit relative">
                       <img
                         className="w-10 h-10 object-fit"
@@ -218,7 +243,8 @@ export default function EditProduct() {
                       <a
                         className="bg-gray-300 absolute top-0 right-0"
                         onClick={() => {
-                          handleImageDelete(image);
+                          setDataToDialogBox(image);
+                          handleDeleteDialogBox();
                         }}
                       >
                         <svg
@@ -234,7 +260,7 @@ export default function EditProduct() {
                 </div>
                 <input
                   type="file"
-                  name="price"
+                  name="image"
                   accept="image/*"
                   onChange={handleImageChange}
                   className="  min-w-[180px] w-[20vw] bg-white text-[10px]  border border-teal-700 rounded-lg p-3"
@@ -248,6 +274,16 @@ export default function EditProduct() {
             </button>
           </div>
         </form>
+      </div>
+      <div className="fixed top-[20%] right-[25%]">
+        {/* Dialog box */}
+        {isDialogOpen && (
+          <DialogBox
+            data={dataToDialogBox}
+            onConfirmDelete={handleImageDelete}
+            onCancel={cancelDelete}
+          />
+        )}
       </div>
     </>
   );
