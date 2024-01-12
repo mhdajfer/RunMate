@@ -4,13 +4,19 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import serverUrl from "../../server";
 import DialogBox from "../../Components/DialogBox";
+import Pagination from "../../Components/Pagination";
 
 export default function Products() {
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [prodForDelete, setProdForDelete] = useState("");
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [dataPerPage, setPostsPerPage] = useState(2);
 
+  const lastDataIndex = currentPage * dataPerPage;
+  const firstDataIndex = lastDataIndex - dataPerPage;
+  const productList = products.slice(firstDataIndex, lastDataIndex);
   useEffect(() => {
     try {
       axios
@@ -78,7 +84,7 @@ export default function Products() {
             </tr>
           </thead>
           <tbody>
-            {products.map((product, i) => {
+            {productList.map((product, i) => {
               return (
                 <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
                   <td>
@@ -109,6 +115,12 @@ export default function Products() {
                 </tr>
               );
             })}
+            <Pagination
+              totalItems={products.length}
+              dataPerPage={dataPerPage}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+            />
           </tbody>
         </table>
       </div>
