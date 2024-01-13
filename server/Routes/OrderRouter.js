@@ -9,4 +9,8 @@ router.post("/add", (req, res) => {
 router.get("/get-AllOrders", (req, res) => {
   orderController.getAllOrders(req, res);
 });
+
+router.post("/status/change", (req, res) => {
+  orderController.changeStatus(req, res);
+});
 module.exports = router;

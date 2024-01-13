@@ -120,7 +120,7 @@ function DialogBox({ data, onConfirmDelete, onCancel }) {
           </svg>
         </div>
         <div className="mt-4 md:mt-0 md:ml-6 text-center md:text-left">
-          <p className="font-bold">Delete your account</p>
+          <p className="font-bold">Delete your data</p>
           <p className="text-sm text-gray-700 mt-1">
             You will lose all of your data by deleting. This action cannot be
             undone.

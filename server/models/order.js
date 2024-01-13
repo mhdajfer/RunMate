@@ -44,6 +44,10 @@ const orderSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  status: {
+    type: String,
+    default: "Processing",
+  },
 });
 
 const orderModel = mongoose.model("order", orderSchema);

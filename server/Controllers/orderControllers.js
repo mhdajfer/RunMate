@@ -84,3 +84,19 @@ exports.getAllOrders = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
+
+exports.changeStatus = async (req, res) => {
+  const { orderStatus, orderId } = req.body;
+
+  console.log(orderId, orderStatus);
+
+  try {
+    await orderModel.updateOne(
+      { _id: orderId },
+      { $set: { status: orderStatus } }
+    );
+    return res.json({ success: true, message: "Status Updated" });
+  } catch (error) {
+    console.log(error);
+  }
+};
