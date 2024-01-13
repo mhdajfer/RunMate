@@ -2,10 +2,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import serverUrl from "../../server";
 import OrderStatus from "../../Components/OrderStatus";
+import Pagination from "../../Components/Pagination";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [isOrderStatusOpen, setIsOrderStatusOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  let dataPerPage = 2;
+
+  const lastDataIndex = currentPage * dataPerPage;
+  const firstDataIndex = lastDataIndex - dataPerPage;
+  const orderList = orders.slice(firstDataIndex, lastDataIndex);
 
   useEffect(() => {
     try {
@@ -43,7 +50,7 @@ function Orders() {
             {!orders.length ? (
               <h1>No Orders yet!!</h1>
             ) : (
-              orders.map((order, i) => {
+              orderList.map((order, i) => {
                 return (
                   <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
                     <td className="p-6">{order._id}</td>
@@ -80,6 +87,12 @@ function Orders() {
                 );
               })
             )}
+            <Pagination
+              totalItems={orders.length}
+              dataPerPage={dataPerPage}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+            />
           </tbody>
         </table>
       </div>

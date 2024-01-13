@@ -5,6 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
 // import ReactImageMagnify from "react-image-magnify";
+import ImageMagnifier from "./ImageMagnifier";
 
 function SingleProductCard(item) {
   const [quantity, setQuantity] = useState(1);
@@ -46,27 +47,28 @@ function SingleProductCard(item) {
             ))}
           </div>
           <div className="">
-            <img
+            {/* <img
               src={serverURL + "/" + product.images[0]}
               alt=""
               className="h-[30rem]"
-            />
+            /> */}
             {/* <ReactImageMagnify
-              className="w-full h-full"
+              className=""
               {...{
                 smallImage: {
                   alt: "Wristwatch by Ted Baker London",
                   isFluidWidth: true,
                   src: serverURL + "/" + product.images[0],
-                  height: 1500,
+                  
                 },
                 largeImage: {
                   src: serverURL + "/" + product.images[0],
-                  width: 1200,
+                  width: 1600,
                   height: 1800,
                 },
               }}
             /> */}
+            <ImageMagnifier image={product.images[0]} />
           </div>
         </div>
         <div className=" p-12 w-[50rem]">

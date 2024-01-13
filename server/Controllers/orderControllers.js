@@ -88,8 +88,6 @@ exports.getAllOrders = async (req, res) => {
 exports.changeStatus = async (req, res) => {
   const { orderStatus, orderId } = req.body;
 
-  console.log(orderId, orderStatus);
-
   try {
     await orderModel.updateOne(
       { _id: orderId },

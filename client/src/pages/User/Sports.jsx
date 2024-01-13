@@ -24,7 +24,6 @@ export default function Sports({ category }) {
   }, [category]);
   return (
     <div className="flex w-screen flex-wrap">
-      <h1>sports</h1>
       {products.map((product, i) => {
         return (
           <div key={i}>

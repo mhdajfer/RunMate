@@ -12,7 +12,7 @@ export default function Products() {
   const [prodForDelete, setProdForDelete] = useState("");
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  let dataPerPage = 2;
+  let dataPerPage = 3;
 
   const lastDataIndex = currentPage * dataPerPage;
   const firstDataIndex = lastDataIndex - dataPerPage;
