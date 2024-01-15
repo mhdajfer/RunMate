@@ -8,6 +8,7 @@ import Category from "../pages/Admin/Category";
 import AddCategory from "../pages/Admin/AddCategory";
 import EditUser from "../pages/Admin/EditUser";
 import Orders from "../pages/Admin/Orders";
+import SingleOrderDetails from "../Components/SingleOrderDetails";
 
 function AdminRoutes() {
   return (
@@ -22,6 +23,7 @@ function AdminRoutes() {
           <Route path="/category" element={<Category />} />
           <Route path="/category/add" element={<AddCategory />} />
           <Route path="/orders/" element={<Orders />} />
+          <Route path="/order/getOne" element={<SingleOrderDetails />} />
         </Route>
       </Route>
     </Routes>

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import serverUrl from "../../server";
 import OrderStatus from "../../Components/OrderStatus";
 import Pagination from "../../Components/Pagination";
 
 function Orders() {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [isOrderStatusOpen, setIsOrderStatusOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +27,10 @@ function Orders() {
       console.log(error);
     }
   });
+
+  function handleSingleOrderDetails(order) {
+    navigate("/admin/order/getOne", { state: { order } });
+  }
 
   function handleStatus() {
     setIsOrderStatusOpen(!isOrderStatusOpen);
@@ -53,7 +59,14 @@ function Orders() {
               orderList.map((order, i) => {
                 return (
                   <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
-                    <td className="p-6">{order._id}</td>
+                    <td
+                      className="p-6 hover:underline hover:text-blue-600 cursor-pointer"
+                      onClick={() => {
+                        handleSingleOrderDetails(order);
+                      }}
+                    >
+                      {order._id}
+                    </td>
                     <td className="p-2">{order.name}</td>
                     <td className="p-2">{order.phone}</td>
                     <td className="p-2">{order.address1}</td>

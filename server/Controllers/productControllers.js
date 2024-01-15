@@ -105,8 +105,17 @@ exports.edit = async (req, res) => {
 exports.delete = async (req, res) => {
   const { id } = req.params;
   try {
-    await prodModel.findOneAndDelete({ _id: id });
-    res.status(200).json({ success: true, message: "Product deleted" });
+    const product = await prodModel.find({ _id: id });
+    await prodModel.updateOne(
+      { _id: id },
+      { $set: { isDeleted: !product[0].isDeleted } }
+    );
+    res.status(200).json({
+      success: true,
+      message: `${
+        product[0].isDeleted ? "Product Restored" : "Product Deleted"
+      }`,
+    });
   } catch (error) {
     console.log("error while deleting product", error);
   }
@@ -144,15 +153,15 @@ exports.get = async (req, res) => {
   let data;
   try {
     if (category === "Men") {
-      data = await prodModel.find({ category: category });
+      data = await prodModel.find({ category: category }, { isDeleted: false });
     } else if (category === "all") {
-      data = await prodModel.find({});
+      data = await prodModel.find({ isDeleted: false });
     } else if (category === "Best Selling") {
-      data = await prodModel.find({ category: category });
+      data = await prodModel.find({ category: category }, { isDeleted: false });
     } else if (category === "Women") {
-      data = await prodModel.find({ category: category });
+      data = await prodModel.find({ category: category }, { isDeleted: false });
     } else if (category === "Sports") {
-      data = await prodModel.find({ category: category });
+      data = await prodModel.find({ category: category }, { isDeleted: false });
     }
     res.json({
       success: true,
