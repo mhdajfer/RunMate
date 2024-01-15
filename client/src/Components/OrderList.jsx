@@ -1,9 +1,11 @@
 import axios from "axios";
 import serverUrl from "../server";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
 function OrderList({ order }) {
+  const navigate = useNavigate();
   const orderId = order._id;
   function hanldeReturnOrder() {
     try {
@@ -32,7 +34,15 @@ function OrderList({ order }) {
         <div className=" md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
           <div className="flex flex-col justify-start items-start space-y-8 w-2/5">
             <h3 className="text-xl  xl:text-2xl font-semibold leading-6 text-gray-800">
-              Order id: <span className="font-medium text-lg">{order._id}</span>
+              Order id:{" "}
+              <span
+                className="font-medium text-lg hover:underline cursor-pointer hover:text-blue-700"
+                onClick={() => {
+                  navigate("/product/order/getOne", { state: { order } });
+                }}
+              >
+                {order._id}
+              </span>
             </h3>
             <div className="flex justify-start items-start flex-col space-y-2">
               {order.productNames.map((name, i) => (

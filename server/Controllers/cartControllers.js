@@ -1,4 +1,5 @@
 const UserModel = require("../models/user");
+const prodModel = require("../models/product");
 const jwt = require("jsonwebtoken");
 
 exports.add = async (req, res) => {
@@ -87,4 +88,22 @@ exports.remove = async (req, res) => {
       .status(500)
       .json({ success: false, message: "error white deleting: backend error" });
   }
+};
+
+exports.stockCheck = async (req, res) => {
+  const productIds = req.body;
+
+  //checking the stocks of products
+  for (const id of productIds) {
+    const stock = await prodModel.find(
+      { _id: id },
+      { _id: 0, stock: 1, name: 1 }
+    );
+    if (stock[0].stock <= 0)
+      return res.json({
+        success: false,
+        message: `${stock[0].name} is out of stock, please remove from cart`,
+      });
+  }
+  return res.json({ success: true, message: "success" });
 };

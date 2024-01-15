@@ -89,6 +89,7 @@ export default function SignupPage() {
                   name="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                   className="bg-[#3282B8] min-w-[180px] w-[20vw] h-[2rem] rounded-xl p-3 text-white"
                 />
               </div>
@@ -99,6 +100,7 @@ export default function SignupPage() {
                   name="age"
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
+                  required
                   className="bg-[#3282B8] min-w-[100px] w-[12vw] h-[2rem] rounded-xl p-3 text-white"
                 />
               </div>
@@ -113,6 +115,7 @@ export default function SignupPage() {
                   defaultValue={""}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  required
                   className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
                 />
               </div>
@@ -123,6 +126,7 @@ export default function SignupPage() {
                   name="name"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                   className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
                 />
               </div>
@@ -136,6 +140,7 @@ export default function SignupPage() {
                     setPassword(e.target.value);
                     handleStrengthCheck(e.target.value);
                   }}
+                  required
                   className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
                 />
                 <ProgressBar progress={passwordStrength} />
@@ -149,6 +154,7 @@ export default function SignupPage() {
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
                   }}
+                  required
                   className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
                 />
               </div>

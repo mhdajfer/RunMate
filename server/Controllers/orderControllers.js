@@ -19,30 +19,22 @@ exports.add = async (req, res) => {
   } = req.body;
 
   try {
-    //checking the stocks of products
-    for (const id of productIds) {
-      const stock = await prodModel.find(
-        { _id: id },
-        { _id: 0, stock: 1, name: 1 }
-      );
-      if (stock[0].stock <= 0)
-        return res.json({
-          success: false,
-          message: `${stock[0].name} is out of stock, please remove from cart`,
-        });
-    }
-
     //reducing the stock of the product
-    productIds.forEach((id) => {
-      prodModel.updateOne({ _id: id }, { $inc: { stock: -1 } }).then((res) => {
-        console.log(res);
-      });
+    productIds.forEach((prod) => {
+      prodModel
+        .updateOne({ _id: prod.productId }, { $inc: { stock: -prod.quantity } })
+        .then((res) => {
+          console.log(res);
+        });
     });
 
     const user = jwt.verify(token, process.env.MY_SECRET_KEY);
     const orderDoc = new orderModel({
       userId: user.id,
-      productIds,
+      products: productIds.map((product) => ({
+        productId: product.productId,
+        quantity: product.quantity,
+      })),
       productNames,
       subTotal,
       shipping,
@@ -96,5 +88,24 @@ exports.changeStatus = async (req, res) => {
     return res.json({ success: true, message: "Status Updated" });
   } catch (error) {
     console.log(error);
+  }
+};
+
+exports.getOrderDetails = async (req, res) => {
+  const orderId = req.params.id;
+
+  try {
+    const data = await orderModel
+      .findById(orderId)
+      .populate("products.productId");
+    console.log(data);
+
+    return res.json({ success: true, data: data });
+  } catch (error) {
+    console.log("error while getting order details", error);
+    return res.json({
+      success: false,
+      message: "error while getting order details",
+    });
   }
 };

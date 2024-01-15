@@ -16,14 +16,17 @@ function Checkout() {
   const [savedAddress, setSavedAddress] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const cartItems = location.state?.cartItems;
-  const productIds = cartItems.map((item) => item.productId);
+  const productIds = cartItems.map((item) => ({
+    productId: item.productId,
+    quantity: item.quantity,
+  }));
   const productNames = cartItems.map((item) => item.productName);
   const subTotal = cartItems.reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
   );
-  const shipping = (subTotal * 3) / 100;
-  const total = shipping + subTotal;
+  const shipping = Math.floor((subTotal * 3) / 100);
+  const total = Math.floor(shipping + subTotal);
 
   useEffect(() => {
     try {
@@ -40,6 +43,7 @@ function Checkout() {
       console.log("error while loading saved address", error);
     }
   }, []);
+  console.log(cartItems);
 
   function handleSavedAddress(e, address) {
     setAddress1(address.address1);
@@ -65,6 +69,7 @@ function Checkout() {
         state,
         zip,
         phone,
+        quantity: cartItems?.quantity,
       },
     });
   }
@@ -169,7 +174,7 @@ function Checkout() {
                     Qty {item.quantity}
                   </span>
                   <p className="text-lg font-bold">
-                    ${item.quantity * item.price}
+                    ₹ {item.quantity * item.price}
                   </p>
                 </div>
               </div>

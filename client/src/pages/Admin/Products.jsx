@@ -73,16 +73,20 @@ export default function Products() {
           New product
         </button>
         <table className="my-12">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Id</th>
-              <th>Description</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+          {productList.length == 0 ? (
+            <h1>No Products Added!!</h1>
+          ) : (
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+          )}
           <tbody>
             {productList.map((product, i) => {
               return (
@@ -115,12 +119,14 @@ export default function Products() {
                 </tr>
               );
             })}
-            <Pagination
-              totalItems={products.length}
-              dataPerPage={dataPerPage}
-              setCurrentPage={setCurrentPage}
-              currentPage={currentPage}
-            />
+            {productList.length != 0 ? (
+              <Pagination
+                totalItems={products.length}
+                dataPerPage={dataPerPage}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+              />
+            ) : null}
           </tbody>
         </table>
       </div>

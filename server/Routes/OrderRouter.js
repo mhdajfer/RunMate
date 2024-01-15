@@ -10,6 +10,10 @@ router.get("/get-AllOrders", (req, res) => {
   orderController.getAllOrders(req, res);
 });
 
+router.get('/details/:id', (req, res) => {
+  orderController.getOrderDetails(req, res);
+})
+
 router.post("/status/change", (req, res) => {
   orderController.changeStatus(req, res);
 });

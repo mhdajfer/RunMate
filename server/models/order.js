@@ -1,15 +1,23 @@
 const mongoose = require("mongoose");
-const { array } = require("../multer");
 
 const orderSchema = mongoose.Schema({
   userId: {
     type: String,
     required: true,
   },
-  productIds: {
-    type: Array,
-    required: true,
-  },
+  products: [
+    {
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "product",
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
   productNames: {
     type: Array,
     required: true,

@@ -75,6 +75,10 @@ router.post("/cart/remove", (req, res) => {
   cartController.remove(req, res);
 });
 
+router.post("/cart/stock-check", (req, res) => {
+  cartController.stockCheck(req, res);
+});
+
 router.post("/getAllAddress", (req, res) => {
   userController.getAllAddress(req, res);
 });

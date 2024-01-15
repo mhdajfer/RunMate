@@ -19,8 +19,8 @@ function Payment() {
   const zip = location.state?.zip;
   const phone = location.state?.phone;
   const subTotal = location.state?.subTotal;
+  const quantity = location.state?.quantity;
   const token = Cookie.get("token");
-  console.log(productNames);
 
   function handleCOD() {
     try {
@@ -38,6 +38,7 @@ function Payment() {
             state,
             zip,
             phone,
+            quantity,
             token,
           },
           { withCredentials: true }

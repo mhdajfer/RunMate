@@ -114,7 +114,7 @@ export default function Products() {
                           className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
                           onClick={() => handleDelete(user)}
                         >
-                          {user.isDeleted ? "Deleted" : "Delete"}
+                          {user.isDeleted ? "Restore" : "Delete"}
                         </button>
                         <button
                           className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
