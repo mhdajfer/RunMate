@@ -175,7 +175,7 @@ exports.getKey = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await orderModel.find({});
+    const orders = await orderModel.find().sort({ _id: -1 });
     return res.json({ success: true, data: orders });
   } catch (error) {
     console.log(error);

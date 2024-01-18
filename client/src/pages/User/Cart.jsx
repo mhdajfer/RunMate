@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import serverUrl from "../../server";
+import QtyButton from "../../Components/QtyButton";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  // const [quantity, setQuantity] = useState();
+
   const navigate = useNavigate();
   useEffect(() => {
     console.log("useEffect is runing");
@@ -51,13 +52,14 @@ function Cart() {
     }
   }
 
-  function handleQuantityChange(e, item) {
-    const newQuantity = parseInt(e.target.value);
+  function handleQuantityChange(quantity, item) {
+    const newQuantity = parseInt(quantity);
 
     const updatedCart = cartItems.map((cartItem) => {
       if (cartItem._id === item._id) {
         return { ...cartItem, quantity: newQuantity };
       }
+
       return cartItem;
     });
 
@@ -133,8 +135,8 @@ function Cart() {
                 </div>
               </div>
 
-              <div className="w-1/5 text-center">
-                <select
+              <div className="w-1/5 text-center  flex justify-center">
+                {/* <select
                   className="border rounded-md"
                   name="qty"
                   id="qty"
@@ -146,7 +148,12 @@ function Cart() {
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
-                </select>
+                </select> */}
+                <QtyButton
+                  Qty={item?.quantity}
+                  qtyChange={handleQuantityChange}
+                  item={item}
+                />
               </div>
               <span className="text-center w-1/5 font-semibold text-sm">
                 ₹ {item.price}
