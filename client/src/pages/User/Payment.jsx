@@ -12,7 +12,6 @@ function Payment() {
   const total = location.state?.total;
   const shipping = location.state?.shipping;
   const productIds = location.state?.productIds;
-  const productNames = location.state?.productNames;
   const address1 = location.state?.address1;
   const name = location.state?.name;
   const state = location.state?.state;
@@ -29,7 +28,6 @@ function Payment() {
           `${serverUrl}/order/add`,
           {
             productIds,
-            productNames,
             subTotal,
             shipping,
             total,
@@ -40,6 +38,7 @@ function Payment() {
             phone,
             quantity,
             token,
+            mode: "COD",
           },
           { withCredentials: true }
         )
@@ -57,6 +56,81 @@ function Payment() {
     } catch (error) {
       toast.error("Error while checkout");
       console.log(error);
+    }
+  }
+
+  async function handleOnlinePayment(amount) {
+    try {
+      //getting key
+      const { data } = await axios.get(`${serverUrl}/order/getKey`);
+
+      //create order
+      const {
+        data: {
+          data: { id: orderId },
+        },
+      } = await axios.post(
+        `${serverUrl}/order/create`,
+        {
+          amount,
+          productIds,
+          subTotal,
+          shipping,
+          total,
+          name,
+          address1,
+          state,
+          zip,
+          phone,
+          quantity,
+          token,
+          mode: "Online payment",
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      var options = {
+        key: data.key, // Enter the Key ID generated from the Dashboard
+        amount: amount * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: "INR",
+        name: "Acme Corp", //your business name
+        description: "Test Transaction",
+
+        order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        handler: function (response) {
+          axios.post(
+            `${serverUrl}/order/validatePayment`,
+            { ...response },
+            { withCredentials: true }
+          );
+        },
+        prefill: {
+          //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+          name: "Gaurav Kumar", //your customer's name
+          email: "gaurav.kumar@example.com",
+          contact: "9000090000", //Provide the customer's phone number for better conversion rates
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      var rzp1 = new window.Razorpay(options);
+      rzp1.on("payment.failed", function (response) {
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+      });
+      rzp1.open();
+    } catch (error) {
+      console.log("error while processing payment", error);
     }
   }
   return (
@@ -125,7 +199,12 @@ function Payment() {
                   </div>
                   <div className="mt-6">
                     <div className="mb-4">
-                      <button className="font-medium text-sm inline-flex items-center justify-center px-3 py-2 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out w-full bg-indigo-500 hover:bg-indigo-600 text-white focus:outline-none focus-visible:ring-2">
+                      <button
+                        className="font-medium text-sm inline-flex items-center justify-center px-3 py-2 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out w-full bg-indigo-500 hover:bg-indigo-600 text-white focus:outline-none focus-visible:ring-2"
+                        onClick={() => {
+                          handleOnlinePayment(total);
+                        }}
+                      >
                         Pay ₹ {total}
                       </button>
                     </div>

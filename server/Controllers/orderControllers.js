@@ -2,11 +2,12 @@ const orderModel = require("../models/order");
 const userModel = require("../models/user");
 const jwt = require("jsonwebtoken");
 const prodModel = require("../models/product");
+const razorpay = require("razorpay");
+const crypto = require("crypto");
 
 exports.add = async (req, res) => {
   const {
     productIds,
-    productNames,
     subTotal,
     shipping,
     total,
@@ -16,6 +17,7 @@ exports.add = async (req, res) => {
     zip,
     phone,
     token,
+    mode,
   } = req.body;
 
   try {
@@ -44,6 +46,8 @@ exports.add = async (req, res) => {
       state,
       zip,
       phone,
+      mode,
+      paymentStatus: true,
     });
 
     orderDoc.save();
@@ -65,6 +69,91 @@ exports.add = async (req, res) => {
       .status(500)
       .json({ success: false, message: "Error while placing order" });
   }
+};
+
+exports.create = async (req, res) => {
+  const {
+    productIds,
+    subTotal,
+    shipping,
+    total,
+    name,
+    address1,
+    state,
+    zip,
+    phone,
+    token,
+    mode,
+    amount,
+  } = req.body;
+
+  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+
+  var instance = new razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+
+  const options = {
+    amount: amount,
+    currency: "INR",
+    receipt: "receipt#1",
+    partial_payment: false,
+  };
+
+  const result = await instance.orders.create(options);
+  const orderDoc = new orderModel({
+    userId: user.id,
+    products: productIds.map((product) => ({
+      productId: product.productId,
+      quantity: product.quantity,
+    })),
+    subTotal,
+    shipping,
+    total,
+    name,
+    address1,
+    state,
+    zip,
+    phone,
+    mode,
+    status: "Payment pending",
+    razor_orderId: result.id,
+  });
+  orderDoc.save();
+
+  res.json({ success: true, data: result });
+};
+
+exports.validatePayment = async (req, res) => {
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+    req.body;
+
+  const body = razorpay_order_id + "|" + razorpay_payment_id;
+  const expected_signature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .update(body.toString())
+    .digest("hex");
+  if (razorpay_signature === expected_signature) {
+    const result = await orderModel.updateOne(
+      { razor_orderId: razorpay_order_id },
+      {
+        $set: {
+          // Fields to add or update regardless of insert/update
+          status: "pending",
+          paymentStatus: true,
+          razor_paymentId: razorpay_payment_id,
+          razor_signature: razorpay_signature,
+        },
+      }
+    );
+  } else {
+    console.log("not validated");
+  }
+};
+
+exports.getKey = async (req, res) => {
+  res.json({ key: process.env.RAZORPAY_KEY_ID });
 };
 
 exports.getAllOrders = async (req, res) => {

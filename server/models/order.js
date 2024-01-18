@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const orderSchema = mongoose.Schema({
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   products: [
@@ -18,10 +18,6 @@ const orderSchema = mongoose.Schema({
       },
     },
   ],
-  productNames: {
-    type: Array,
-    required: true,
-  },
   address1: {
     type: String,
     reuired: true,
@@ -52,9 +48,26 @@ const orderSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  mode: {
+    type: String,
+    required: true,
+  },
+  paymentStatus: {
+    type: Boolean,
+    default: false,
+  },
   status: {
     type: String,
     default: "Processing",
+  },
+  razor_orderId: {
+    type: String,
+  },
+  razor_paymentId: {
+    type: String,
+  },
+  razor_signature: {
+    type: String,
   },
 });
 

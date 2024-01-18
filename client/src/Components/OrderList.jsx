@@ -45,7 +45,7 @@ function OrderList({ order }) {
               </span>
             </h3>
             <div className="flex justify-start items-start flex-col space-y-2">
-              {order.productNames.map((name, i) => (
+              {order?.productNames?.map((name, i) => (
                 <p
                   key={i}
                   className="text-sm dark:text-black leading-none text-gray-800"
