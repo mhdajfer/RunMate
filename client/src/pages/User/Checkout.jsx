@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import CouponField from "../../Components/couponField";
 
 function Checkout() {
   const location = useLocation();
@@ -15,6 +16,11 @@ function Checkout() {
   const [phone, setPhone] = useState();
   const [savedAddress, setSavedAddress] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  // for the coupon field
+  const [couponList, setCouponList] = useState([]);
+  const [discount, setDiscount] = useState(0);
+  const [selectedCoupon, setSelectedCoupon] = useState();
+  //
   const cartItems = location.state?.cartItems;
   const productIds = cartItems.map((item) => ({
     productId: item.productId,
@@ -26,10 +32,17 @@ function Checkout() {
     0
   );
   const shipping = Math.floor((subTotal * 3) / 100);
-  const total = Math.floor(shipping + subTotal);
+  let total = Math.floor(shipping + subTotal);
+  const discountedPrice = Math.floor((total * discount) / 100);
+  total = total - discountedPrice;
 
   useEffect(() => {
     try {
+      axios.get(`${serverUrl}/coupon/getCoupons`).then((res) => {
+        if (res.data.success) {
+          setCouponList(res.data.data);
+        }
+      });
       axios
         .post(`${serverUrl}/getAllAddress`, {}, { withCredentials: true })
         .then((res) => {
@@ -43,7 +56,11 @@ function Checkout() {
       console.log("error while loading saved address", error);
     }
   }, []);
-  console.log(cartItems);
+
+  function handleDiscount(coupon) {
+    setDiscount(coupon?.discount);
+    setSelectedCoupon(coupon);
+  }
 
   function handleSavedAddress(e, address) {
     setAddress1(address.address1);
@@ -59,6 +76,7 @@ function Checkout() {
 
     navigate("/user/payment", {
       state: {
+        couponId: selectedCoupon?._id,
         productIds,
         productNames,
         subTotal,
@@ -181,61 +199,18 @@ function Checkout() {
             ))}
           </div>
 
-          <p className="mt-8 text-lg font-medium">Shipping Methods</p>
-          <form className="mt-5 grid gap-6 border border-teal-600 rounded-md">
-            <div className="relative">
-              <input
-                className="peer hidden"
-                id="radio_1"
-                type="radio"
-                name="radio"
-                checked
-                onChange={() => {}}
-              />
-              <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
-              <label
-                className="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                htmlFor="radio_1"
-              >
-                <img
-                  className="z-6 w-14 h-14 object-contain"
-                  src="../../assets/Logos/fedexLogo.png"
-                  alt=""
+          <p className="mt-8 text-lg font-medium">Coupons</p>
+          <div className="mt-8 rounded-lg border border-teal-600 bg-white px-2 py-4 sm:px-6">
+            <div className="container mx-auto">
+              {couponList.map((coupon, i) => (
+                <CouponField
+                  key={i}
+                  coupon={coupon}
+                  setDiscount={handleDiscount}
                 />
-                <div className="ml-5">
-                  <span className="mt-2 font-semibold">Fedex Delivery</span>
-                  <p className="text-slate-500 text-sm leading-6">
-                    Delivery: 2-4 Days
-                  </p>
-                </div>
-              </label>
+              ))}
             </div>
-            <div className="relative">
-              <input
-                className="peer hidden"
-                id="radio_2"
-                type="radio"
-                name="radio"
-              />
-              <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
-              <label
-                className="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                htmlFor="radio_2"
-              >
-                <img
-                  className="w-14 object-contain"
-                  src="/images/oG8xsl3xsOkwkMsrLGKM4.png"
-                  alt=""
-                />
-                <div className="ml-5">
-                  <span className="mt-2 font-semibold">Fedex Delivery</span>
-                  <p className="text-slate-500 text-sm leading-6">
-                    Delivery: 2-4 Days
-                  </p>
-                </div>
-              </label>
-            </div>
-          </form>
+          </div>
         </div>
         <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
           <p className="text-xl font-medium">Shipping Details</p>
@@ -462,6 +437,14 @@ function Checkout() {
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">Shipping</p>
                 <p className="font-semibold text-gray-900">₹ {shipping}</p>
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-900">
+                  Coupon discount
+                </p>
+                <p className="font-semibold text-gray-900">
+                  - ₹ {discountedPrice}
+                </p>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between">

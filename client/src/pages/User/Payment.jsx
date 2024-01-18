@@ -19,6 +19,7 @@ function Payment() {
   const phone = location.state?.phone;
   const subTotal = location.state?.subTotal;
   const quantity = location.state?.quantity;
+  const couponId = location.state?.couponId;
   const token = Cookie.get("token");
 
   function handleCOD() {
@@ -27,6 +28,7 @@ function Payment() {
         .post(
           `${serverUrl}/order/add`,
           {
+            couponId,
             productIds,
             subTotal,
             shipping,
@@ -74,6 +76,7 @@ function Payment() {
         {
           amount,
           productIds,
+          couponId,
           subTotal,
           shipping,
           total,
@@ -98,12 +101,19 @@ function Payment() {
         description: "Test Transaction",
 
         order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-        handler: function (response) {
-          axios.post(
-            `${serverUrl}/order/validatePayment`,
-            { ...response },
-            { withCredentials: true }
-          );
+        handler: async function (response) {
+          axios
+            .post(
+              `${serverUrl}/order/validatePayment`,
+              { ...response },
+              { withCredentials: true }
+            )
+            .then((res) => {
+              if (res.data.success) {
+                navigate("/user/home");
+                toast.success("Your order is on move");
+              }
+            });
         },
         prefill: {
           //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
@@ -121,12 +131,7 @@ function Payment() {
       var rzp1 = new window.Razorpay(options);
       rzp1.on("payment.failed", function (response) {
         alert(response.error.code);
-        alert(response.error.description);
-        alert(response.error.source);
-        alert(response.error.step);
-        alert(response.error.reason);
-        alert(response.error.metadata.order_id);
-        alert(response.error.metadata.payment_id);
+        toast.error("payment failed");
       });
       rzp1.open();
     } catch (error) {

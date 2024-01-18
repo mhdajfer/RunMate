@@ -167,7 +167,7 @@ function SingleOrderDetails() {
             <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-[60rem] mx-auto bg-gray-50 dark:bg-gray-800 space-y-6">
               <div className="flex justify-between items-center w-full">
                 <p className="text-md dark:text-white leading-5 text-gray-800">
-                  Customer
+                  Customer name
                 </p>
                 <p className="text-white">{orderData?.name}</p>
               </div>
@@ -182,6 +182,20 @@ function SingleOrderDetails() {
                   Order status
                 </p>
                 <p className="text-white">{orderData?.status}</p>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <p className="text-md dark:text-white leading-5 text-gray-800">
+                  payment status
+                </p>
+                <p className="text-white">
+                  {orderData?.paymentStatus ? "Paid" : "Not Paid"}
+                </p>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <p className="text-md dark:text-white leading-5 text-gray-800">
+                  payment mode
+                </p>
+                <p className="text-white">{orderData?.mode}</p>
               </div>
             </div>
           </div>

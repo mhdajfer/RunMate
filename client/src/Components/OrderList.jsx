@@ -7,12 +7,14 @@ import { useNavigate } from "react-router-dom";
 function OrderList({ order }) {
   const navigate = useNavigate();
   const orderId = order._id;
-  function hanldeReturnOrder() {
+
+  function handleChangeStatus(orderStatus) {
+    console.log(orderStatus);
     try {
       axios
         .post(
           `${serverUrl}/order/status/change`,
-          { orderStatus: "Returned", orderId },
+          { orderStatus, orderId },
           { withCredentials: true }
         )
         .then((res) => {
@@ -28,6 +30,7 @@ function OrderList({ order }) {
       console.log(error);
     }
   }
+
   return (
     <>
       <div className="bg-gray-50 p-4 rounded-lg border-md mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-[64rem] text-center">
@@ -59,11 +62,7 @@ function OrderList({ order }) {
             </div>
           </div>
           <div className="text-base text-orange-500 leading-6 w-1/5">
-            {order.status === "Deliver"
-              ? "Delivered"
-              : order.status === "Cancel"
-              ? "Canceled"
-              : order.status}
+            {order.status}
           </div>
           <div className="text-base dark:text-black leading-6 text-gray-800 w-1/5">
             {order.subTotal}
@@ -71,10 +70,23 @@ function OrderList({ order }) {
           <div className="text-base dark:text-black xl:text-lg w-1/5 font-semibold leading-6 text-gray-800 ">
             {order.total}
             <div>
-              {!(order.status === "Deliver") ? null : (
+              {!(order.status === "Delivered") ? (
+                order.status === "waiting for admin" ? (
+                  <button
+                    className="mt-8 bg-transparent hover:bg-blue-500 text-blue-700  hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded"
+                    onClick={() => {
+                      handleChangeStatus("cancelled");
+                    }}
+                  >
+                    Cancel Order
+                  </button>
+                ) : null
+              ) : (
                 <button
                   className="mt-8 bg-transparent hover:bg-blue-500 text-blue-700  hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded"
-                  onClick={hanldeReturnOrder}
+                  onClick={() => {
+                    handleChangeStatus("Returned");
+                  }}
                 >
                   Return Order
                 </button>

@@ -9,6 +9,8 @@ import AddCategory from "../pages/Admin/AddCategory";
 import EditUser from "../pages/Admin/EditUser";
 import Orders from "../pages/Admin/Orders";
 import SingleOrderDetails from "../Components/SingleOrderDetails";
+import Coupons from "../pages/Admin/Coupons";
+import AddCoupon from "../pages/Admin/AddCoupon";
 
 function AdminRoutes() {
   return (
@@ -24,6 +26,8 @@ function AdminRoutes() {
           <Route path="/category/add" element={<AddCategory />} />
           <Route path="/orders/" element={<Orders />} />
           <Route path="/order/getOne" element={<SingleOrderDetails />} />
+          <Route path="/coupons" element={<Coupons />} />
+          <Route path="/coupon/add" element={<AddCoupon />} />
         </Route>
       </Route>
     </Routes>

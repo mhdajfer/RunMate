@@ -7,6 +7,7 @@ const crypto = require("crypto");
 
 exports.add = async (req, res) => {
   const {
+    couponId,
     productIds,
     subTotal,
     shipping,
@@ -37,8 +38,8 @@ exports.add = async (req, res) => {
         productId: product.productId,
         quantity: product.quantity,
       })),
-      productNames,
       subTotal,
+      coupon: couponId,
       shipping,
       total,
       name,
@@ -47,7 +48,7 @@ exports.add = async (req, res) => {
       zip,
       phone,
       mode,
-      paymentStatus: true,
+      paymentStatus: false,
     });
 
     orderDoc.save();
@@ -73,6 +74,7 @@ exports.add = async (req, res) => {
 
 exports.create = async (req, res) => {
   const {
+    couponId,
     productIds,
     subTotal,
     shipping,
@@ -109,6 +111,7 @@ exports.create = async (req, res) => {
       quantity: product.quantity,
     })),
     subTotal,
+    coupon: couponId,
     shipping,
     total,
     name,
@@ -117,7 +120,6 @@ exports.create = async (req, res) => {
     zip,
     phone,
     mode,
-    status: "Payment pending",
     razor_orderId: result.id,
   });
   orderDoc.save();
@@ -140,13 +142,28 @@ exports.validatePayment = async (req, res) => {
       {
         $set: {
           // Fields to add or update regardless of insert/update
-          status: "pending",
           paymentStatus: true,
           razor_paymentId: razorpay_payment_id,
           razor_signature: razorpay_signature,
         },
       }
     );
+
+    const user = await orderModel.find(
+      { razor_orderId: razorpay_order_id },
+      { userId: 1, _id: 0 }
+    );
+    // emptying cart
+    userModel
+      .updateOne({ _id: user[0].userId }, { $set: { cart: [] } })
+      .then((response) => {
+        console.log("saved");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    return res.json({ success: true });
   } else {
     console.log("not validated");
   }
@@ -170,10 +187,18 @@ exports.changeStatus = async (req, res) => {
   const { orderStatus, orderId } = req.body;
 
   try {
-    await orderModel.updateOne(
-      { _id: orderId },
-      { $set: { status: orderStatus } }
-    );
+    if (orderStatus === "Delivered") {
+      await orderModel.updateOne(
+        { _id: orderId },
+        { $set: { status: orderStatus, paymentStatus: true } }
+      );
+    } else {
+      await orderModel.updateOne(
+        { _id: orderId },
+        { $set: { status: orderStatus } }
+      );
+    }
+
     return res.json({ success: true, message: "Status Updated" });
   } catch (error) {
     console.log(error);

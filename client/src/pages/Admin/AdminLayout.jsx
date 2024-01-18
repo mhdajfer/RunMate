@@ -21,6 +21,9 @@ export default function AdminLayout() {
       case "Orders":
         navigate("/admin/orders");
         break;
+      case "Coupons":
+        navigate("/admin/coupons");
+        break;
     }
   }
 

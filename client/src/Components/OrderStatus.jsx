@@ -86,8 +86,8 @@ function OrderStatus({ order, cancelFn }) {
             >
               {/* // eslint-disable-next-line react/prop-types */}
               <option value=""> {orderStatus}</option>
-              <option value="Cancel">Cancel</option>
-              <option value="Deliver">Deliver</option>
+              <option value="Cancelled">Cancel</option>
+              <option value="Delivered">Deliver</option>
             </select>
           </div>
         </div>

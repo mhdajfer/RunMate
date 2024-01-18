@@ -7,6 +7,7 @@ const userRouter = require("./Routes/UserRouter.js");
 const adminRouter = require("./Routes/AdminRouter.js");
 const productRouter = require("./Routes/ProductRouter.js");
 const orderRouter = require("./Routes/OrderRouter.js");
+const couponRouter = require("./Routes/CouponRouter.js");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -36,6 +37,7 @@ mongoose
 app.use("/product", productRouter);
 app.use("/admin", adminRouter);
 app.use("/order", orderRouter);
+app.use("/coupon/", couponRouter);
 app.use("/", userRouter);
 
 app.listen(port, () => {

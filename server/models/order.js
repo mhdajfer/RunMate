@@ -58,7 +58,7 @@ const orderSchema = mongoose.Schema({
   },
   status: {
     type: String,
-    default: "Processing",
+    default: "waiting for admin",
   },
   razor_orderId: {
     type: String,
@@ -68,6 +68,9 @@ const orderSchema = mongoose.Schema({
   },
   razor_signature: {
     type: String,
+  },
+  coupon: {
+    type: mongoose.Schema.Types.ObjectId,
   },
 });
 
