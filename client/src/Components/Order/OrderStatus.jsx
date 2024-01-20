@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import serverUrl from "../server";
+import serverUrl from "../../server";
 import toast from "react-hot-toast";
 
 // eslint-disable-next-line react/prop-types

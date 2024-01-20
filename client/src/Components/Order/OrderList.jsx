@@ -1,5 +1,5 @@
 import axios from "axios";
-import serverUrl from "../server";
+import serverUrl from "../../server";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 

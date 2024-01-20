@@ -1,6 +1,6 @@
-import OrderList from "../../Components/OrderList";
+import OrderList from "../../Components/Order/OrderList";
 import { useLocation } from "react-router-dom";
-import ProfileSideBar from "../../Components/ProfileSideBar";
+import ProfileSideBar from "../../Components/Layout/ProfileSideBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "../../Components/Pagination";

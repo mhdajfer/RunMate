@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -6,7 +5,6 @@ import serverUrl from "../../server";
 import DialogBox from "../../Components/DialogBox";
 
 export default function Products() {
-  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [isBlocked, setIsBlocked] = useState(Boolean);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -53,10 +51,6 @@ export default function Products() {
     if (user.isDeleted) return toast("User Already Deleted");
     setIsDialogOpen(true);
     setOneUser(user);
-  }
-
-  function handleEdit(user) {
-    navigate("/admin/users/edit", { state: { user } });
   }
 
   const handleBlocks = async (user) => {
@@ -115,12 +109,6 @@ export default function Products() {
                           onClick={() => handleDelete(user)}
                         >
                           {user.isDeleted ? "Restore" : "Delete"}
-                        </button>
-                        <button
-                          className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
-                          onClick={() => handleEdit(user)}
-                        >
-                          Edit
                         </button>
                         <button
                           className="bg-green-700 px-2 m-1 rounded-md text-md text-white"

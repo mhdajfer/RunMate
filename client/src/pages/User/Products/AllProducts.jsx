@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import ProductCard from "../../Components/ProductCard";
+import ProductCard from "../../../Components/ProductCard";
 import axios from "axios";
-import serverUrl from "../../server";
+import serverUrl from "../../../server";
 
 // eslint-disable-next-line react/prop-types
-export default function Sports({ category }) {
+export default function AllProducts({ category }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {

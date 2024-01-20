@@ -3,7 +3,7 @@ import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import serverURL from "../../serverURL";
+import serverURL from "../../../serverURL";
 
 export default function Subnavbar() {
   const navigate = useNavigate();

@@ -2,8 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import serverUrl from "../../server";
-import DialogBox from "../../Components/DialogBox";
+import serverUrl from "../../../server";
+import DialogBox from "../../../Components/DialogBox";
 
 function Category() {
   const [categoryList, setCategoryList] = useState([]);

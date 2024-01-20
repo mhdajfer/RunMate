@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import serverURL from "../../../serverURL";
+import serverURL from "../../../../serverURL";
 
 function PasswordChange() {
   const [email, setEmail] = useState("");

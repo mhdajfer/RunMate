@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import serverURL from "../../../serverURL";
+import serverURL from "../../../../serverURL";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 export default function AddProduct() {

@@ -2,9 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import serverUrl from "../../server";
-import DialogBox from "../../Components/DialogBox";
-import Pagination from "../../Components/Pagination";
+import serverUrl from "../../../server";
+import DialogBox from "../../../Components/DialogBox";
+import Pagination from "../../../Components/Pagination";
 
 export default function Products() {
   const navigate = useNavigate();

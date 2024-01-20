@@ -1,11 +1,11 @@
 import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import serverURL from "../../../serverURL";
+import serverURL from "../../../../serverURL";
 import toast from "react-hot-toast";
-import ProfileSideBar from "../../Components/ProfileSideBar";
-import DialogBox from "../../Components/DialogBox";
-import EditAddress from "../../Components/EditAddress";
+import ProfileSideBar from "../../../Components/Layout/ProfileSideBar";
+import DialogBox from "../../../Components/DialogBox";
+import EditAddress from "../../../Components/EditAddress";
 
 function UserProfile() {
   const token = Cookie.get("token");

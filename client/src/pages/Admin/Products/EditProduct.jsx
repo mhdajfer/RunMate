@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import serverURL from "../../../serverURL";
+import serverURL from "../../../../serverURL";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
-import DialogBox from "../../Components/DialogBox";
+import DialogBox from "../../../Components/DialogBox";
 
 export default function EditProduct() {
   const location = useLocation();

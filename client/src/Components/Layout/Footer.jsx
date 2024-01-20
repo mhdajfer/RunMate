@@ -1,4 +1,4 @@
-import { Support, About } from "../staticData/data";
+import { Support, About } from "../../staticData/data";
 import { Link } from "react-router-dom";
 
 export default function Footer() {

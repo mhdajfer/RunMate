@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import ProductCard from "../../Components/ProductCard";
+import ProductCard from "../../../Components/ProductCard";
 import axios from "axios";
-import serverUrl from "../../server";
+import serverUrl from "../../../server";
 
 export default function WomenItems() {
   const [products, setProducts] = useState([]);

@@ -1,8 +1,8 @@
-import serverURL from "../../serverURL";
+import serverURL from "../../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
-import Icons from "../assets/Icons";
+import Icons from "../../assets/Icons";
 const { cart } = Icons;
 
 // eslint-disable-next-line react/prop-types
