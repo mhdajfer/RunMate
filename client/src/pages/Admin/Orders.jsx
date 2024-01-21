@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import serverUrl from "../../server";
-import OrderStatus from "../../Components/OrderStatus";
+import OrderStatus from "../../Components/Order/OrderStatus";
 import Pagination from "../../Components/Pagination";
 
 function Orders() {

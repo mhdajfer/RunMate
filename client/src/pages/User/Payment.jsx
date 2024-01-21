@@ -94,13 +94,13 @@ function Payment() {
         }
       );
       var options = {
-        key: data.key, // Enter the Key ID generated from the Dashboard
-        amount: amount * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        key: data.key,
+        amount: amount * 100,
         currency: "INR",
-        name: "Acme Corp", //your business name
+        name: "Acme Corp",
         description: "Test Transaction",
 
-        order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        order_id: orderId,
         handler: async function (response) {
           axios
             .post(
@@ -116,10 +116,9 @@ function Payment() {
             });
         },
         prefill: {
-          //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
-          name: "Gaurav Kumar", //your customer's name
+          name: "Gaurav Kumar",
           email: "gaurav.kumar@example.com",
-          contact: "9000090000", //Provide the customer's phone number for better conversion rates
+          contact: "9000090000",
         },
         notes: {
           address: "Razorpay Corporate Office",
@@ -132,10 +131,50 @@ function Payment() {
       rzp1.on("payment.failed", function (response) {
         alert(response.error.code);
         toast.error("payment failed");
+        navigate("/user/cart");
       });
       rzp1.open();
     } catch (error) {
       console.log("error while processing payment", error);
+    }
+  }
+
+  async function handleWalletPayment(amount) {
+    try {
+      axios
+        .post(`${serverUrl}/wallet/deduct`, { amount, token })
+        .then((res) => {
+          if (!res.data.success) {
+            return toast.error(res.data.message);
+          } else if (res.data.success) {
+            axios
+              .post(`${serverUrl}/order/add-wallet`, {
+                couponId,
+                productIds,
+                subTotal,
+                shipping,
+                total,
+                name,
+                address1,
+                state,
+                zip,
+                phone,
+                quantity,
+                token,
+                mode: "Wallet",
+              })
+              .then((res) => {
+                if (res.data.success) {
+                  toast.success(res.data.message);
+                  navigate("/user/home");
+                } else {
+                  toast.error(res.data.message);
+                }
+              });
+          }
+        });
+    } catch (error) {
+      console.log("error while processing payment via wallet", error);
     }
   }
   return (
@@ -175,7 +214,7 @@ function Payment() {
                       className="relative flex-1 text-sm font-medium p-1 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2"
                       onClick={() => setCard(true)}
                     >
-                      Pay With Card
+                      Online Payment
                     </button>
                     <button
                       className="relative flex-1 text-sm font-medium p-1 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2"
@@ -188,18 +227,14 @@ function Payment() {
                 <div style={{ display: card ? "block" : "none" }}>
                   <div className="space-y-4">
                     <div>
-                      <label
-                        className="block text-sm font-medium mb-1"
-                        htmlFor="card-nr"
+                      <button
+                        className="font-medium text-sm inline-flex items-center justify-center px-3 py-2 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out w-full bg-indigo-500 hover:bg-indigo-600 text-white focus:outline-none focus-visible:ring-2"
+                        onClick={() => {
+                          handleWalletPayment(total);
+                        }}
                       >
-                        Card Number <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        id="card-nr"
-                        className="text-sm text-gray-800 bg-white border rounded leading-5 py-2 px-3 border-gray-200 hover:border-gray-300 focus:border-indigo-300 shadow-sm placeholder-gray-400 focus:ring-0 w-full"
-                        type="text"
-                        placeholder="1234 1234 1234 1234"
-                      />
+                        Pay ₹ {total} via wallet
+                      </button>
                     </div>
                   </div>
                   <div className="mt-6">
@@ -210,7 +245,7 @@ function Payment() {
                           handleOnlinePayment(total);
                         }}
                       >
-                        Pay ₹ {total}
+                        Pay ₹ {total} via Razorpay
                       </button>
                     </div>
                     <div className="text-xs text-gray-500 italic text-center">

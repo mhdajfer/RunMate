@@ -10,21 +10,28 @@ function Orders() {
   const location = useLocation();
   const user = location.state?.user;
   const [orders, setOrders] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(2);
   const dataPerPage = 3;
 
   const lastDataIndex = currentPage * dataPerPage;
   const firstDataIndex = lastDataIndex - dataPerPage;
   const orderList = orders.slice(firstDataIndex, lastDataIndex);
+  console.log(currentPage);
 
   useEffect(() => {
     console.log("running orders");
     try {
-      axios.get(`${serverURL}/order/get-AllOrders`).then((res) => {
-        if (res.data.success) {
-          setOrders(res.data.data);
-        }
-      });
+      axios
+        .post(
+          `${serverURL}/order/get-AllOrders`,
+          { userId: user?._id },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            setOrders(res.data.data);
+          }
+        });
     } catch (error) {
       console.log(error);
     }

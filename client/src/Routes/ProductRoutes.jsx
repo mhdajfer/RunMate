@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import AdminLayout from "../pages/Admin/AdminLayout";
-import AddProduct from "../pages/Admin/AddProduct";
-import EditProduct from "../pages/Admin/EditProduct";
+import AddProduct from "../pages/Admin/Products/AddProduct";
+import EditProduct from "../pages/Admin/products/EditProduct";
 import PrivateRoutes from "../Utils/PrivateRoutes";
-import UserLayout from "../Components/UserLayout";
+import UserLayout from "../Components/Layout/UserLayout";
 import SingleProduct from "../pages/Product/SingleProduct";
-import SingleOrderDetails from "../Components/SingleOrderDetails";
+import SingleOrderDetails from "../Components/Order/SingleOrderDetails";
 
 function ProductRoutes() {
   return (

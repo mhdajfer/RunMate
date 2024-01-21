@@ -2,7 +2,7 @@ import HomePage from "../pages/User/HomePage";
 import LoginPage from "../pages/User/LoginPage";
 import { Route, Routes } from "react-router-dom";
 import PrivateRoutes from "../Utils/PrivateRoutes";
-import MenItems from "../pages/User/MenItems";
+import MenItems from "../pages/User/Products/MenItems";
 import SignupPage from "../pages/User/SignupPage";
 import UserLayout from "../Components/Layout/UserLayout";
 import Cart from "../pages/User/Cart";
@@ -11,9 +11,10 @@ import Payment from "../pages/User/Payment";
 import UserProfile from "../pages/User/Profile/UserProfile";
 import Orders from "../pages/User/Orders";
 import PasswordChange from "../pages/User/Profile/PasswordChange";
-import BestSelling from "../pages/User/BestSelling";
-import Women from "../pages/User/Women";
-import Sports from "../pages/User/Sports";
+import BestSelling from "../pages/User/Products/BestSelling";
+import Women from "../pages/User/Products/Women";
+import Sports from "../pages/User/Products/Sports";
+import WalletPage from "../pages/User/WalletPage";
 
 export default function UserRoutes() {
   return (
@@ -29,6 +30,7 @@ export default function UserRoutes() {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/password/change" element={<PasswordChange />} />
+          <Route path="/wallet" element={<WalletPage />} />
         </Route>
 
         <Route

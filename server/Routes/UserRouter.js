@@ -1,5 +1,6 @@
 const userController = require("../Controllers/userControllers");
 const cartController = require("../Controllers/cartControllers");
+const walletController = require("../Controllers/walletController");
 const express = require("express");
 const router = express.Router();
 
@@ -85,6 +86,19 @@ router.post("/getAllAddress", (req, res) => {
 
 router.post("/isUserBlocked", (req, res) => {
   userController.isUserBlocked(req, res);
+});
+
+//wallet Routes
+router.post("/wallet/add", (req, res) => {
+  walletController.addMoney(req, res);
+});
+
+router.post("/wallet/balance", (req, res) => {
+  walletController.getBalance(req, res);
+});
+
+router.post("/wallet/deduct", (req, res) => {
+  walletController.getDeducted(req, res);
 });
 
 module.exports = router;

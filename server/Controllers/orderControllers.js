@@ -5,6 +5,59 @@ const prodModel = require("../models/product");
 const razorpay = require("razorpay");
 const crypto = require("crypto");
 
+exports.addOrderforWallet = async (req, res) => {
+  const {
+    couponId,
+    productIds,
+    subTotal,
+    shipping,
+    total,
+    name,
+    address1,
+    state,
+    zip,
+    phone,
+    token,
+    mode,
+  } = req.body;
+  productIds.forEach((prod) => {
+    prodModel
+      .updateOne({ _id: prod.productId }, { $inc: { stock: -prod.quantity } })
+      .then((res) => {
+        console.log(res);
+      });
+  });
+  try {
+    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const orderDoc = new orderModel({
+      userId: user.id,
+      products: productIds.map((product) => ({
+        productId: product.productId,
+        quantity: product.quantity,
+      })),
+      subTotal,
+      coupon: couponId,
+      shipping,
+      total,
+      name,
+      address1,
+      state,
+      zip,
+      phone,
+      mode,
+      paymentStatus: true,
+    });
+    orderDoc.save();
+    await userModel.updateOne({ _id: user.id }, { $set: { cart: [] } });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Your Order is placed" });
+  } catch (error) {
+    console.log("error while adding order for wallet", error);
+  }
+};
+
 exports.add = async (req, res) => {
   const {
     couponId,
@@ -97,7 +150,7 @@ exports.create = async (req, res) => {
   });
 
   const options = {
-    amount: amount,
+    amount: amount * 100,
     currency: "INR",
     receipt: "receipt#1",
     partial_payment: false,
@@ -173,13 +226,23 @@ exports.getKey = async (req, res) => {
   res.json({ key: process.env.RAZORPAY_KEY_ID });
 };
 
-exports.getAllOrders = async (req, res) => {
+exports.getUserOrders = async (req, res) => {
+  const { userId } = req.body;
   try {
-    const orders = await orderModel.find().sort({ _id: -1 });
+    const orders = await orderModel.find({ userId: userId }).sort({ _id: -1 });
     return res.json({ success: true, data: orders });
   } catch (error) {
     console.log(error);
     return res.json({ success: false, message: error.message });
+  }
+};
+
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await orderModel.find();
+    return res.json({ success: true, data: orders });
+  } catch (error) {
+    console.log("Error getting all orders", error);
   }
 };
 

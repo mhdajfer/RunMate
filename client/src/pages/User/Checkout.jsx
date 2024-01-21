@@ -21,7 +21,8 @@ function Checkout() {
   const [discount, setDiscount] = useState(0);
   const [selectedCoupon, setSelectedCoupon] = useState();
   //
-  const cartItems = location.state?.cartItems;
+  let cartItems = [];
+  cartItems = location.state?.cartItems;
   const productIds = cartItems.map((item) => ({
     productId: item.productId,
     quantity: item.quantity,

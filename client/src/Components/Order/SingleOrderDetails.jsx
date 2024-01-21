@@ -105,7 +105,7 @@ function SingleOrderDetails() {
                       Subtotal
                     </p>
                     <p className="text-base dark:text-gray-300 leading-4 text-gray-600">
-                      ${orderData?.subTotal}
+                    ₹{orderData?.subTotal}
                     </p>
                   </div>
                   <div className="flex justify-between items-center w-full">
@@ -113,7 +113,13 @@ function SingleOrderDetails() {
                       Discount{" "}
                     </p>
                     <p className="text-base dark:text-gray-300 leading-4 text-gray-600">
-                      -$00.00 (0%)
+                      {orderData?.shipping + orderData?.subTotal ==
+                      orderData?.total
+                        ? " ₹00.00 (0%)"
+                        : ` ₹${
+                            orderData?.total -
+                            (orderData?.shipping + orderData?.subTotal)
+                          }`}
                     </p>
                   </div>
                   <div className="flex justify-between items-center w-full">
@@ -121,7 +127,7 @@ function SingleOrderDetails() {
                       Shipping
                     </p>
                     <p className="text-base dark:text-gray-300 leading-4 text-gray-600">
-                      ${orderData?.shipping}
+                      ₹{orderData?.shipping}
                     </p>
                   </div>
                 </div>
@@ -130,7 +136,7 @@ function SingleOrderDetails() {
                     Total
                   </p>
                   <p className="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">
-                    ${orderData?.subTotal + orderData?.shipping}
+                    ₹{orderData?.total}
                   </p>
                 </div>
               </div>

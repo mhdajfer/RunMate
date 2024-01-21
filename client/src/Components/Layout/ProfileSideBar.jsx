@@ -15,12 +15,12 @@ function ProfileSideBar({ user }) {
             />
             <a href="#" className="text-main-color">
               {/* eslint-disable-next-line react/prop-types */}
-              {user.name}
+              {user?.name}
             </a>
           </div>
           <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
             {/* eslint-disable-next-line react/prop-types */}
-            {user.name}
+            {user?.name}
           </h1>
           <h3 className="text-gray-600 font-lg text-semibold leading-6">
             Owner at Her Company Inc.
@@ -57,12 +57,20 @@ function ProfileSideBar({ user }) {
             <span>Orders</span>
           </div>
           <div
-            className="bg-gray-200 p-2 hover:bg-white cursor-pointer"
+            className="bg-gray-200 p-2 hover:bg-white border-b border-gray-400 cursor-pointer"
             onClick={() => {
               navigate("/user/password/change");
             }}
           >
             <span>Change password</span>
+          </div>
+          <div
+            className="bg-gray-200 p-2 hover:bg-white cursor-pointer"
+            onClick={() => {
+              navigate("/user/wallet", { state: { user } });
+            }}
+          >
+            <span>Wallet</span>
           </div>
         </div>
       </div>

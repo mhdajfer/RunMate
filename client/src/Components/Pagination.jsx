@@ -5,6 +5,7 @@ function Pagination({ totalItems, dataPerPage, setCurrentPage, currentPage }) {
   for (let i = 1; i <= Math.ceil(totalItems / dataPerPage); i++) {
     totalPages.push(i);
   }
+
   return (
     <>
       <nav aria-label="Page navigation example">
@@ -15,9 +16,7 @@ function Pagination({ totalItems, dataPerPage, setCurrentPage, currentPage }) {
               onClick={() =>
                 setCurrentPage(
                   `${
-                    currentPage > totalPages.length
-                      ? currentPage
-                      : parseInt(currentPage) - 1
+                    currentPage <= 1 ? currentPage : parseInt(currentPage) - 1
                   }`
                 )
               }

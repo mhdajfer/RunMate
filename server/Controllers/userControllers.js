@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { CreateToken } = require("../Utils/Jwt/createToken");
 const sendMail = require("../Utils/NodeMailer/sendMail");
-const { add } = require("./cartControllers");
 
 exports.getUsers = async (req, res) => {
   try {

@@ -66,6 +66,12 @@ const UserSchema = mongoose.Schema({
       },
     },
   ],
+  wallet: {
+    balance: {
+      type: Number,
+      default: 0,
+    },
+  },
 });
 
 const UserModel = mongoose.model("user", UserSchema);

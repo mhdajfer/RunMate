@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import Navbar from "../../Components/Navbar";
+import Navbar from "../../Components/Layout/Navbar";
 import store from "../../assets/IconsPNG/store.png";
 
 export default function AdminLayout() {
@@ -24,6 +24,9 @@ export default function AdminLayout() {
       case "Coupons":
         navigate("/admin/coupons");
         break;
+      case "Dashboard":
+        navigate("/admin/dashboard");
+        break;
     }
   }
 
@@ -42,7 +45,7 @@ export default function AdminLayout() {
       <Navbar role="admin" />
 
       <div className="flex">
-        <div className="h-screen w-[34vw] max-w-[380px] p-4 bg-[#BBE1FA]">
+        <div className="h-screen w-[34vw] max-w-[380px] p-4 bg-[#BBE1FA] sticky top-0">
           {sideBarItems.map((item, i) => (
             <div key={i}>
               <button

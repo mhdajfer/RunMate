@@ -18,8 +18,16 @@ router.get("/getKey", (req, res) => {
   orderController.getKey(req, res);
 });
 
-router.get("/get-AllOrders", (req, res) => {
+router.post("/add-wallet", (req, res) => {
+  orderController.addOrderforWallet(req, res);
+});
+
+router.get("/getAll", (req, res) => {
   orderController.getAllOrders(req, res);
+});
+
+router.post("/get-AllOrders", (req, res) => {
+  orderController.getUserOrders(req, res);
 });
 
 router.get("/details/:id", (req, res) => {
