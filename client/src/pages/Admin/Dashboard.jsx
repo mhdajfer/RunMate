@@ -61,7 +61,7 @@ function Dashboard() {
             </h1>
           </div>
         </div>
-        <div>
+        <div className="">
           <LineChart data={chartData} />
         </div>
       </div>
