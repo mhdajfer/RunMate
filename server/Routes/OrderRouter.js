@@ -1,36 +1,40 @@
 const express = require("express");
 const router = express.Router();
 const orderController = require("../Controllers/orderControllers");
+const { isUserLoggedIn, isAdminLoggedIn } = require("../Middlewares/Auth");
 
-router.post("/add", (req, res) => {
+router.post("/add", isUserLoggedIn, (req, res) => {
   orderController.add(req, res);
 });
 
-router.post("/create", (req, res) => {
+router.post("/create", isUserLoggedIn, (req, res) => {
   orderController.create(req, res);
 });
 
-router.post("/validatePayment", (req, res) => {
+router.post("/validatePayment", isUserLoggedIn, (req, res) => {
   orderController.validatePayment(req, res);
 });
 
-router.get("/getKey", (req, res) => {
+router.get("/getKey", isUserLoggedIn, (req, res) => {
   orderController.getKey(req, res);
 });
 
-router.post("/add-wallet", (req, res) => {
+router.post("/add-wallet", isUserLoggedIn, (req, res) => {
   orderController.addOrderforWallet(req, res);
 });
 
-router.get("/getAll", (req, res) => {
+router.get("/getAll", isAdminLoggedIn, (req, res) => {
   orderController.getAllOrders(req, res);
 });
 
-router.post("/get-AllOrders", (req, res) => {
+router.post("/get-AllOrders", isUserLoggedIn, (req, res) => {
   orderController.getUserOrders(req, res);
 });
 
-router.get("/details/:id", (req, res) => {
+router.get("/details/:id", isUserLoggedIn, (req, res) => {
+  orderController.getOrderDetails(req, res);
+});
+router.get("/details/:id/admin", isAdminLoggedIn, (req, res) => {
   orderController.getOrderDetails(req, res);
 });
 

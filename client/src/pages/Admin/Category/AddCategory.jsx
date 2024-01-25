@@ -22,6 +22,8 @@ function AddCategory() {
           if (res.data.success) {
             toast.success(res.data.message);
             navigate("/admin/category");
+          } else {
+            toast.error(res.data.message);
           }
         });
     } catch (error) {

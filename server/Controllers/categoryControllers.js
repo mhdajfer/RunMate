@@ -6,7 +6,13 @@ exports.addCategory = async (req, res) => {
     return res.json({ success: false, message: "Enter Category name" });
 
   try {
-    const categoryDoc = new categoryModel({ name, desc });
+    const dataExist = await categoryModel.findOne({ name: name.toLowerCase() });
+    if (dataExist)
+      return res.json({ success: false, message: "Category already exists" });
+    const categoryDoc = new categoryModel({
+      name: name.toLowerCase(),
+      desc: desc.toLowerCase(),
+    });
     categoryDoc.save();
     res
       .status(201)

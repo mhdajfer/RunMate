@@ -47,27 +47,6 @@ function SingleProductCard(item) {
             ))}
           </div>
           <div className="">
-            {/* <img
-              src={serverURL + "/" + product.images[0]}
-              alt=""
-              className="h-[30rem]"
-            /> */}
-            {/* <ReactImageMagnify
-              className=""
-              {...{
-                smallImage: {
-                  alt: "Wristwatch by Ted Baker London",
-                  isFluidWidth: true,
-                  src: serverURL + "/" + product.images[0],
-                  
-                },
-                largeImage: {
-                  src: serverURL + "/" + product.images[0],
-                  width: 1600,
-                  height: 1800,
-                },
-              }}
-            /> */}
             <ImageMagnifier image={product.images[0]} />
           </div>
         </div>
@@ -75,7 +54,7 @@ function SingleProductCard(item) {
           <h1 className="font-bold text-3xl">{product.brand}</h1>
           <p className="my-6 ">{product.subDesc}</p>
           <h1 className="text-6xl font-semibold text-[#003355]">
-            ${product.price}
+            ₹ {product.price}
           </h1>
           <p className="text-slate-500">(10,786 Ratings & 1859 Reviews)</p>
           <div className="flex space-x-1 my-2">

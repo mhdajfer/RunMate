@@ -25,6 +25,16 @@ exports.delete = async (req, res) => {
   }
 };
 
+exports.restore = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await UserModel.updateOne({ _id: id }, { $set: { isDeleted: false } });
+    res.status(200).json({ success: true, message: "user restored" });
+  } catch (error) {
+    console.log("error while restoring user", error);
+  }
+};
+
 exports.edit = async (req, res) => {
   let user = req.body;
   console.log(user);
@@ -293,6 +303,7 @@ exports.logout = async (req, res) => {
 
 exports.isUserBlocked = async (req, res) => {
   const token = req.cookies.token;
+  console.log(token);
   try {
     const user = jwt.verify(token, process.env.MY_SECRET_KEY);
     if (!user) return res.json({ success: false, message: "user not found" });

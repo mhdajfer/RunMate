@@ -25,7 +25,7 @@ export default function Subnavbar() {
             }
           })
       : null;
-  });
+  }, [navigate, token]);
   return (
     <div className="relative">
       <div className="my-2 flex justify-center">

@@ -16,7 +16,6 @@ function Orders() {
   const lastDataIndex = currentPage * dataPerPage;
   const firstDataIndex = lastDataIndex - dataPerPage;
   const orderList = orders.slice(firstDataIndex, lastDataIndex);
-  console.log(currentPage);
 
   useEffect(() => {
     console.log("running orders");

@@ -59,6 +59,11 @@ function Checkout() {
   }, []);
 
   function handleDiscount(coupon) {
+    if (coupon === 0) {
+      setDiscount(0);
+      setSelectedCoupon(null);
+      return true;
+    }
     setDiscount(coupon?.discount);
     setSelectedCoupon(coupon);
   }

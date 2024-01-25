@@ -11,16 +11,20 @@ function Dashboard() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        await axios.get(`${serverUrl}/users`).then((res) => {
-          if (res.data.success) {
-            setUsers(res.data.users);
-          }
-        });
-        await axios.get(`${serverUrl}/order/getAll`).then((res) => {
-          if (res.data.success) {
-            setOrders(res.data.data);
-          }
-        });
+        await axios
+          .get(`${serverUrl}/users`, { withCredentials: true })
+          .then((res) => {
+            if (res.data.success) {
+              setUsers(res.data.users);
+            }
+          });
+        await axios
+          .get(`${serverUrl}/order/getAll`, { withCredentials: true })
+          .then((res) => {
+            if (res.data.success) {
+              setOrders(res.data.data);
+            }
+          });
       } catch (error) {
         console.log("error while loading Dashboard", error);
       }

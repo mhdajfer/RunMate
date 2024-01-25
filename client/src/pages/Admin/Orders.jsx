@@ -8,6 +8,7 @@ import Pagination from "../../Components/Pagination";
 function Orders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+  const [clickedOrder, setClickedOrder] = useState();
   const [isOrderStatusOpen, setIsOrderStatusOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   let dataPerPage = 2;
@@ -18,15 +19,17 @@ function Orders() {
 
   useEffect(() => {
     try {
-      axios.get(`${serverUrl}/admin/orders`).then((res) => {
-        if (res.data.success) {
-          setOrders(res.data.data);
-        }
-      });
+      axios
+        .get(`${serverUrl}/admin/orders`, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            setOrders(res.data.data);
+          }
+        });
     } catch (error) {
       console.log(error);
     }
-  });
+  }, [isOrderStatusOpen]);
 
   function handleSingleOrderDetails(order) {
     navigate("/admin/order/getOne", { state: { order } });
@@ -54,7 +57,11 @@ function Orders() {
           </thead>
           <tbody>
             {!orders.length ? (
-              <h1>No Orders yet!!</h1>
+              <tr>
+                <td>
+                  <h1>No Orders yet!!</h1>
+                </td>
+              </tr>
             ) : (
               orderList.map((order, i) => {
                 return (
@@ -82,7 +89,8 @@ function Orders() {
                       <button
                         className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
                         onClick={() => {
-                          handleStatus(order);
+                          handleStatus();
+                          setClickedOrder(order);
                         }}
                       >
                         Change Status
@@ -90,7 +98,7 @@ function Orders() {
                       <div className="absolute right-[10%]">
                         {isOrderStatusOpen && (
                           <OrderStatus
-                            order={order}
+                            order={clickedOrder}
                             cancelFn={cancelOrderStatus}
                           />
                         )}
@@ -100,12 +108,16 @@ function Orders() {
                 );
               })
             )}
-            <Pagination
-              totalItems={orders.length}
-              dataPerPage={dataPerPage}
-              setCurrentPage={setCurrentPage}
-              currentPage={currentPage}
-            />
+            <tr>
+              <td>
+                <Pagination
+                  totalItems={orders.length}
+                  dataPerPage={dataPerPage}
+                  setCurrentPage={setCurrentPage}
+                  currentPage={currentPage}
+                />
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

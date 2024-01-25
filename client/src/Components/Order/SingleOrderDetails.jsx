@@ -10,7 +10,9 @@ function SingleOrderDetails() {
 
   useEffect(() => {
     axios
-      .get(`${serverUrl}/order/details/${order._id}`)
+      .get(`${serverUrl}/order/details/${order._id}/admin`, {
+        withCredentials: true,
+      })
       .then((res) => {
         if (res.data.success) {
           setOrderData(res.data.data);
@@ -105,7 +107,7 @@ function SingleOrderDetails() {
                       Subtotal
                     </p>
                     <p className="text-base dark:text-gray-300 leading-4 text-gray-600">
-                    ₹{orderData?.subTotal}
+                      ₹{orderData?.subTotal}
                     </p>
                   </div>
                   <div className="flex justify-between items-center w-full">

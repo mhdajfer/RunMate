@@ -10,12 +10,10 @@ export default function Products() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [Oneuser, setOneUser] = useState("");
 
-  console.log(users);
-
   useEffect(() => {
     try {
       axios
-        .get(`${serverUrl}/users`)
+        .get(`${serverUrl}/users`, { withCredentials: true })
         .then((res) => {
           setUsers(res.data.users);
         })
@@ -35,22 +33,37 @@ export default function Products() {
 
   function confirmDelete(user) {
     axios
-      .get(`${serverUrl}/users/delete/${user._id}`)
+      .get(`${serverUrl}/users/delete/${user._id}`, { withCredentials: true })
       .then((res) => {
         if (res.data.success) {
           setIsDialogOpen(false);
           setOneUser(null);
           toast.success(res.data.message);
-          console.log(res.data);
         }
       })
       .catch((err) => console.log(err));
   }
 
   function handleDelete(user) {
-    if (user.isDeleted) return toast("User Already Deleted");
-    setIsDialogOpen(true);
     setOneUser(user);
+    if (user.isDeleted) {
+      try {
+        axios
+          .get(`${serverUrl}/users/restore/${user._id}`, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            if (res.data.success) {
+              toast.success(res.data.message);
+            }
+          })
+          .catch((err) => toast.error(err.message));
+      } catch (error) {
+        console.log("error while restoring user", error);
+      }
+    } else {
+      setIsDialogOpen(true);
+    }
   }
 
   const handleBlocks = async (user) => {

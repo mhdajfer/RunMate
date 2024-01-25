@@ -41,11 +41,13 @@ export default function EditProduct() {
             setProduct(res.data.data);
           }
         });
-      axios.get(`${serverURL}/admin/category`).then((res) => {
-        if (res.data.success) {
-          setCategoryList(res.data.data);
-        }
-      });
+      axios
+        .get(`${serverURL}/admin/category`, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            setCategoryList(res.data.data);
+          }
+        });
     } catch (error) {
       toast.error("white while loading categories");
       console.log(error);

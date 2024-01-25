@@ -29,4 +29,8 @@ router.get("/delete/:id", (req, res) => {
   productController.delete(req, res);
 });
 
+router.get("/restore/:id", (req, res) => {
+  productController.restore(req, res);
+});
+
 module.exports = router;

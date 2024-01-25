@@ -13,17 +13,18 @@ function Category() {
 
   useEffect(() => {
     try {
-      axios.get(`${serverUrl}/admin/category`).then((res) => {
-        if (res.data.success) {
-          setCategoryList(res.data.data);
-          console.log("yes");
-        }
-      });
+      axios
+        .get(`${serverUrl}/admin/category`, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            setCategoryList(res.data.data);
+          }
+        });
     } catch (error) {
       toast.error("Error while loading category");
       console.log(error);
     }
-  }, [categoryList]);
+  }, [categoryList.length]);
 
   function handleDelete(category) {
     setCategory(category);
@@ -36,6 +37,9 @@ function Category() {
   }
 
   function confirmDelete(category) {
+    setCategoryList((prevList) => {
+      return prevList.filter((catry) => catry._id !== category._id);
+    });
     try {
       axios
         .post(
@@ -48,6 +52,9 @@ function Category() {
             toast.success(res.data.message);
             navigate("/admin/category");
             setIsDialogOpen(false);
+          } else {
+            toast.error(res.data.message);
+            categoryList.push(category);
           }
         });
     } catch (error) {

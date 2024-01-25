@@ -20,6 +20,15 @@ function CouponField({ coupon, setDiscount }) {
           >
             Tap to Apply
           </span>
+          <span
+            id="cpnBtn"
+            onClick={() => {
+              setDiscount(0);
+            }}
+            className="border border-white hover:text-black bg-purple-400  px-1 py-1 rounded-lg cursor-pointer"
+          >
+            Cancel
+          </span>
         </div>
         <p className="text-sm">Valid Till: 20Dec, 2024</p>
 

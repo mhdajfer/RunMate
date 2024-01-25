@@ -31,11 +31,12 @@ export default function Products() {
     } catch (error) {
       console.log("error while fetching products", error);
     }
-  }, [products]);
+  }, []);
 
   function handleDelete(product) {
-    setIsDialogOpen(true);
     setProdForDelete(product);
+
+    setIsDialogOpen(true);
   }
   function CancelDelete() {
     setProdForDelete(null);

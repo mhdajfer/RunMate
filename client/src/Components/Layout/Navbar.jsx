@@ -49,25 +49,26 @@ export default function Navbar({ role }) {
             </h1>
           </div>
           <div>
-            <form
-              onSubmit={(e) => {
-                handleFormSubmit(e);
-              }}
-            >
-              <input
-                type="search"
-                name="search"
-                className="rounded-full bg-[#0F4C75] px-4 py-1"
-                placeholder="Search"
-                onChange={(e) => {
-                  setSearch(e.target.value);
+            {role === "admin" ? null : (
+              <form
+                onSubmit={(e) => {
+                  handleFormSubmit(e);
                 }}
-              />
-            </form>
+              >
+                <input
+                  type="search"
+                  name="search"
+                  className="rounded-full bg-[#0F4C75] px-4 py-1"
+                  placeholder="Search"
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                />
+              </form>
+            )}
           </div>
           <div className="space-x-6 flex">
-            <div onClick={handleCart}>{cart}</div>
-            {/* <div onClick={handleCart}>{cart}</div> */}
+            {role === "admin" ? null : <div onClick={handleCart}>{cart}</div>}
 
             <button
               className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium"

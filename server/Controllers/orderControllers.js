@@ -275,7 +275,6 @@ exports.getOrderDetails = async (req, res) => {
     const data = await orderModel
       .findById(orderId)
       .populate("products.productId");
-    console.log(data);
 
     return res.json({ success: true, data: data });
   } catch (error) {

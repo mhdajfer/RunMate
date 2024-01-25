@@ -13,16 +13,18 @@ function Coupons() {
 
   useEffect(() => {
     try {
-      axios.get(`${serverUrl}/coupon/getCoupons`).then((res) => {
-        if (res.data.success) {
-          setCouponList(res.data.data);
-        }
-      });
+      axios
+        .get(`${serverUrl}/coupon/getCoupons-admin`, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            setCouponList(res.data.data);
+          }
+        });
     } catch (error) {
       toast.error("Error while loading category");
       console.log(error);
     }
-  }, [couponList]);
+  }, []);
 
   function handleDelete(coupon) {
     setCoupon(coupon);

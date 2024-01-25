@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 function OrderStatus({ order, cancelFn }) {
   // eslint-disable-next-line react/prop-types
   const [orderStatus, setOrderStatus] = useState(order.status);
+  console.log(order);
   // eslint-disable-next-line react/prop-types
   const orderId = order._id;
   function updateOrder(e) {
@@ -25,6 +26,8 @@ function OrderStatus({ order, cancelFn }) {
           if (res.data.success) {
             toast.success(res.data.message);
             cancelFn(false);
+          } else {
+            toast.error(res.data.message);
           }
         });
     } catch (error) {
