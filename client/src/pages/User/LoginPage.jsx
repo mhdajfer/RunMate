@@ -33,7 +33,7 @@ export default function LoginPage() {
         } else if (res.data.success) {
           toast.success("login successful");
           Cookie.set("token", res.data.token, { sameSite: true });
-          navigate("/user/home");
+          navigate("/home");
           console.log(res);
         }
       })
@@ -83,7 +83,7 @@ export default function LoginPage() {
           <p className="text-xs">
             Dont have an account?
             <span className="text-blue-500 underline">
-              <Link to={"/user/signup"}>Signup</Link>
+              <Link to={"/signup"}>Signup</Link>
             </span>
           </p>
         </form>

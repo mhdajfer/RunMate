@@ -30,16 +30,16 @@ export default function Subnavbar() {
     <div className="relative">
       <div className="my-2 flex justify-center">
         <button className="bg-white border px-10 py-1 rounded-full mx-3">
-          <Link to={"/user/bestSelling"}>Best Selling</Link>
+          <Link to={"/bestSelling"}>Best Selling</Link>
         </button>
         <button className="bg-white border px-10 py-1 rounded-full mx-3">
-          <Link to={"/user/men"}>Men</Link>
+          <Link to={"/men"}>Men</Link>
         </button>
         <button className="bg-white border px-10 py-1 rounded-full mx-3">
-          <Link to={"/user/women"}>Women</Link>
+          <Link to={"/women"}>Women</Link>
         </button>
         <button className="bg-white border px-10 py-1 rounded-full mx-3">
-          <Link to={"/user/sports"}>Sports</Link>
+          <Link to={"/sports"}>Sports</Link>
         </button>
       </div>
       <div>

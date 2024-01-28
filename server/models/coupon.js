@@ -16,6 +16,10 @@ const couponSchema = mongoose.Schema({
     type: Number,
     requires: true,
   },
+  discountMax: {
+    type: Number,
+    requires: true,
+  },
 });
 
 const couponModel = mongoose.model("coupon", couponSchema);

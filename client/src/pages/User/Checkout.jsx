@@ -34,16 +34,22 @@ function Checkout() {
   );
   const shipping = Math.floor((subTotal * 3) / 100);
   let total = Math.floor(shipping + subTotal);
-  const discountedPrice = Math.floor((total * discount) / 100);
+  const offerPrice = Math.floor((total * discount) / 100);
+  const discountedPrice =
+    offerPrice > selectedCoupon?.discountMax
+      ? selectedCoupon?.discountMax
+      : offerPrice;
   total = total - discountedPrice;
 
   useEffect(() => {
     try {
-      axios.get(`${serverUrl}/coupon/getCoupons`).then((res) => {
-        if (res.data.success) {
-          setCouponList(res.data.data);
-        }
-      });
+      axios
+        .get(`${serverUrl}/coupon/getCoupons`, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            setCouponList(res.data.data);
+          }
+        });
       axios
         .post(`${serverUrl}/getAllAddress`, {}, { withCredentials: true })
         .then((res) => {
@@ -77,10 +83,11 @@ function Checkout() {
   }
 
   function handleCheckout() {
+  
     if (!name || !address1 || !state || !zip || !phone)
       return toast.error("Please fill all fields");
 
-    navigate("/user/payment", {
+    navigate("/payment", {
       state: {
         couponId: selectedCoupon?._id,
         productIds,
@@ -188,7 +195,7 @@ function Checkout() {
                 className="flex flex-col rounded-lg bg-white sm:flex-row"
               >
                 <img
-                  className="m-2 h-24 w-28 rounded-md border object-contain"
+                  className="m-2 h-24 w-60 object-contain  rounded-md border "
                   src={serverUrl + "/" + item.image}
                   alt=""
                 />

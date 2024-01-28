@@ -1,6 +1,7 @@
 const userController = require("../Controllers/userControllers");
 const cartController = require("../Controllers/cartControllers");
 const walletController = require("../Controllers/walletController");
+const categoryController = require("../Controllers/categoryControllers");
 const express = require("express");
 const router = express.Router();
 const { isUserLoggedIn, isAdminLoggedIn } = require("../Middlewares/Auth");
@@ -68,7 +69,7 @@ router.post("/cart/add", (req, res) => {
   cartController.add(req, res);
 });
 
-router.post("/cart/get", (req, res) => {
+router.post("/cart/get", isUserLoggedIn, (req, res) => {
   cartController.get(req, res);
 });
 
@@ -84,7 +85,7 @@ router.post("/getAllAddress", isUserLoggedIn, (req, res) => {
   userController.getAllAddress(req, res);
 });
 
-router.post("/isUserBlocked", (req, res) => {
+router.post("/isUserBlocked", isUserLoggedIn, (req, res) => {
   userController.isUserBlocked(req, res);
 });
 
@@ -99,6 +100,10 @@ router.post("/wallet/balance", isUserLoggedIn, (req, res) => {
 
 router.post("/wallet/deduct", isUserLoggedIn, (req, res) => {
   walletController.getDeducted(req, res);
+});
+
+router.get("/category", isUserLoggedIn, (req, res) => {
+  categoryController.listCategory(req, res);
 });
 
 module.exports = router;

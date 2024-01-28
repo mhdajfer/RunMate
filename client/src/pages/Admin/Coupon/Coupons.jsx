@@ -12,6 +12,10 @@ function Coupons() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  function fetchData() {
     try {
       axios
         .get(`${serverUrl}/coupon/getCoupons-admin`, { withCredentials: true })
@@ -24,7 +28,7 @@ function Coupons() {
       toast.error("Error while loading category");
       console.log(error);
     }
-  }, []);
+  }
 
   function handleDelete(coupon) {
     setCoupon(coupon);
@@ -37,6 +41,9 @@ function Coupons() {
   }
 
   function confirmDelete(coupon) {
+    couponList.filter((coupon) => {
+      return coupon._id !== coupon._id;
+    });
     try {
       axios
         .post(
@@ -49,7 +56,8 @@ function Coupons() {
             toast.success(res.data.message);
             navigate("/admin/coupons");
             setIsDialogOpen(false);
-          }
+            fetchData();
+          } else couponList.push(coupon);
         });
     } catch (error) {
       toast.error("Error while deleting category");

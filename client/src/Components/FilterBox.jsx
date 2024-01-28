@@ -1,12 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icons from "../assets/Icons";
+import serverUrl from "../server";
 const { star_filled, star } = Icons;
+import axios from "axios";
 
-function FilterBox() {
-  const [maxPrice, setMaxPrice] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [rating, setRating] = useState("");
-  const categoriesConstants = ["men", "women"];
+// eslint-disable-next-line react/prop-types
+function FilterBox({ setFilteredProducts, products }) {
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [minPrice, setMinPrice] = useState();
+  let setRating;
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    try {
+      axios
+        .get(`${serverUrl}/category`, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            setCategories(res.data.data);
+          }
+        });
+    } catch (error) {
+      console.log("error while loading filter box", error);
+    }
+  }, []);
+
+  function filterProducts(category) {
+    // eslint-disable-next-line react/prop-types
+    const filteredProducts = products.filter((product) => {
+      if (product.category === category) return product;
+    });
+    setFilteredProducts(filteredProducts);
+  }
+
   return (
     <>
       <div className=" bg-white p-4 rounded-xl pe-20">
@@ -15,11 +40,12 @@ function FilterBox() {
           <select
             className="border border-teal-600 rounded-lg bg-gray-200 px-3 py-1 "
             id="categorySelect"
+            onClick={(e) => filterProducts(e.target.value)}
           >
-            <option value="">Select Category</option>
-            {categoriesConstants.map((e) => (
-              <option key={e} value={e}>
-                {e}
+            <option value="">Categories</option>
+            {categories.map((catgry, i) => (
+              <option key={i} value={catgry?.name}>
+                {catgry?.name}
               </option>
             ))}
           </select>
@@ -39,7 +65,7 @@ function FilterBox() {
           </div>
           <div className=" flex flex-col">
             <button
-              className="flex items-center"
+              className="flex items-center border border-transparent rounded-xl hover:border-teal-500 "
               onClick={() => {
                 setRating(2);
               }}
@@ -54,7 +80,7 @@ function FilterBox() {
               <p className="ms-2 font-semibold">& Up</p>
             </button>
             <button
-              className="flex items-center"
+              className="flex items-center border border-transparent rounded-xl hover:border-teal-500 "
               onClick={() => {
                 setRating(2);
               }}
@@ -69,7 +95,7 @@ function FilterBox() {
               <p className="ms-2 font-semibold">& Up</p>
             </button>
             <button
-              className="flex items-center"
+              className="flex items-center border border-transparent rounded-xl hover:border-teal-500 "
               onClick={() => {
                 setRating(2);
               }}
@@ -84,7 +110,7 @@ function FilterBox() {
               <p className="ms-2 font-semibold">& Up</p>
             </button>
             <button
-              className="flex items-center"
+              className="flex items-center border border-transparent rounded-xl hover:border-teal-500 "
               onClick={() => {
                 setRating(2);
               }}
@@ -119,37 +145,37 @@ function FilterBox() {
               className=" border border-teal-600 px-3 rounded-lg hover:bg-teal-100"
               onClick={() => {
                 setMinPrice("");
-                setMaxPrice(10000);
+                setMaxPrice(1000);
               }}
             >
-              Under 10,000
+              Under 1500
             </button>
             <button
               className=" border border-teal-600 px-3 rounded-lg hover:bg-teal-100"
               onClick={() => {
-                setMinPrice(10000);
-                setMaxPrice(20000);
+                setMinPrice(1500);
+                setMaxPrice(2500);
               }}
             >
-              10,000 - 20,000
+              1500 - 2500
             </button>
             <button
               className=" border border-teal-600 px-3 rounded-lg hover:bg-teal-100"
               onClick={() => {
-                setMinPrice(20000);
-                setMaxPrice(50000);
+                setMinPrice(2500);
+                setMaxPrice(3500);
               }}
             >
-              20,000 - 50,000
+              2500 - 3500
             </button>
             <button
               className=" border border-teal-600 px-3 rounded-lg hover:bg-teal-100"
               onClick={() => {
-                setMinPrice(50000);
+                setMinPrice(3500);
                 setMaxPrice("");
               }}
             >
-              Above 50,000
+              Above 3500
             </button>
           </div>
           <section className="flex mt-3">

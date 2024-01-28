@@ -48,11 +48,11 @@ function Payment() {
           if (res.data.success) {
             toast.success("You Order Placed.");
             setTimeout(() => {
-              navigate("/user/home");
+              navigate("/home");
             }, 700);
           } else {
             toast.error(res.data.message);
-            navigate("/user/cart");
+            navigate("/cart");
           }
         });
     } catch (error) {
@@ -64,7 +64,9 @@ function Payment() {
   async function handleOnlinePayment(amount) {
     try {
       //getting key
-      const { data } = await axios.get(`${serverUrl}/order/getKey`);
+      const { data } = await axios.get(`${serverUrl}/order/getKey`, {
+        withCredentials: true,
+      });
 
       //create order
       const {
@@ -110,7 +112,7 @@ function Payment() {
             )
             .then((res) => {
               if (res.data.success) {
-                navigate("/user/home");
+                navigate("/home");
                 toast.success("Your order is on move");
               }
             });
@@ -131,7 +133,7 @@ function Payment() {
       rzp1.on("payment.failed", function (response) {
         alert(response.error.code);
         toast.error("payment failed");
-        navigate("/user/cart");
+        navigate("/cart");
       });
       rzp1.open();
     } catch (error) {
@@ -142,31 +144,39 @@ function Payment() {
   async function handleWalletPayment(amount) {
     try {
       axios
-        .post(`${serverUrl}/wallet/deduct`, { amount, token })
+        .post(
+          `${serverUrl}/wallet/deduct`,
+          { amount, token },
+          { withCredentials: true }
+        )
         .then((res) => {
           if (!res.data.success) {
             return toast.error(res.data.message);
           } else if (res.data.success) {
             axios
-              .post(`${serverUrl}/order/add-wallet`, {
-                couponId,
-                productIds,
-                subTotal,
-                shipping,
-                total,
-                name,
-                address1,
-                state,
-                zip,
-                phone,
-                quantity,
-                token,
-                mode: "Wallet",
-              })
+              .post(
+                `${serverUrl}/order/add-wallet`,
+                {
+                  couponId,
+                  productIds,
+                  subTotal,
+                  shipping,
+                  total,
+                  name,
+                  address1,
+                  state,
+                  zip,
+                  phone,
+                  quantity,
+                  token,
+                  mode: "Wallet",
+                },
+                { withCredentials: true }
+              )
               .then((res) => {
                 if (res.data.success) {
                   toast.success(res.data.message);
-                  navigate("/user/home");
+                  navigate("/home");
                 } else {
                   toast.error(res.data.message);
                 }

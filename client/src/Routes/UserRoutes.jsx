@@ -19,7 +19,7 @@ import WalletPage from "../pages/User/WalletPage";
 export default function UserRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
 
       <Route element={<UserLayout />}>
@@ -40,7 +40,7 @@ export default function UserRoutes() {
         <Route path="/women" element={<Women category={"Women"} />} />
         <Route path="/sports" element={<Sports category={"Sports"} />} />
         <Route path="/men" element={<MenItems category={"Men"} />} />
-        <Route path="/home" element={<HomePage category={"all"} />} />
+        <Route path="/*" element={<HomePage category={"all"} />} />
       </Route>
     </Routes>
   );

@@ -31,12 +31,18 @@ router.post("/get-AllOrders", isUserLoggedIn, (req, res) => {
   orderController.getUserOrders(req, res);
 });
 
-router.get("/details/:id", isUserLoggedIn, (req, res) => {
+router.get("/details/:id", (req, res) => {
   orderController.getOrderDetails(req, res);
 });
-router.get("/details/:id/admin", isAdminLoggedIn, (req, res) => {
-  orderController.getOrderDetails(req, res);
-});
+// router.get(
+//   "/details/:id/admin",
+//   isAdminLoggedIn,
+//   isUserLoggedIn,
+
+//   (req, res) => {
+//     orderController.getOrderDetails(req, res);
+//   }
+// );
 
 router.post("/status/change", (req, res) => {
   orderController.changeStatus(req, res);

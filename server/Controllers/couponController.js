@@ -1,7 +1,7 @@
 const couponModel = require("../models/coupon");
 
 exports.addCoupon = async (req, res) => {
-  const { name, desc, code, discount } = req.body;
+  const { name, desc, code, discount, maxDisc } = req.body;
 
   try {
     const couponDoc = new couponModel({
@@ -9,6 +9,7 @@ exports.addCoupon = async (req, res) => {
       desc,
       code,
       discount,
+      discountMax: maxDisc,
     });
     await couponDoc.save();
     return res.json({ success: true, message: "coupon added successfully" });

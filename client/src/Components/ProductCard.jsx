@@ -1,6 +1,6 @@
 import Icons from "../assets/Icons";
 import serverUrl from "../server";
-const { heart, cart } = Icons;
+const { heart, cart, star, star_filled } = Icons;
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import serverURL from "../../serverURL";
@@ -48,25 +48,25 @@ export default function ProductCard(item) {
             onClick={() => {
               handleClick(product);
             }}
-            src={serverUrl + "/" + product.images[0]}
+            src={serverUrl + "/" + product?.images[0]}
             alt=""
             className="w-full h-[30vh] object-contain rounded-lg"
           />
         </div>
         <div className="p-4">
           <div className="h-20">
-            <h2 className="font-bold text-xl">{product.brand}</h2>
-            <p className="text-[13px]">{product.subDesc}</p>
+            <h2 className="font-bold text-xl">{product?.brand}</h2>
+            <p className="text-[13px]">{product?.subDesc}</p>
           </div>
           <div className="flex space-x-1 my-2">
-            {heart}
-            {heart}
-            {heart}
-            {heart}
-            {heart}
+            {star_filled}
+            {star_filled}
+            {star_filled}
+            {star_filled}
+            {star}
           </div>
           <h1 className="text-3xl font-medium text-[#003355]">
-            ₹ {product.price}
+            ₹ {product?.price}
           </h1>
           <div className="flex justify-evenly my-4">
             <button

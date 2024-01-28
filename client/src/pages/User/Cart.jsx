@@ -7,10 +7,10 @@ import QtyButton from "../../Components/QtyButton";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  localStorage.setItem("search", "");
 
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("useEffect is runing");
     try {
       axios
         .post(`${serverUrl}/cart/get`, {}, { withCredentials: true })
@@ -75,7 +75,7 @@ function Cart() {
       .then((res) => {
         if (res.data.success) {
           cartItems.length
-            ? navigate("/user/checkout", { state: { cartItems } })
+            ? navigate("/checkout", { state: { cartItems } })
             : toast.error("Add items to cart");
         } else {
           toast.error(res.data.message);

@@ -10,7 +10,7 @@ function Orders() {
   const location = useLocation();
   const user = location.state?.user;
   const [orders, setOrders] = useState([]);
-  const [currentPage, setCurrentPage] = useState(2);
+  const [currentPage, setCurrentPage] = useState(1);
   const dataPerPage = 3;
 
   const lastDataIndex = currentPage * dataPerPage;

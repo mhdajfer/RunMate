@@ -10,7 +10,7 @@ function SingleOrderDetails() {
 
   useEffect(() => {
     axios
-      .get(`${serverUrl}/order/details/${order._id}/admin`, {
+      .get(`${serverUrl}/order/details/${order._id}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -22,6 +22,8 @@ function SingleOrderDetails() {
         console.error("Error while fetching order details", error);
       });
   }, [order._id]);
+
+  console.log({});
 
   return (
     <>

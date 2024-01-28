@@ -4,15 +4,17 @@ import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
 import Icons from "../../assets/Icons";
 const { cart } = Icons;
-import { useState } from "react";
+import {  useState } from "react";
 
 // eslint-disable-next-line react/prop-types
 export default function Navbar({ role }) {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("f");
+  const [search, setSearch] = useState("");
+
+
 
   function handleCart() {
-    navigate("/user/cart");
+    navigate("/cart");
   }
 
   const handleLogout = async () => {
@@ -23,7 +25,7 @@ export default function Navbar({ role }) {
       })
       .then((res) => {
         console.log(res);
-        navigate(`/${role === "admin" ? "admin" : "user"}/login`);
+        navigate(`/${role === "admin" ? "admin/login" : "login"}`);
       })
       .catch((err) => {
         console.log(err);
@@ -42,7 +44,7 @@ export default function Navbar({ role }) {
             <h1
               className="text-3xl font-bold cursor-pointer"
               onClick={() => {
-                navigate("/user/home");
+                navigate("/home");
               }}
             >
               RunMate
@@ -60,6 +62,7 @@ export default function Navbar({ role }) {
                   name="search"
                   className="rounded-full bg-[#0F4C75] px-4 py-1"
                   placeholder="Search"
+                  defaultValue={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
                   }}

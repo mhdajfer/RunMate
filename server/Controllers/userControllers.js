@@ -254,12 +254,9 @@ exports.verify = async (req, res) => {
 };
 
 exports.getOneUser = async (req, res) => {
-  const { token } = req.body;
-
-  if (!token) return res.json({ success: false });
+  const user = req?.user;
 
   try {
-    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
     const userDetails = await UserModel.find({ _id: user.id });
     res.json({ success: true, message: "got user details", user: userDetails });
   } catch (error) {
@@ -302,11 +299,8 @@ exports.logout = async (req, res) => {
 };
 
 exports.isUserBlocked = async (req, res) => {
-  const token = req.cookies.token;
-  console.log(token);
+  const user = req?.user;
   try {
-    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
-    if (!user) return res.json({ success: false, message: "user not found" });
     const isBlocked = await UserModel.find(
       { _id: user.id },
       { isBlocked: 1, _id: 0 }

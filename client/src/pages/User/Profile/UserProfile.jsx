@@ -9,7 +9,6 @@ import EditAddress from "../../../Components/EditAddress";
 
 function UserProfile() {
   const token = Cookie.get("token");
-  console.log(token);
   const [user, setUser] = useState({});
   const userId = user._id;
   const [isDialogOpen, setIsDialogOpen] = useState(false);

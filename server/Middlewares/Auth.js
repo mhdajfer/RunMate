@@ -4,7 +4,6 @@ const adminModel = require("../models/admin");
 
 exports.isUserLoggedIn = async (req, res, next) => {
   const token = req.cookies.token;
-  console.log(token);
 
   try {
     if (!token)
@@ -12,7 +11,6 @@ exports.isUserLoggedIn = async (req, res, next) => {
 
     const jwtUser = jwt.verify(token, process.env.MY_SECRET_KEY);
     const userExist = await UserModel.findOne({ _id: jwtUser.id });
-    console.log(userExist);
 
     if (!userExist)
       return res.json({ success: false, message: "user not found" });

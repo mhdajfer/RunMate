@@ -169,7 +169,7 @@ export default function SignupPage() {
               Already have an account?
               <span className="text-blue-500 underline">
                 {" "}
-                <Link to={"/user/login"}>login</Link>
+                <Link to={"/login"}>login</Link>
               </span>
             </p>
           </form>
