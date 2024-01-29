@@ -8,7 +8,8 @@ export default function MenItems({ category }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    console.log("running");
+     //removing text from search box
+     localStorage.removeItem("search");
     try {
       axios
         .post(

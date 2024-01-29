@@ -8,6 +8,8 @@ export default function BestSelling({ category }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+     //removing text from search box
+     localStorage.removeItem("search");
     try {
       axios
         .post(

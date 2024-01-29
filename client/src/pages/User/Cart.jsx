@@ -7,10 +7,11 @@ import QtyButton from "../../Components/QtyButton";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  localStorage.setItem("search", "");
 
   const navigate = useNavigate();
   useEffect(() => {
+    //removing text from search box
+    localStorage.removeItem("search");
     try {
       axios
         .post(`${serverUrl}/cart/get`, {}, { withCredentials: true })

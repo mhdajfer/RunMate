@@ -12,7 +12,10 @@ function Search() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   let searchedProducts = filteredProducts.length
-    ? filteredProducts
+    ? filteredProducts.filter((product) => {
+        if (product?.brand.toLowerCase().includes(search.trim().toLowerCase()))
+          return product;
+      })
     : products.filter((product) => {
         if (product?.brand.toLowerCase().includes(search.trim().toLowerCase()))
           return product;

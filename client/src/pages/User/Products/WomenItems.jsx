@@ -7,6 +7,8 @@ export default function WomenItems() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    //removing text from search box
+    localStorage.removeItem("search");
     try {
       axios
         .post(`${serverUrl}/product/get`, {}, { withCredentials: true })

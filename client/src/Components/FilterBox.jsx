@@ -39,7 +39,7 @@ function FilterBox({ setFilteredProducts, products }) {
   }
 
   function filterProductsByCategory(category) {
-    if (category === "all") return setFilteredProducts(products);
+    // if (category === "all") return setFilteredProducts(products);
     // eslint-disable-next-line react/prop-types
     const filteredProducts = products.filter((product) => {
       if (product.category === category) return product;

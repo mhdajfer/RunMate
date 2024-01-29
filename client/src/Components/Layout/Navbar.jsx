@@ -4,14 +4,16 @@ import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
 import Icons from "../../assets/Icons";
 const { cart } = Icons;
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 
 // eslint-disable-next-line react/prop-types
 export default function Navbar({ role }) {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-
+  useEffect(() => {
+    setSearch(localStorage.getItem("search"));
+  }, []);
 
   function handleCart() {
     navigate("/cart");
@@ -34,6 +36,7 @@ export default function Navbar({ role }) {
 
   function handleFormSubmit(e) {
     e.preventDefault();
+    localStorage.setItem("search", search);
     navigate("/product/search", { state: { search } });
   }
   return (
@@ -50,7 +53,7 @@ export default function Navbar({ role }) {
               RunMate
             </h1>
           </div>
-          <div>
+          <div className="flex items-center space-x-2">
             {role === "admin" ? null : (
               <form
                 onSubmit={(e) => {
@@ -69,6 +72,19 @@ export default function Navbar({ role }) {
                 />
               </form>
             )}
+            <span
+              className="cursor-pointer"
+              onClick={() =>
+                navigate("/product/search", { state: { search: "" } })
+              }
+            >
+              <img
+                width="20"
+                height="20"
+                src="https://img.icons8.com/ios/50/FFFFFF/filter--v1.png"
+                alt="filter--v1"
+              />
+            </span>
           </div>
           <div className="space-x-6 flex">
             {role === "admin" ? null : <div onClick={handleCart}>{cart}</div>}
