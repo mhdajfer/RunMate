@@ -12,17 +12,11 @@ function Search() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   let searchedProducts = filteredProducts.length
-    ? filteredProducts.filter((product) => {
-        if (product?.brand.toLowerCase().includes(search.trim().toLowerCase()))
-          return product;
-      })
+    ? filteredProducts
     : products.filter((product) => {
         if (product?.brand.toLowerCase().includes(search.trim().toLowerCase()))
           return product;
       });
-
-  console.log("filtered", filteredProducts);
-  console.log("searched", searchedProducts);
 
   useEffect(() => {
     try {
@@ -46,17 +40,24 @@ function Search() {
         <div className="ms-20">
           <FilterBox
             setFilteredProducts={setFilteredProducts}
-            products={searchedProducts}
+            products={products}
           />
         </div>
         <div className="flex w-screen flex-wrap">
-          {searchedProducts.map((product, i) => {
-            return (
-              <div key={i}>
-                <ProductCard product={product} />
-              </div>
-            );
-          })}
+          {searchedProducts ? (
+            searchedProducts.map((product, i) => {
+              return (
+                <div key={i}>
+                  <ProductCard product={product} />
+                </div>
+              );
+            })
+          ) : (
+            <div>
+              {" "}
+              <h1>No Products!!!</h1>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -64,23 +65,3 @@ function Search() {
 }
 
 export default Search;
-
-// products
-//             .filter((product) => {
-//               if (search.trim() === "") {
-//                 return product;
-//               } else if (
-//                 product?.brand
-//                   .toLowerCase()
-//                   .includes(search.trim().toLowerCase())
-//               ) {
-//                 return product;
-//               }
-//             })
-//             .map((product, i) => {
-//               return (
-//                 <div key={i}>
-//                   <ProductCard product={product} />
-//                 </div>
-//               );
-//             })

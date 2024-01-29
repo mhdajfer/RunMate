@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import Icons from "../assets/Icons";
 import serverUrl from "../server";
 const { star_filled, star } = Icons;
 import axios from "axios";
+import toast from "react-hot-toast";
 
 // eslint-disable-next-line react/prop-types
 function FilterBox({ setFilteredProducts, products }) {
   const [maxPrice, setMaxPrice] = useState(0);
-  const [minPrice, setMinPrice] = useState();
+  const [minPrice, setMinPrice] = useState(0);
   let setRating;
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -24,7 +26,20 @@ function FilterBox({ setFilteredProducts, products }) {
     }
   }, []);
 
-  function filterProducts(category) {
+  function filterProductsByPrice(min, max) {
+    // eslint-disable-next-line react/prop-types
+    const filteredProducts = products.filter((product) => {
+      if (product?.price < max && product?.price > min) return product;
+    });
+    console.log("min", min);
+    console.log("max", max);
+    if (filteredProducts.length === 0)
+      return toast.error("no products at this range");
+    setFilteredProducts(filteredProducts);
+  }
+
+  function filterProductsByCategory(category) {
+    if (category === "all") return setFilteredProducts(products);
     // eslint-disable-next-line react/prop-types
     const filteredProducts = products.filter((product) => {
       if (product.category === category) return product;
@@ -40,9 +55,13 @@ function FilterBox({ setFilteredProducts, products }) {
           <select
             className="border border-teal-600 rounded-lg bg-gray-200 px-3 py-1 "
             id="categorySelect"
-            onClick={(e) => filterProducts(e.target.value)}
+            defaultValue=""
+            onClick={(e) => filterProductsByCategory(e.target.value)}
           >
-            <option value="">Categories</option>
+            <option value="" hidden>
+              Categories
+            </option>
+            <option value="all">All</option>
             {categories.map((catgry, i) => (
               <option key={i} value={catgry?.name}>
                 {catgry?.name}
@@ -135,6 +154,7 @@ function FilterBox({ setFilteredProducts, products }) {
               onClick={() => {
                 setMinPrice("");
                 setMaxPrice("");
+                filterProductsByPrice(0, 10000);
               }}
             >
               Clear
@@ -144,8 +164,9 @@ function FilterBox({ setFilteredProducts, products }) {
             <button
               className=" border border-teal-600 px-3 rounded-lg hover:bg-teal-100"
               onClick={() => {
-                setMinPrice("");
-                setMaxPrice(1000);
+                setMinPrice(0);
+                setMaxPrice(1500);
+                filterProductsByPrice(0, 1500);
               }}
             >
               Under 1500
@@ -155,6 +176,7 @@ function FilterBox({ setFilteredProducts, products }) {
               onClick={() => {
                 setMinPrice(1500);
                 setMaxPrice(2500);
+                filterProductsByPrice(1500, 2500);
               }}
             >
               1500 - 2500
@@ -164,6 +186,7 @@ function FilterBox({ setFilteredProducts, products }) {
               onClick={() => {
                 setMinPrice(2500);
                 setMaxPrice(3500);
+                filterProductsByPrice(2500, 3500);
               }}
             >
               2500 - 3500
@@ -173,6 +196,7 @@ function FilterBox({ setFilteredProducts, products }) {
               onClick={() => {
                 setMinPrice(3500);
                 setMaxPrice("");
+                filterProductsByPrice(3500, 10000);
               }}
             >
               Above 3500
