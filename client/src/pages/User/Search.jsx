@@ -12,14 +12,20 @@ function Search() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   let searchedProducts = filteredProducts.length
-    ? filteredProducts.filter((product) => {
-        if (product?.brand.toLowerCase().includes(search.trim().toLowerCase()))
-          return product;
-      })
+    ? filteredProducts.length === products.length
+      ? products
+      : filteredProducts.filter((product) => {
+          if (
+            product?.brand.toLowerCase().includes(search.trim().toLowerCase())
+          )
+            return product;
+        })
     : products.filter((product) => {
         if (product?.brand.toLowerCase().includes(search.trim().toLowerCase()))
           return product;
       });
+
+  console.log(searchedProducts.length);
 
   useEffect(() => {
     try {
@@ -47,7 +53,7 @@ function Search() {
           />
         </div>
         <div className="flex w-screen flex-wrap">
-          {searchedProducts ? (
+          {searchedProducts.length ? (
             searchedProducts.map((product, i) => {
               return (
                 <div key={i}>
@@ -56,7 +62,7 @@ function Search() {
               );
             })
           ) : (
-            <div>
+            <div className="flex justify-center w-full mt-24">
               {" "}
               <h1>No Products!!!</h1>
             </div>
