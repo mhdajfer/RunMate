@@ -49,7 +49,7 @@ function UserProfile() {
     e.preventDefault();
     try {
       axios
-        .post(`${serverURL}/user/address/edit`, address, {
+        .post(`${serverURL}address/edit`, address, {
           withCredentials: true,
         })
         .then((res) => {

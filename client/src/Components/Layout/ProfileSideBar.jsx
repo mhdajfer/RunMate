@@ -51,7 +51,7 @@ function ProfileSideBar({ user }) {
           <div
             className="bg-gray-200 p-2 border-b border-gray-400 cursor-pointer hover:bg-white"
             onClick={() => {
-              navigate("/user/orders", { state: { user } });
+              navigate("/orders", { state: { user } });
             }}
           >
             <span>Orders</span>
@@ -59,7 +59,7 @@ function ProfileSideBar({ user }) {
           <div
             className="bg-gray-200 p-2 hover:bg-white border-b border-gray-400 cursor-pointer"
             onClick={() => {
-              navigate("/user/password/change");
+              navigate("/password/change");
             }}
           >
             <span>Change password</span>
@@ -67,7 +67,7 @@ function ProfileSideBar({ user }) {
           <div
             className="bg-gray-200 p-2 hover:bg-white cursor-pointer"
             onClick={() => {
-              navigate("/user/wallet", { state: { user } });
+              navigate("/wallet", { state: { user } });
             }}
           >
             <span>Wallet</span>
