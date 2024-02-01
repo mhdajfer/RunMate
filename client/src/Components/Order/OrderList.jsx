@@ -2,7 +2,6 @@ import axios from "axios";
 import serverUrl from "../../server";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
 /* eslint-disable react/prop-types */
 function OrderList({ order }) {
   const navigate = useNavigate();
@@ -28,6 +27,33 @@ function OrderList({ order }) {
     } catch (error) {
       toast.error(" Can't Return");
       console.log(error);
+    }
+  }
+
+  async function handleInvoice() {
+    try {
+      // Make the Axios request
+      const response = await axios.get(`${serverUrl}/invoice/${orderId}`, {
+        withCredentials: true,
+        responseType: "blob", // Set the responseType to "arraybuffer"
+      });
+
+      // Create a Blob from the received data
+      const pdtBlob = new Blob([response.data], { type: "application/pdf" });
+
+      const url = window.URL.createObjectURL(pdtBlob);
+
+      const tempElement = document.createElement("a");
+      tempElement.href = url;
+
+      tempElement.setAttribute("download", `invoice_${orderId}`);
+      document.body.appendChild(tempElement);
+      tempElement.click();
+
+      document.body.removeChild(tempElement);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.log("error while processing invoice", error);
     }
   }
 
@@ -91,6 +117,15 @@ function OrderList({ order }) {
                   Return Order
                 </button>
               )}
+            </div>
+            <div>
+              <a
+                className="text-sm font-medium cursor-pointer"
+                onClick={() => handleInvoice()}
+              >
+                {" "}
+                download invoice
+              </a>
             </div>
           </div>
         </div>

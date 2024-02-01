@@ -2,6 +2,7 @@ const userController = require("../Controllers/userControllers");
 const cartController = require("../Controllers/cartControllers");
 const walletController = require("../Controllers/walletController");
 const categoryController = require("../Controllers/categoryControllers");
+const invoiceController = require("../Controllers/invoiceControllers");
 const express = require("express");
 const router = express.Router();
 const { isUserLoggedIn, isAdminLoggedIn } = require("../Middlewares/Auth");
@@ -104,6 +105,10 @@ router.post("/wallet/deduct", isUserLoggedIn, (req, res) => {
 
 router.get("/category", isUserLoggedIn, (req, res) => {
   categoryController.listCategory(req, res);
+});
+
+router.get("/invoice/:id", isUserLoggedIn, (req, res) => {
+  invoiceController.generateInvoice(req, res);
 });
 
 module.exports = router;
