@@ -8,14 +8,14 @@ const generateHeader = (doc) => {
     .moveDown();
 };
 
-const generateUserInfo = (doc, invoice) => {
+const generateUserInfo = (doc, order) => {
   const options = {
     year: "numeric",
     month: "numeric",
     day: "numeric",
   };
 
-  const formattedDate = invoice.createdAt.toLocaleDateString("en-Us", options);
+  const formattedDate = order.createdAt.toLocaleDateString("en-Us", options);
   doc.fillColor("#444444").fontSize(20).text("Invoice", 50, 160);
 
   doc
@@ -31,26 +31,47 @@ const generateUserInfo = (doc, invoice) => {
     .fontSize(10)
     .text("Invoice Number:", 50, customerInformationTop)
     .font("Helvetica-Bold")
-    .text(invoice._id, 150, customerInformationTop)
+    .text(order._id.toString(), 150, customerInformationTop)
     .font("Helvetica")
     .text("Invoice Date:", 50, customerInformationTop + 15)
     .text(formattedDate, 150, customerInformationTop + 15)
-    .text("Total Amount :", 50, customerInformationTop + 30)
-    .text("Rs." + invoice.total, 150, customerInformationTop + 30)
+    .text("Total Amount:", 50, customerInformationTop + 30)
+    .text("Rs. " + order.total.toFixed(2), 150, customerInformationTop + 30)
 
     .font("Helvetica-Bold")
-    .text("AjferShipping", 300, customerInformationTop)
+    .text("Customer Information:", 300, customerInformationTop)
     .font("Helvetica")
-    .text(invoice.address1, 300, customerInformationTop + 15)
+    .text("Name: " + order.name, 300, customerInformationTop + 15)
+    .text("Address: " + order.address1, 300, customerInformationTop + 30)
+    .text("State: " + (order.state || ""), 300, customerInformationTop + 45)
+    .text("ZIP: " + (order.zip || ""), 300, customerInformationTop + 60)
+    .text("Phone: " + (order.phone || ""), 300, customerInformationTop + 75)
 
     .moveDown();
 
   doc
     .strokeColor("#aaaaaa")
     .lineWidth(1)
-    .moveTo(50, 252)
-    .lineTo(550, 252)
+    .moveTo(50, 292)
+    .lineTo(550, 292)
     .stroke();
+
+  const productsTop = 400;
+
+  doc.font("Helvetica-Bold").fontSize(12).text("Products:", 50, productsTop);
+
+  order.products.forEach((product, index) => {
+    const productTop = productsTop + 20 + index * 15;
+    doc
+      .font("Helvetica")
+      .text(
+        `${index + 1}. ${product.productId.name} x ${product.quantity}`,
+        50,
+        productTop
+      );
+  });
+
+  doc.moveDown();
 };
 
 module.exports = { generateHeader, generateUserInfo };

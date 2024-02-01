@@ -118,15 +118,17 @@ function OrderList({ order }) {
                 </button>
               )}
             </div>
-            <div>
-              <a
-                className="text-sm font-medium cursor-pointer"
-                onClick={() => handleInvoice()}
-              >
-                {" "}
-                download invoice
-              </a>
-            </div>
+            {order?.status === "Delivered" ? (
+              <div>
+                <a
+                  className="text-sm font-medium cursor-pointer"
+                  onClick={() => handleInvoice()}
+                >
+                  {" "}
+                  download invoice
+                </a>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
