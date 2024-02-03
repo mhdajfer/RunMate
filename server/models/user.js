@@ -64,6 +64,9 @@ const UserSchema = mongoose.Schema({
       image: {
         type: String,
       },
+      discountPrice: {
+        type: Number,
+      },
     },
   ],
   wallet: {

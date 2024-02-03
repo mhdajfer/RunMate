@@ -29,9 +29,13 @@ function Checkout() {
   }));
   const productNames = cartItems.map((item) => item.productName);
   const subTotal = cartItems.reduce(
-    (sum, item) => sum + item.quantity * item.price,
+    (sum, item) =>
+      sum +
+      item.quantity *
+        (item?.discountPrice > 0 ? item?.discountPrice : item.price),
     0
   );
+
   const shipping = Math.floor((subTotal * 3) / 100);
   let total = Math.floor(shipping + subTotal);
   const offerPrice = Math.floor((total * discount) / 100);
@@ -83,7 +87,6 @@ function Checkout() {
   }
 
   function handleCheckout() {
-  
     if (!name || !address1 || !state || !zip || !phone)
       return toast.error("Please fill all fields");
 
@@ -205,7 +208,11 @@ function Checkout() {
                     Qty {item.quantity}
                   </span>
                   <p className="text-lg font-bold">
-                    ₹ {item.quantity * item.price}
+                    ₹{" "}
+                    {item.quantity *
+                      (item?.discountPrice > 0
+                        ? item?.discountPrice
+                        : item.price)}
                   </p>
                 </div>
               </div>

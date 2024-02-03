@@ -53,9 +53,21 @@ function SingleProductCard(item) {
         <div className=" p-12 w-[50rem]">
           <h1 className="font-bold text-3xl">{product.brand}</h1>
           <p className="my-6 ">{product.subDesc}</p>
-          <h1 className="text-6xl font-semibold text-[#003355]">
-            ₹ {product.price}
-          </h1>
+          {product?.discountPrice > 0 ? (
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-medium  line-through">
+                ₹ {product?.price}
+              </h1>
+              <h1 className="text-6xl font-semibold text-[#003355]">
+                ₹ {product?.discountPrice}
+              </h1>
+            </div>
+          ) : (
+            <h1 className="text-6xl font-semibold text-[#003355]">
+              ₹ {product.price}
+            </h1>
+          )}
+          {/*  */}
           <p className="text-slate-500">(10,786 Ratings & 1859 Reviews)</p>
           <div className="flex space-x-1 my-2">
             {star_filled}

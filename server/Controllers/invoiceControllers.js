@@ -33,14 +33,6 @@ router.generateInvoice = async (req, res) => {
   generateHeader(doc);
   generateUserInfo(doc, order);
   doc.end();
-  //   const filepath = path.join(__dirname, `../Utils/Invoice/invoice_${id}.pdf`);
-  //   doc.pipe(fs.createWriteStream(filepath));
-  //   generateHeader(doc);
-  //   generateUserInfo(doc, order);
-
-  //   doc.end();
-
-  //   res.sendFile(filepath);
 };
 
 module.exports = router;

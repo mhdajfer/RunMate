@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import serverUrl from "../../../server";
 import DialogBox from "../../../Components/DialogBox";
 import Pagination from "../../../Components/Pagination";
+import AddOfferForm from "../../../Components/AddOfferForm";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function Products() {
   const [prodForDelete, setProdForDelete] = useState("");
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [offerProduct, setOfferProduct] = useState();
   let dataPerPage = 3;
 
   const lastDataIndex = currentPage * dataPerPage;
@@ -31,7 +33,7 @@ export default function Products() {
     } catch (error) {
       console.log("error while fetching products", error);
     }
-  }, []);
+  }, [offerProduct]);
 
   function handleDelete(product) {
     setProdForDelete(product);
@@ -61,8 +63,62 @@ export default function Products() {
     });
   }
 
+  function handleAddOffer(product) {
+    setOfferProduct(product);
+  }
+
+  function canceloffer() {
+    setOfferProduct(null);
+  }
+
   function AddProduct() {
     navigate("/product/add");
+  }
+
+  function ApplyOfferForProduct(product, discount) {
+    if (discount <= 0) return toast.error("Enter positive discount number");
+    const productDiscount = (product?.price * discount) / 100;
+    const discountedPrice = product?.price - productDiscount;
+    try {
+      axios
+        .post(
+          `${serverUrl}/product/applyOffer`,
+          {
+            productId: product?._id,
+            discountedPrice: discountedPrice,
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+            setOfferProduct(null);
+          }
+        });
+    } catch (error) {
+      console.log("error while applying offer for product", error);
+    }
+  }
+
+  function handleCancelOffer(product) {
+    try {
+      axios
+        .post(
+          `${serverUrl}/product/cancelOffer`,
+          { productId: product?._id },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+            setOfferProduct(null);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+    } catch (error) {
+      console.log("error while cancelling offer for product", error);
+    }
   }
   return (
     <>
@@ -75,7 +131,13 @@ export default function Products() {
         </button>
         <table className="my-12">
           {productList.length == 0 ? (
-            <h1>No Products Added!!</h1>
+            <tbody>
+              <tr>
+                <td>
+                  <h1>No Products Added!!</h1>
+                </td>
+              </tr>
+            </tbody>
           ) : (
             <thead>
               <tr>
@@ -100,7 +162,7 @@ export default function Products() {
                     />
                   </td>
                   <td className="p-6">{product._id}</td>
-                  <td className="p-2">{product.desc}</td>
+                  <td className="p-2">{product.subDesc}</td>
                   <td className="p-2">{product.price}</td>
                   <td className="p-2">{product.stock}</td>
                   <td className="p-2">
@@ -116,18 +178,44 @@ export default function Products() {
                     >
                       Edit
                     </button>
+                    {product?.discountPrice === 0 ? (
+                      <button
+                        className="bg-green-700 px-2 m-1 rounded-md text-md text-white relative"
+                        onClick={() => handleAddOffer(product)}
+                      >
+                        Add offer
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-red-500 px-2 m-1 rounded-md text-md text-white relative"
+                        onClick={() => handleCancelOffer(product)}
+                      >
+                        Cancel offer
+                      </button>
+                    )}
+                    {offerProduct?._id === product._id && (
+                      <AddOfferForm
+                        ApplyOfferForProduct={ApplyOfferForProduct}
+                        canceloffer={canceloffer}
+                        product={offerProduct}
+                      />
+                    )}
                   </td>
                 </tr>
               );
             })}
-            {productList.length != 0 ? (
-              <Pagination
-                totalItems={products.length}
-                dataPerPage={dataPerPage}
-                setCurrentPage={setCurrentPage}
-                currentPage={currentPage}
-              />
-            ) : null}
+            <tr>
+              <td>
+                {productList.length != 0 ? (
+                  <Pagination
+                    totalItems={products.length}
+                    dataPerPage={dataPerPage}
+                    setCurrentPage={setCurrentPage}
+                    currentPage={currentPage}
+                  />
+                ) : null}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

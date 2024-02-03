@@ -33,10 +33,22 @@ const prodSchema = mongoose.Schema({
     type: Array,
     required: true,
   },
-  isDeleted:{
+  isDeleted: {
     type: Boolean,
     default: false,
   },
+  discountPrice: {
+    type: Number,
+    default: 0,
+  },
+  productWiseOffer:{
+    type: Boolean,
+    default: false,
+  },
+  categoryWiseOffer:{
+    type: Boolean,
+    default: false,
+  }
 });
 
 const prodModel = mongoose.model("product", prodSchema);

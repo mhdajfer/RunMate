@@ -172,3 +172,41 @@ exports.get = async (req, res) => {
     console.log("error :", error);
   }
 };
+
+exports.applyProductOffer = async (req, res) => {
+  const { productId, discountedPrice } = req.body;
+
+  try {
+    const response = await prodModel.updateOne(
+      { _id: productId },
+      {
+        $set: {
+          discountPrice: Math.floor(discountedPrice),
+          productWiseOffer: true,
+        },
+      }
+    );
+
+    if ((response.modifiedCount = 1))
+      return res.status(200).json({ success: true, message: "Offer Applied" });
+    return res.json({ success: false, message: "offer not applied" });
+  } catch (error) {
+    console.log("error while applying offer", error);
+    return res.json({ success: false, message: "error while applying offer" });
+  }
+};
+
+exports.cancelProductOffer = async (req, res) => {
+  const { productId } = req.body;
+
+  try {
+    await prodModel.updateOne(
+      { _id: productId },
+      { $set: { discountPrice: 0, productWiseOffer: false } }
+    );
+    return res.json({ success: true, message: "Offer Withdrawn" });
+  } catch (error) {
+    console.log("error while cancelling productOffer", error);
+    return res.json({ success: false, message: "ProductOffer not cancelled" });
+  }
+};

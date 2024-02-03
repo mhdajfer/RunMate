@@ -65,9 +65,21 @@ export default function ProductCard(item) {
             {star_filled}
             {star}
           </div>
-          <h1 className="text-3xl font-medium text-[#003355]">
-            ₹ {product?.price}
-          </h1>
+          {product?.discountPrice > 0 ? (
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-medium  line-through">
+                ₹ {product?.price}
+              </h1>
+              <h1 className="text-3xl font-medium text-[#003355]">
+                ₹ {product?.discountPrice}
+              </h1>
+            </div>
+          ) : (
+            <h1 className="text-3xl font-medium text-[#003355]">
+              ₹ {product?.price}
+            </h1>
+          )}
+
           <div className="flex justify-evenly my-4">
             <button
               className="bg-[#003355] hover:bg-[#003377] hover:mt-[-1px] flex items-center justify-center  w-[18vw] py-2 rounded-full text-white"

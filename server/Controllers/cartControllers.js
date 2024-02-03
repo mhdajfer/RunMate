@@ -12,6 +12,7 @@ exports.add = async (req, res) => {
     quantity,
     price,
     images,
+    discountPrice,
   } = req.body;
   const image = images[0];
 
@@ -19,7 +20,6 @@ exports.add = async (req, res) => {
     cart: { $elemMatch: { productId: productId } },
   });
   if (itemExists) {
-    console.log("another one");
     try {
       await UserModel.updateOne(
         { _id: user.id, "cart.productId": productId },
@@ -37,6 +37,7 @@ exports.add = async (req, res) => {
     quantity,
     price,
     image,
+    discountPrice,
   };
 
   try {
@@ -48,7 +49,6 @@ exports.add = async (req, res) => {
         console.log(err);
       });
 
-    console.log(productName);
 
     return res.status(200).json({ success: true, message: "Added to cart" });
   } catch (error) {
@@ -65,7 +65,7 @@ exports.get = async (req, res) => {
 
   const userData = await UserModel.find({ _id: user.id }, { cart: 1 });
 
-  const cart = userData[0].cart;
+  let cart = userData[0].cart;
   res.status(200).json({ success: true, data: cart });
 };
 

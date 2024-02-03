@@ -8,7 +8,7 @@ function Pagination({ totalItems, dataPerPage, setCurrentPage, currentPage }) {
 
   return (
     <>
-      <nav aria-label="Page navigation example">
+      <div aria-label="Page navigation example">
         <ul className="flex items-center -space-x-px h-8 text-sm">
           <li>
             <a
@@ -88,7 +88,7 @@ function Pagination({ totalItems, dataPerPage, setCurrentPage, currentPage }) {
             </a>
           </li>
         </ul>
-      </nav>
+      </div>
     </>
   );
 }

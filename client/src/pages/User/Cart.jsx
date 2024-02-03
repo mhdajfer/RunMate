@@ -137,19 +137,6 @@ function Cart() {
               </div>
 
               <div className="w-1/5 text-center  flex justify-center">
-                {/* <select
-                  className="border rounded-md"
-                  name="qty"
-                  id="qty"
-                  defaultValue={item.quantity}
-                  onChange={(e) => {
-                    handleQuantityChange(e, item);
-                  }}
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select> */}
                 <QtyButton
                   Qty={item?.quantity}
                   qtyChange={handleQuantityChange}
@@ -157,10 +144,12 @@ function Cart() {
                 />
               </div>
               <span className="text-center w-1/5 font-semibold text-sm">
-                ₹ {item.price}
+                ₹ {item?.discountPrice > 0 ? item.discountPrice : item?.price}
               </span>
               <span className="text-center w-1/5 font-semibold text-sm">
-                ₹ {item.price * item.quantity}
+                ₹{" "}
+                {(item?.discountPrice > 0 ? item.discountPrice : item?.price) *
+                  item.quantity}
               </span>
             </div>
           ))
