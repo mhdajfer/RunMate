@@ -53,6 +53,39 @@ function Dashboard() {
     loadData();
   }, []);
 
+  function MonthlyChartData(ordersData) {
+    const MonthlySales = Array(12).fill(0);
+
+    ordersData.forEach((order) => {
+      const date = order?.createdAt;
+      MonthlySales[new Date(date).getMonth()] = order?.total;
+    });
+    setChartData((prevData) => ({
+      ...prevData,
+      labels: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+      datasets: [
+        {
+          ...prevData.datasets[0],
+          data: MonthlySales,
+          label: "Monthly Revenue",
+        },
+      ],
+    }));
+  }
+
   function RevenueChartData(ordersData) {
     const DailySales = Array(new Date().getDay() + 1).fill(0);
 
@@ -119,66 +152,86 @@ function Dashboard() {
           </div>
         </div>
         <div className=" mt-8">
-          <div className="relative flex justify-end pe-36">
-            <button
-              className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onClick={() => setDropdownVisible(!dropdownVisible)}
-            >
-              Filter By{" "}
-              <svg
-                className="w-2.5 h-2.5 ms-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 10 6"
+          <div className="flex justify-between">
+            <div className="">
+              <button
+                className="border px-2"
+                onClick={() => {
+                  MonthlyChartData(orders);
+                }}
               >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 4 4 4-4"
-                />
-              </svg>
-            </button>
-
-            {dropdownVisible && (
-              <div className="z-10 absolute top-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                <ul
-                  className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                  aria-labelledby="dropdownHoverButton"
+                Monthly
+              </button>
+              <button
+                className="border px-2"
+                onClick={() => {
+                  RevenueChartData(orders);
+                }}
+              >
+                Current week
+              </button>
+            </div>
+            <div className="relative">
+              <button
+                className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                onClick={() => setDropdownVisible(!dropdownVisible)}
+              >
+                Filter By{" "}
+                <svg
+                  className="w-2.5 h-2.5 ms-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
                 >
-                  <li
-                    className="cursor-pointer"
-                    onClick={() => {
-                      RevenueChartData(orders);
-                      setDropdownVisible(false);
-                    }}
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+
+              {dropdownVisible && (
+                <div className="z-10 absolute top-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                  <ul
+                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="dropdownHoverButton"
                   >
-                    <a
-                      href="#"
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    <li
+                      className="cursor-pointer"
+                      onClick={() => {
+                        RevenueChartData(orders);
+                        setDropdownVisible(false);
+                      }}
                     >
-                      Revenue
-                    </a>
-                  </li>
-                  <li
-                    className="cursor-pointer"
-                    onClick={() => {
-                      OrderChartData(orders);
-                      setDropdownVisible(false);
-                    }}
-                  >
-                    <a
-                      href="#"
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Revenue
+                      </a>
+                    </li>
+                    <li
+                      className="cursor-pointer"
+                      onClick={() => {
+                        OrderChartData(orders);
+                        setDropdownVisible(false);
+                      }}
                     >
-                      Order
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            )}
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Order
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
           <div className="">
             <LineChart data={chartData} />
