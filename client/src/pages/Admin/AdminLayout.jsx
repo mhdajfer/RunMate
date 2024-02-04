@@ -27,6 +27,9 @@ export default function AdminLayout() {
       case "Dashboard":
         navigate("/admin/dashboard");
         break;
+      case "Sales Report":
+        navigate("/admin/salesReport");
+        break;
     }
   }
 
@@ -34,6 +37,7 @@ export default function AdminLayout() {
     "Dashboard",
     "Orders",
     "Users",
+    "Sales Report",
     "Products",
     "Coupons",
     "Category",

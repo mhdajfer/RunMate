@@ -55,36 +55,38 @@ export default function Navbar({ role }) {
           </div>
           <div className="flex items-center space-x-2">
             {role === "admin" ? null : (
-              <form
-                onSubmit={(e) => {
-                  handleFormSubmit(e);
-                }}
-              >
-                <input
-                  type="search"
-                  name="search"
-                  className="rounded-full bg-[#0F4C75] px-4 py-1"
-                  placeholder="Search"
-                  defaultValue={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
+              <>
+                <form
+                  onSubmit={(e) => {
+                    handleFormSubmit(e);
                   }}
-                />
-              </form>
+                >
+                  <input
+                    type="search"
+                    name="search"
+                    className="rounded-full bg-[#0F4C75] px-4 py-1"
+                    placeholder="Search"
+                    defaultValue={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                  />
+                </form>
+                <span
+                  className="cursor-pointer"
+                  onClick={() =>
+                    navigate("/product/search", { state: { search: "" } })
+                  }
+                >
+                  <img
+                    width="20"
+                    height="20"
+                    src="https://img.icons8.com/ios/50/FFFFFF/filter--v1.png"
+                    alt="filter--v1"
+                  />
+                </span>
+              </>
             )}
-            <span
-              className="cursor-pointer"
-              onClick={() =>
-                navigate("/product/search", { state: { search: "" } })
-              }
-            >
-              <img
-                width="20"
-                height="20"
-                src="https://img.icons8.com/ios/50/FFFFFF/filter--v1.png"
-                alt="filter--v1"
-              />
-            </span>
           </div>
           <div className="space-x-6 flex">
             {role === "admin" ? null : <div onClick={handleCart}>{cart}</div>}

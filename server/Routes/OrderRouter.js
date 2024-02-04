@@ -38,4 +38,8 @@ router.get("/details/:id", (req, res) => {
 router.post("/status/change", (req, res) => {
   orderController.changeStatus(req, res);
 });
+
+router.post('/filterDataByDate', (req, res)=>{
+  orderController.filterDataByDate(req, res);
+})
 module.exports = router;

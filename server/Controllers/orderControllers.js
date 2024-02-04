@@ -285,3 +285,26 @@ exports.getOrderDetails = async (req, res) => {
     });
   }
 };
+
+exports.filterDataByDate = async (req, res) => {
+  const { startDate, endDate } = req.body;
+  try {
+    const orderData = await orderModel.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate),
+          },
+        },
+      },
+    ]);
+    return res.status(200).json({ success: true, data: orderData });
+  } catch (error) {
+    console.log("error while getting order details", error);
+    return res.json({
+      success: false,
+      message: "error while getting order filtering",
+    });
+  }
+};

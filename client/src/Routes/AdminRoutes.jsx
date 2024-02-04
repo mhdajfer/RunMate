@@ -11,6 +11,7 @@ import SingleOrderDetails from "../Components/Order/SingleOrderDetails";
 import Coupons from "../pages/Admin/Coupon/Coupons";
 import AddCoupon from "../pages/Admin/Coupon/AddCoupon";
 import Dashboard from "../pages/Admin/Dashboard";
+import SalesReport from "../pages/Admin/SalesReport";
 
 function AdminRoutes() {
   return (
@@ -27,6 +28,7 @@ function AdminRoutes() {
           <Route path="/order/getOne" element={<SingleOrderDetails />} />
           <Route path="/coupons" element={<Coupons />} />
           <Route path="/coupon/add" element={<AddCoupon />} />
+          <Route path="/salesReport" element={<SalesReport />} />
         </Route>
       </Route>
     </Routes>
