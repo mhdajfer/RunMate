@@ -8,6 +8,9 @@ const categorySchema = mongoose.Schema({
   desc: {
     type: String,
   },
+  offerInPercentage: {
+    type: Number,
+  },
 });
 
 const categoryModel = mongoose.model("Category", categorySchema);

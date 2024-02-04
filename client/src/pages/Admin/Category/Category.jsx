@@ -4,11 +4,13 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import serverUrl from "../../../server";
 import DialogBox from "../../../Components/DialogBox";
+import AddOfferForm from "../../../Components/AddOfferForm";
 
 function Category() {
   const [categoryList, setCategoryList] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [category, setCategory] = useState();
+  const [deleteCategory, setDeleteCategory] = useState();
+  const [offerCategory, setOfferCategory] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,15 +26,15 @@ function Category() {
       toast.error("Error while loading category");
       console.log(error);
     }
-  }, [categoryList.length]);
+  }, [categoryList.length, offerCategory]);
 
   function handleDelete(category) {
-    setCategory(category);
+    setDeleteCategory(category);
     setIsDialogOpen(true);
   }
 
   function CancelDelete() {
-    setCategory(null);
+    setDeleteCategory(null);
     setIsDialogOpen(false);
   }
 
@@ -60,6 +62,56 @@ function Category() {
     } catch (error) {
       toast.error("Error while deleting category");
       console.log(error);
+    }
+  }
+
+  function handleAddOffer(category) {
+    setOfferCategory(category);
+  }
+
+  function cancelOffer() {
+    setOfferCategory(null);
+  }
+
+  function handleCancelOffer(category) {
+    setOfferCategory({});
+    try {
+      axios
+        .post(`${serverUrl}/admin/category/cancelOffer`, category, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+            setOfferCategory(null);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+    } catch (error) {
+      console.log("error while cancelling offers", error);
+    }
+  }
+
+  function ApplyOfferForCategory(category, discount) {
+    if (discount <= 0) return toast.error("Enter positive discount number");
+    try {
+      axios
+        .post(
+          `${serverUrl}/admin/category/applyOffer`,
+          { ...category, discount },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+            setOfferCategory(null);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+    } catch (error) {
+      console.log("error while applying discount", error);
     }
   }
 
@@ -95,6 +147,28 @@ function Category() {
                     >
                       Delete
                     </button>
+                    {category?.offerInPercentage === 0 ? (
+                      <button
+                        className="bg-green-700 px-2 m-1 rounded-md text-md text-white relative"
+                        onClick={() => handleAddOffer(category)}
+                      >
+                        Add offer
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-red-500 px-2 m-1 rounded-md text-md text-white relative"
+                        onClick={() => handleCancelOffer(category)}
+                      >
+                        Cancel offer
+                      </button>
+                    )}
+                    {offerCategory?._id === category?._id && (
+                      <AddOfferForm
+                        ApplyOffer={ApplyOfferForCategory}
+                        canceloffer={cancelOffer}
+                        product={offerCategory}
+                      />
+                    )}
                   </td>
                 </tr>
               ))}
@@ -106,7 +180,7 @@ function Category() {
         {/* Dialog box */}
         {isDialogOpen && (
           <DialogBox
-            data={category}
+            data={deleteCategory}
             onConfirmDelete={confirmDelete}
             onCancel={CancelDelete}
           />

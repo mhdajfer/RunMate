@@ -39,6 +39,14 @@ router.post("/category/delete", isAdminLoggedIn, (req, res) => {
   categoryController.delete(req, res);
 });
 
+router.post("/category/applyOffer", isAdminLoggedIn, (req, res) => {
+  categoryController.applyOffer(req, res);
+});
+
+router.post("/category/cancelOffer", isAdminLoggedIn, (req, res) => {
+  categoryController.cancelOffer(req, res);
+});
+
 router.post("/isUserBlocked", (req, res) => {
   adminController.isUserBlocked(req, res);
 });

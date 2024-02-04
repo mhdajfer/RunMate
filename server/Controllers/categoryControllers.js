@@ -1,4 +1,5 @@
 const categoryModel = require("../models/category");
+const prodModel = require("../models/product");
 
 exports.addCategory = async (req, res) => {
   const { name, desc } = req.body;
@@ -45,5 +46,70 @@ exports.delete = async (req, res) => {
       success: false,
       message: "Error while deleting category - backend",
     });
+  }
+};
+
+exports.applyOffer = async (req, res) => {
+  const { _id, name, discount } = req.body;
+
+  try {
+    await categoryModel.updateOne(
+      { _id: _id },
+      { $set: { offerInPercentage: discount } }
+    );
+    const products = await prodModel.aggregate([
+      { $match: { category: name } },
+    ]);
+    console.log(products);
+
+    for (const product of products) {
+      if (!product.productWiseOffer) {
+        console.log("here");
+        await prodModel.updateOne(
+          { _id: product?._id },
+          {
+            $set: {
+              categoryWiseOffer: true,
+              discountPrice: Math.floor(
+                product?.price - (product?.price * discount) / 100
+              ),
+            },
+          }
+        );
+      }
+    }
+    return res.status(200).json({ success: true, message: "Offer Applied" });
+  } catch (error) {
+    console.log("error while applying offer", error);
+    return res.json({ success: false, message: "offer not applied" });
+  }
+};
+
+exports.cancelOffer = async (req, res) => {
+  const category = req.body;
+
+  try {
+    await categoryModel.updateOne(
+      { _id: category?._id },
+      { $set: { offerInPercentage: 0 } }
+    );
+    const products = await prodModel.aggregate([
+      { $match: { category: category?.name } },
+    ]);
+
+    for (const product of products) {
+      if (product?.categoryWiseOffer) {
+        await prodModel.updateOne(
+          { _id: product?._id },
+          {
+            $set: { categoryWiseOffer: false, discountPrice: 0 },
+          }
+        );
+      }
+    }
+    return res.status(200).json({ success: true, message: "Offer Cancelled" });
+  } catch (error) {
+    console.log("error while cancelling offer", error);
+    return res.json({ success: false, message: "offer not applied" });
   }
 };

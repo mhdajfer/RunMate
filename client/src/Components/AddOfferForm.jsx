@@ -2,12 +2,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 // eslint-disable-next-line react/prop-types
-function AddOfferForm({ canceloffer, product, ApplyOfferForProduct }) {
+function AddOfferForm({ canceloffer, product, ApplyOffer }) {
   const [discount, setDiscount] = useState(undefined);
 
   function handleSubmit(e) {
     e.preventDefault();
-    ApplyOfferForProduct(product, discount);
+    ApplyOffer(product, discount);
   }
   return (
     <>

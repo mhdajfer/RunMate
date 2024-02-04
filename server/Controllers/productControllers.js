@@ -1,4 +1,5 @@
 const prodModel = require("../models/product");
+const categoryModel = require("../models/category");
 const upload = require("../multer");
 const path = require("path");
 const fs = require("fs");
@@ -177,19 +178,25 @@ exports.applyProductOffer = async (req, res) => {
   const { productId, discountedPrice } = req.body;
 
   try {
-    const response = await prodModel.updateOne(
-      { _id: productId },
-      {
-        $set: {
-          discountPrice: Math.floor(discountedPrice),
-          productWiseOffer: true,
-        },
-      }
-    );
+    const product = await prodModel.findOne({ _id: productId });
 
-    if ((response.modifiedCount = 1))
+    if (!product?.categoryWiseOffer) {
+      await prodModel.updateOne(
+        { _id: productId },
+        {
+          $set: {
+            discountPrice: Math.floor(discountedPrice),
+            productWiseOffer: true,
+          },
+        }
+      );
       return res.status(200).json({ success: true, message: "Offer Applied" });
-    return res.json({ success: false, message: "offer not applied" });
+    } else {
+      return res.json({
+        success: false,
+        message: "already applied category offer",
+      });
+    }
   } catch (error) {
     console.log("error while applying offer", error);
     return res.json({ success: false, message: "error while applying offer" });
@@ -199,12 +206,35 @@ exports.applyProductOffer = async (req, res) => {
 exports.cancelProductOffer = async (req, res) => {
   const { productId } = req.body;
 
+  const product = await prodModel.findOne({ _id: productId });
+  const category = await categoryModel.findOne({ name: product?.category });
+
   try {
-    await prodModel.updateOne(
-      { _id: productId },
-      { $set: { discountPrice: 0, productWiseOffer: false } }
-    );
-    return res.json({ success: true, message: "Offer Withdrawn" });
+    if (category?.offerInPercentage > 0) {
+      await prodModel.updateOne(
+        { _id: productId },
+        {
+          $set: {
+            discountPrice:
+              product?.price -
+              (product?.price * category?.offerInPercentage) / 100,
+            productWiseOffer: false,
+            categoryWiseOffer: true,
+          },
+        }
+      );
+    } else {
+      await prodModel.updateOne(
+        { _id: productId },
+        {
+          $set: {
+            discountPrice: 0,
+            productWiseOffer: false,
+          },
+        }
+      );
+    }
+    return res.json({ success: true, message: "Product Offer Withdrawn" });
   } catch (error) {
     console.log("error while cancelling productOffer", error);
     return res.json({ success: false, message: "ProductOffer not cancelled" });

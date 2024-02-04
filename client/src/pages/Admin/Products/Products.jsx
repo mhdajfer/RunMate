@@ -93,6 +93,9 @@ export default function Products() {
           if (res.data.success) {
             toast.success(res.data.message);
             setOfferProduct(null);
+          } else {
+            toast.error(res.data.message);
+            setOfferProduct(null);
           }
         });
     } catch (error) {
@@ -178,7 +181,7 @@ export default function Products() {
                     >
                       Edit
                     </button>
-                    {product?.discountPrice === 0 ? (
+                    {!product?.productWiseOffer ? (
                       <button
                         className="bg-green-700 px-2 m-1 rounded-md text-md text-white relative"
                         onClick={() => handleAddOffer(product)}
@@ -195,7 +198,7 @@ export default function Products() {
                     )}
                     {offerProduct?._id === product._id && (
                       <AddOfferForm
-                        ApplyOfferForProduct={ApplyOfferForProduct}
+                        ApplyOffer={ApplyOfferForProduct}
                         canceloffer={canceloffer}
                         product={offerProduct}
                       />
