@@ -165,7 +165,35 @@ exports.activate = async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(user.password, 10);
 
-  const userDoc = new UserModel({ ...user, password: hashedPassword });
+  const referral = user?.phone.slice(-4) + user?.name.slice(-4);
+  let referredUser;
+  if (user?.referral) {
+    referredUser = await UserModel.findOne({
+      "referral.myCode": user?.referral,
+    });
+    await UserModel.updateOne(
+      { _id: referredUser._id },
+      { $inc: { "referral.referralAmount": 100, "wallet.balance": 100 } }
+    );
+  }
+
+  const userData = user?.referral
+    ? {
+        ...user,
+        password: hashedPassword,
+        "referral.myCode": referral,
+        "referral.referralAmount": 50,
+        "wallet.balance": 50,
+        "referral.signUpViaReferral": true,
+        "referral.usedReferral": user.referral,
+      }
+    : {
+        ...user,
+        password: hashedPassword,
+        "referral.myCode": referral,
+      };
+
+  const userDoc = new UserModel(userData);
   await userDoc.save();
   res.redirect("http://localhost:5173/activation");
 };
@@ -175,9 +203,15 @@ exports.signUp = async (req, res) => {
 
   const existUser = await UserModel.find({ email: user.email });
   if (existUser._id) {
-    console.log(existUser);
-
     return res.json({ success: false, message: "User already exists" });
+  }
+
+  if (user?.referral) {
+    const referredUser = await UserModel.findOne({
+      "referral.myCode": user?.referral,
+    });
+    if (!referredUser)
+      return res.json({ success: false, message: "Referral not found" });
   }
 
   const token = jwt.sign(user, process.env.MY_SECRET_KEY, {

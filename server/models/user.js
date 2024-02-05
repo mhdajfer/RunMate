@@ -75,6 +75,20 @@ const UserSchema = mongoose.Schema({
       default: 0,
     },
   },
+  referral: {
+    myCode: {
+      type: String,
+    },
+    referralAmount: {
+      type: Number,
+    },
+    signUpViaReferral: {
+      type: Boolean,
+    },
+    usedReferral: {
+      type: String,
+    },
+  },
 });
 
 const UserModel = mongoose.model("user", UserSchema);

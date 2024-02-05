@@ -12,6 +12,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [referral, setReferral] = useState("");
 
   function handleStrengthCheck(password) {
     setPasswordStrength(0);
@@ -31,29 +32,32 @@ export default function SignupPage() {
 
     if (!(passwordStrength >= 75)) return toast.error("passwod strength low!!");
 
-    const user = {
-      name: name,
-      age: age,
-      phone: phone,
-      email: email,
-      password: password,
-    };
+    const user = referral
+      ? {
+          name: name,
+          age: age,
+          phone: phone,
+          email: email,
+          password: password,
+          referral: referral,
+        }
+      : {
+          name: name,
+          age: age,
+          phone: phone,
+          email: email,
+          password: password,
+        };
 
     try {
       await axios
         .post("http://localhost:3000/user/signup", user)
         .then((res) => {
           if (res.data.success) {
-            console.log(res);
             toast.success(res.data.message);
           } else {
-            console.log(res);
-            toast.success(res.data.message);
+            toast.error(res.data.message);
           }
-        })
-        .catch((err) => {
-          console.log(err);
-          toast.error("user registration failed");
         });
       setTimeout(() => {
         window.location.reload();
@@ -156,6 +160,16 @@ export default function SignupPage() {
                   }}
                   required
                   className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
+                />
+              </div>
+              <div className="flex flex-col my-4">
+                <label htmlFor="referral">Referral</label>
+                <input
+                  type="text"
+                  name="referral"
+                  value={referral}
+                  onChange={(e) => setReferral(e.target.value)}
+                  className="bg-[#3282B8] min-w-[180px] w-[20vw] h-[2rem] rounded-xl p-3 text-white"
                 />
               </div>
             </div>
