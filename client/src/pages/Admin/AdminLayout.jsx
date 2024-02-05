@@ -30,6 +30,9 @@ export default function AdminLayout() {
       case "Sales Report":
         navigate("/admin/salesReport");
         break;
+      case "Banner":
+        navigate("/admin/banner");
+        break;
     }
   }
 

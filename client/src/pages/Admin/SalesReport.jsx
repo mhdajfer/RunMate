@@ -99,46 +99,56 @@ function SalesReport() {
   return (
     <>
       <div className="w-full flex flex-col items-center p-16">
-        <div className="w-full">
-          <input
-            type="date"
-            onChange={(e) => {
-              setStartDate(e.target.value ? new Date(e.target.value) : null);
-            }}
-            value={startDate?.toISOString().slice(0, 10)}
-            className="border border-black rounded-md px-1 mx-2"
-          />
-          <input
-            type="date"
-            onChange={(e) => {
-              setEndDate(e.target.value ? new Date(e.target.value) : null);
-            }}
-            value={endDate.toISOString().slice(0, 10)}
-            className="border border-black rounded-md px-1 mx-2"
-          />
-          <button onClick={filterDataByDate}>show report</button>
-          <button
-            onClick={() => {
-              setStartDate(null);
-            }}
-          >
-            reset
-          </button>
-          <button
-            className="hover:bg-blue-700 shadow-lg px-2 mx-4 rounded-md bg-blue-400"
-            onClick={downloadPDF}
-          >
-            Download Pdf
-          </button>
-          <button
-            className="hover:bg-blue-700 shadow-lg px-2 mx-4 rounded-md bg-blue-400"
-            onClick={downloadXL}
-          >
-            Download xl
-          </button>
+        <div className="flex justify-between items-center w-full px-5">
+          <div>
+            <input
+              type="date"
+              onChange={(e) => {
+                setStartDate(e.target.value ? new Date(e.target.value) : null);
+              }}
+              value={startDate?.toISOString().slice(0, 10)}
+              className="border border-black rounded-md px-1 mx-2"
+            />
+            <input
+              type="date"
+              onChange={(e) => {
+                setEndDate(e.target.value ? new Date(e.target.value) : null);
+              }}
+              value={endDate.toISOString().slice(0, 10)}
+              className="border border-black rounded-md px-1 mx-2"
+            />
+            <button
+              className="border px-1 mx-2 rounded-md bg-[#BBE1FA] border-gray-400 hover:border-black"
+              onClick={filterDataByDate}
+            >
+              Go
+            </button>
+            <button
+              className="border border-gray-500 rounded-md px-2 "
+              onClick={() => {
+                setStartDate(null);
+              }}
+            >
+              reset
+            </button>
+          </div>
+          <div className="flex flex-col space-y-4">
+            <button
+              className="hover:bg-blue-500  shadow-lg px-2 mx-4 rounded-md bg-blue-400"
+              onClick={downloadPDF}
+            >
+              Download Pdf
+            </button>
+            <button
+              className="hover:bg-blue-500 shadow-lg px-2 mx-4 rounded-md bg-blue-400"
+              onClick={downloadXL}
+            >
+              Download xl
+            </button>
+          </div>
         </div>
-        <table className="my-12">
-          <thead>
+        <table className="my-12 w-[64rem]">
+          <thead className="border-b border-gray-400">
             <tr>
               <th>Id</th>
               <th>Customer</th>

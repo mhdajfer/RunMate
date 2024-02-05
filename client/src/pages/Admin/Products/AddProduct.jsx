@@ -171,7 +171,7 @@ export default function AddProduct() {
                 <label htmlFor="image">Image</label>
                 <input
                   type="file"
-                  name="price"
+                  name="image"
                   required
                   multiple
                   accept="image/*"

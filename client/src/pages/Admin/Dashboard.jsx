@@ -98,6 +98,15 @@ function Dashboard() {
 
     setChartData((prevData) => ({
       ...prevData,
+      labels: [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
       datasets: [
         {
           ...prevData.datasets[0],

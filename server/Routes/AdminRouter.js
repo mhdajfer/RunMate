@@ -1,5 +1,6 @@
 const adminController = require("../Controllers/adminControllers");
 const categoryController = require("../Controllers/categoryControllers");
+const bannerController = require("../Controllers/bannerController");
 const express = require("express");
 const router = express.Router();
 const { isAdminLoggedIn } = require("../Middlewares/Auth");
@@ -45,6 +46,18 @@ router.post("/category/applyOffer", isAdminLoggedIn, (req, res) => {
 
 router.post("/category/cancelOffer", isAdminLoggedIn, (req, res) => {
   categoryController.cancelOffer(req, res);
+});
+
+router.post("/banner/add", (req, res) => {
+  bannerController.addBanner(req, res);
+});
+
+router.get("/getBannerList", (req, res) => {
+  bannerController.getBannerList(req, res);
+});
+
+router.post("/delete-banner", (req, res) => {
+  bannerController.deleteBanner(req, res);
 });
 
 router.post("/isUserBlocked", (req, res) => {

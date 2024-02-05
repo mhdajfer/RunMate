@@ -12,6 +12,8 @@ import Coupons from "../pages/Admin/Coupon/Coupons";
 import AddCoupon from "../pages/Admin/Coupon/AddCoupon";
 import Dashboard from "../pages/Admin/Dashboard";
 import SalesReport from "../pages/Admin/SalesReport";
+import Banner from "../pages/Admin/Banner";
+import AddBanner from "../pages/Admin/AddBanner";
 
 function AdminRoutes() {
   return (
@@ -29,6 +31,8 @@ function AdminRoutes() {
           <Route path="/coupons" element={<Coupons />} />
           <Route path="/coupon/add" element={<AddCoupon />} />
           <Route path="/salesReport" element={<SalesReport />} />
+          <Route path="/banner" element={<Banner />} />
+          <Route path="/banner/add" element={<AddBanner />} />
         </Route>
       </Route>
     </Routes>
