@@ -45,7 +45,6 @@ export default function AdminLayout() {
     "Coupons",
     "Category",
     "Banner",
-    "Profile",
   ];
   return (
     <>

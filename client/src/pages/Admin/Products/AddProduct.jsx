@@ -3,6 +3,7 @@ import axios from "axios";
 import serverURL from "../../../../serverURL";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import ImageUploadModal from "../../../Components/ImageUploadModal";
 export default function AddProduct() {
   const navigate = useNavigate();
   const [product, setProduct] = useState({
@@ -16,14 +17,18 @@ export default function AddProduct() {
     name: "",
   });
   const [categoryList, setCategoryList] = useState([]);
+  const [isImageUploadModalVisible, setImageUploadModalVisible] =
+    useState(false);
 
   useEffect(() => {
     try {
-      axios.get(`${serverURL}/admin/category`).then((res) => {
-        if (res.data.success) {
-          setCategoryList(res.data.data);
-        }
-      });
+      axios
+        .get(`${serverURL}/admin/category`, { withCredentials: true })
+        .then((res) => {
+          if (res.data.success) {
+            setCategoryList(res.data.data);
+          }
+        });
     } catch (error) {
       toast.error("white while loading categories");
       console.log(error);
@@ -45,10 +50,13 @@ export default function AddProduct() {
     product.images.forEach((file) => formProd.append("files", file));
     formProd.append("name", product.name);
     formProd.append("subDesc", product.subDesc);
+    console.log(product?.images);
+
     try {
       await axios
         .post(`${serverURL}/product/add`, formProd, {
           headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
         })
         .then((res) => {
           if (res.data.success) {
@@ -72,12 +80,17 @@ export default function AddProduct() {
     }));
   }
 
-  function handleImageChange(e) {
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      images: [...e.target.files],
-    }));
+  function handleImageChange(file, index) {
+    setProduct((prevProduct) => {
+      const updatedImages = [...prevProduct.images];
+      updatedImages[index] = file;
+      return {
+        ...prevProduct,
+        images: updatedImages,
+      };
+    });
   }
+
   return (
     <>
       <div className="flex justify-center">
@@ -168,16 +181,34 @@ export default function AddProduct() {
                 </select>
               </div>
               <div className="flex flex-col my-4">
-                <label htmlFor="image">Image</label>
-                <input
-                  type="file"
-                  name="image"
-                  required
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="  min-w-[180px] w-[20vw] bg-white text-[10px]  border border-teal-700 rounded-lg p-3"
-                />
+                {/* {[...Array(4)].map((_, index) => (
+                  <input
+                    key={index}
+                    type="file"
+                    name="image"
+                    required
+                    accept="image/*"
+                    onChange={(e) => handleImageChange(e, index)}
+                    className="min-w-[120px] w-[18vw] bg-white text-[10px] border border-teal-700 rounded-lg p-1"
+                  />
+                ))} */}
+                <a
+                  className="bg-blue-500 hover:bg-blue-700 text-white cursor-pointer font-bold py-2 px-4 rounded-full"
+                  onClick={() => {
+                    setImageUploadModalVisible(!isImageUploadModalVisible);
+                  }}
+                >
+                  Add Images
+                </a>
+                {isImageUploadModalVisible && (
+                  <div className="fixed  h-[70%] w-[50%] mx-auto top-[20%] left-[35%]">
+                    {" "}
+                    <ImageUploadModal
+                      handleSubmit={setImageUploadModalVisible}
+                      handleImageChange={handleImageChange}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

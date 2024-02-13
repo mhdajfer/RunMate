@@ -58,8 +58,9 @@ function Dashboard() {
 
     ordersData.forEach((order) => {
       const date = order?.createdAt;
-      MonthlySales[new Date(date).getMonth()] = order?.total;
+      MonthlySales[new Date(date).getMonth()] += order?.total;
     });
+    console.log(MonthlySales);
     setChartData((prevData) => ({
       ...prevData,
       labels: [
@@ -88,13 +89,25 @@ function Dashboard() {
 
   function RevenueChartData(ordersData) {
     const DailySales = Array(new Date().getDay() + 1).fill(0);
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
 
-    ordersData.forEach((order) => {
+    const endOfWeek = new Date(today);
+    endOfWeek.setDate(today.getDate() - today.getDay() + 6);
+    const filteredOrders = ordersData.filter((order) => {
+      const orderDate = new Date(order?.createdAt);
+      return orderDate >= startOfWeek && orderDate <= endOfWeek;
+    });
+
+    filteredOrders.forEach((order) => {
       const orderDate = new Date(order?.createdAt);
       const dayOfWeek = orderDate.getDay();
 
       DailySales[dayOfWeek] += order?.total;
+      console.log(order, dayOfWeek, orderDate.getDay(), order?.createdAt);
     });
+    console.log(DailySales);
 
     setChartData((prevData) => ({
       ...prevData,
@@ -120,7 +133,18 @@ function Dashboard() {
   function OrderChartData(ordersData) {
     const DailyOrders = Array(new Date().getDay() + 1).fill(0);
 
-    ordersData.forEach((order) => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+
+    const endOfWeek = new Date(today);
+    endOfWeek.setDate(today.getDate() - today.getDay() + 6);
+    const filteredOrders = ordersData.filter((order) => {
+      const orderDate = new Date(order?.createdAt);
+      return orderDate >= startOfWeek && orderDate <= endOfWeek;
+    });
+
+    filteredOrders.forEach((order) => {
       const orderDate = new Date(order?.createdAt);
       const dayOfWeek = orderDate.getDay();
 

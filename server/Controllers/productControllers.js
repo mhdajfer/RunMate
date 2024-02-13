@@ -32,7 +32,7 @@ exports.addProduct = async (req, res) => {
         return res.json({ success: false, message: err.message });
       }
       const images = req.files;
-      const filenames = images.map((file) => file.originalname);
+      const filenames = images.map((file) => file.filename);
       const { brand, desc, stock, price, category, name, subDesc } = req.body;
       if (
         !brand ||

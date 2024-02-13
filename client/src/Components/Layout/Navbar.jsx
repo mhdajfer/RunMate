@@ -36,6 +36,7 @@ export default function Navbar({ role }) {
 
   function handleFormSubmit(e) {
     e.preventDefault();
+    console.log("search");
     localStorage.setItem("search", search);
     navigate("/product/search", { state: { search } });
   }

@@ -287,7 +287,11 @@ exports.getOrderDetails = async (req, res) => {
 };
 
 exports.filterDataByDate = async (req, res) => {
-  const { startDate, endDate } = req.body;
+  let { startDate, endDate } = req.body;
+
+  if (startDate === endDate)
+    endDate = new Date(new Date(endDate).setHours(28, 59, 59, 999));
+
   try {
     const orderData = await orderModel.aggregate([
       {
