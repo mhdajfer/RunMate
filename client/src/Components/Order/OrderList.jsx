@@ -11,7 +11,9 @@ function OrderList({ order }) {
     try {
       axios
         .post(
-          `${serverUrl}/order/status/change`,
+          `${serverUrl}/order/${
+            orderStatus === "Returned" ? "return" : "status/change"
+          }`,
           { orderStatus, orderId },
           { withCredentials: true }
         )

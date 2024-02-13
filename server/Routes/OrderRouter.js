@@ -39,7 +39,11 @@ router.post("/status/change", (req, res) => {
   orderController.changeStatus(req, res);
 });
 
-router.post('/filterDataByDate', (req, res)=>{
+router.post("/return", isUserLoggedIn, (req, res) => {
+  orderController.returnOrder(req, res);
+});
+
+router.post("/filterDataByDate", (req, res) => {
   orderController.filterDataByDate(req, res);
-})
+});
 module.exports = router;

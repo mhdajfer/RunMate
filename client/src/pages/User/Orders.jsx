@@ -28,7 +28,7 @@ function Orders() {
         .then((res) => {
           if (res.data.success) {
             console.log("hai");
-            setOrders((prevOrders) => [...prevOrders, ...res.data.data]);
+            setOrders(res.data.data);
           }
         })
         .catch((error) => {

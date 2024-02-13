@@ -76,6 +76,12 @@ const orderSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  razor_refundId: {
+    type: String,
+  },
+  refundStatus: {
+    type: Boolean,
+  },
 });
 
 const orderModel = mongoose.model("order", orderSchema);

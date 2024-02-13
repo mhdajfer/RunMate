@@ -129,10 +129,43 @@ exports.returnOrder = async (req, res) => {
   const { orderStatus, orderId } = req.body;
   try {
     console.log(orderStatus, orderId);
-    // await orderModel.updateOne(
-    //   { _id: orderId },
-    //   { $set: { status: orderStatus, paymentStatus: true } }
-    // );
+
+    const order = await orderModel.findOne({ _id: orderId });
+
+    const instance = new razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+
+    const response = await instance.payments.refund(order?.razor_paymentId, {
+      amount: order?.total,
+      speed: "optimum",
+      receipt: Date.now() + order?.name,
+    });
+
+    if (response.error)
+      return res
+        .status(400)
+        .json({ success: false, message: response.error.message });
+
+    await orderModel.updateOne(
+      { _id: orderId },
+      {
+        $set: {
+          refundStatus: true,
+          razor_refundId: response.id,
+          status: orderStatus,
+        },
+      }
+    );
+    await userModel.updateOne(
+      { _id: req.user?._id },
+      { $inc: { "wallet.balance": response?.amount } }
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Item returned & refund will credit",
+    });
   } catch (error) {
     console.log("error while returning order", error);
     res.status(400).json({ success: false, message: error.message });
@@ -145,14 +178,10 @@ exports.changeStatus = async (req, res) => {
   const order = await orderModel.findOne({ _id: orderId });
 
   try {
-    if (order?.status === "Delivered") {
-      if (orderStatus === "Returned") return this.returnOrder(req, res);
-    } else {
-      await orderModel.updateOne(
-        { _id: orderId },
-        { $set: { status: orderStatus } }
-      );
-    }
+    await orderModel.updateOne(
+      { _id: orderId },
+      { $set: { status: orderStatus } }
+    );
 
     return res.json({ success: true, message: "Status Updated" });
   } catch (error) {
