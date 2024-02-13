@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 function AddBanner() {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState("");
+  const [url, setUrl] = useState("");
   const navigate = useNavigate();
 
   function handleFormSubmit(e) {
@@ -15,6 +16,7 @@ function AddBanner() {
     const bannerForm = new FormData();
     bannerForm.append("caption", caption);
     bannerForm.append("image", image);
+    bannerForm.append("url", url);
     try {
       axios
         .post(`${serverUrl}/admin/banner/add`, bannerForm, {
@@ -63,6 +65,18 @@ function AddBanner() {
               className="  min-w-[180px] w-[20vw] bg-white text-[10px]  border border-teal-700 rounded-lg py-1 px-3"
             />
           </div>
+        </div>
+      </div>
+      <div>
+        <div className="flex flex-col my-4">
+          <label htmlFor="url">Url</label>
+          <input
+            type="text"
+            name="url"
+            onChange={(e) => setUrl(e.target.value)}
+            value={url}
+            className=" min-w-[180px] w-[20vw] h-[2rem]  border border-teal-700 rounded-lg p-3 "
+          />
         </div>
       </div>
       <div className="w-full flex justify-center items-center text-white mt-6">

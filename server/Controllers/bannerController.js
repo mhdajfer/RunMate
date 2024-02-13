@@ -9,9 +9,9 @@ exports.addBanner = async (req, res) => {
       }
 
       const image = req.file?.filename;
-      const { caption } = req.body;
+      const { caption, url } = req.body;
 
-      const existBanner = await bannerModel.find({ caption: caption });
+      const existBanner = await bannerModel.findOne({ caption: caption });
       if (existBanner)
         return res.json({
           success: false,
@@ -21,6 +21,7 @@ exports.addBanner = async (req, res) => {
       const bannerDoc = new bannerModel({
         image,
         caption,
+        url,
       });
 
       await bannerDoc.save();
