@@ -18,7 +18,6 @@ function Orders() {
   const orderList = orders.slice(firstDataIndex, lastDataIndex);
 
   useEffect(() => {
-    console.log("running orders");
     try {
       axios
         .post(
@@ -28,8 +27,12 @@ function Orders() {
         )
         .then((res) => {
           if (res.data.success) {
-            setOrders(res.data.data);
+            console.log("hai");
+            setOrders((prevOrders) => [...prevOrders, ...res.data.data]);
           }
+        })
+        .catch((error) => {
+          console.log("ERROR: " + error);
         });
     } catch (error) {
       console.log(error);

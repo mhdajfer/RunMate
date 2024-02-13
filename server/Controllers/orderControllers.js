@@ -125,6 +125,41 @@ exports.add = async (req, res) => {
   }
 };
 
+exports.returnOrder = async (req, res) => {
+  const { orderStatus, orderId } = req.body;
+  try {
+    console.log(orderStatus, orderId);
+    // await orderModel.updateOne(
+    //   { _id: orderId },
+    //   { $set: { status: orderStatus, paymentStatus: true } }
+    // );
+  } catch (error) {
+    console.log("error while returning order", error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+exports.changeStatus = async (req, res) => {
+  const { orderStatus, orderId } = req.body;
+
+  const order = await orderModel.findOne({ _id: orderId });
+
+  try {
+    if (order?.status === "Delivered") {
+      if (orderStatus === "Returned") return this.returnOrder(req, res);
+    } else {
+      await orderModel.updateOne(
+        { _id: orderId },
+        { $set: { status: orderStatus } }
+      );
+    }
+
+    return res.json({ success: true, message: "Status Updated" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 exports.create = async (req, res) => {
   const {
     couponId,
@@ -190,7 +225,7 @@ exports.validatePayment = async (req, res) => {
     .update(body.toString())
     .digest("hex");
   if (razorpay_signature === expected_signature) {
-    const result = await orderModel.updateOne(
+    await orderModel.updateOne(
       { razor_orderId: razorpay_order_id },
       {
         $set: {
@@ -227,9 +262,10 @@ exports.getKey = async (req, res) => {
 };
 
 exports.getUserOrders = async (req, res) => {
-  const { userId } = req.body;
   try {
-    const orders = await orderModel.find({ userId: userId }).sort({ _id: -1 });
+    const orders = await orderModel
+      .find({ userId: req?.user?._id })
+      .sort({ _id: -1 });
     return res.json({ success: true, data: orders });
   } catch (error) {
     console.log(error);
@@ -243,28 +279,6 @@ exports.getAllOrders = async (req, res) => {
     return res.json({ success: true, data: orders });
   } catch (error) {
     console.log("Error getting all orders", error);
-  }
-};
-
-exports.changeStatus = async (req, res) => {
-  const { orderStatus, orderId } = req.body;
-
-  try {
-    if (orderStatus === "Delivered") {
-      await orderModel.updateOne(
-        { _id: orderId },
-        { $set: { status: orderStatus, paymentStatus: true } }
-      );
-    } else {
-      await orderModel.updateOne(
-        { _id: orderId },
-        { $set: { status: orderStatus } }
-      );
-    }
-
-    return res.json({ success: true, message: "Status Updated" });
-  } catch (error) {
-    console.log(error);
   }
 };
 

@@ -33,7 +33,7 @@ export default function Products() {
     } catch (error) {
       console.log("error while fetching products", error);
     }
-  }, [offerProduct]);
+  }, [offerProduct, isDialogOpen]);
 
   function handleDelete(product) {
     setProdForDelete(product);

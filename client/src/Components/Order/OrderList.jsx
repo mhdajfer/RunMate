@@ -8,7 +8,6 @@ function OrderList({ order }) {
   const orderId = order._id;
 
   function handleChangeStatus(orderStatus) {
-    console.log(orderStatus);
     try {
       axios
         .post(
@@ -32,10 +31,9 @@ function OrderList({ order }) {
 
   async function handleInvoice() {
     try {
-      // Make the Axios request
       const response = await axios.get(`${serverUrl}/invoice/${orderId}`, {
         withCredentials: true,
-        responseType: "blob", // Set the responseType to "arraybuffer"
+        responseType: "blob",
       });
 
       // Create a Blob from the received data
