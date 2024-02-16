@@ -12,7 +12,7 @@ export default function Subnavbar() {
   useEffect(() => {
     Cookie.get("token")
       ? axios
-          .post(`${serverURL}/getOneUser`, { token }, { withCredentials: true })
+          .get(`${serverURL}/getOneUser`, { withCredentials: true })
           .then((res) => {
             if (res.data.success) {
               const [user] = res.data.user;

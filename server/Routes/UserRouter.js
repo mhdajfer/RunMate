@@ -42,7 +42,7 @@ router.post("/user/address/delete", isUserLoggedIn, (req, res) => {
   userController.deleteAddress(req, res);
 });
 
-router.post("/user/address/edit", isUserLoggedIn, (req, res) => {
+router.post("/address/edit", isUserLoggedIn, (req, res) => {
   userController.editAddress(req, res);
 });
 
@@ -62,7 +62,7 @@ router.get("/logout", (req, res) => {
   userController.logout(req, res);
 });
 
-router.post("/getOneUser", isUserLoggedIn, (req, res) => {
+router.get("/getOneUser", isUserLoggedIn, (req, res) => {
   userController.getOneUser(req, res);
 });
 

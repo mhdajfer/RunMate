@@ -11,7 +11,7 @@ function EditAddress({ address, cancelFn, updateAddress, setAddress }) {
       <form
         className=" mx-auto flex flex-col bg-gray-200 p-20 rounded-xl shadow-lg"
         onSubmit={(e) => {
-          updateAddress(e);
+          updateAddress(e, address);
         }}
       >
         <div className="flex space-x-4">

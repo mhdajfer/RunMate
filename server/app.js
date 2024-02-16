@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./uploads"));
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/RunMateDB")
+  .connect(process.env.DB_URL)
   .then(() => {
     console.log("Connection established");
   })

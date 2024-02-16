@@ -1,4 +1,3 @@
-import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import serverURL from "../../../../serverURL";
@@ -6,13 +5,17 @@ import toast from "react-hot-toast";
 import ProfileSideBar from "../../../Components/Layout/ProfileSideBar";
 import DialogBox from "../../../Components/DialogBox";
 import EditAddress from "../../../Components/EditAddress";
-
 function UserProfile() {
-  const token = Cookie.get("token");
   const [user, setUser] = useState({});
   const userId = user._id;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [addressUpdateBoxOpen, setAddressUpdateBoxOpen] = useState(false);
+  const [addressForDeleteOrUpdate, setAddressForDeleteOrUpdate] = useState({
+    address1: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
   const [address, setAddress] = useState({
     address1: "",
     city: "",
@@ -32,7 +35,7 @@ function UserProfile() {
   useEffect(() => {
     try {
       axios
-        .post(`${serverURL}/getOneUser`, { token }, { withCredentials: true })
+        .get(`${serverURL}/getOneUser`, { withCredentials: true })
         .then((res) => {
           if (res.data.success) {
             const [user] = res.data.user;
@@ -43,19 +46,26 @@ function UserProfile() {
     } catch (error) {
       console.log("error file fetching data", error);
     }
-  }, [token]);
+  }, [savedAddress.length]);
 
-  function handleUpdateAddress(e) {
+  function handleUpdateAddress(e, address) {
     e.preventDefault();
     try {
       axios
-        .post(`${serverURL}address/edit`, address, {
+        .post(`${serverURL}/address/edit`, address, {
           withCredentials: true,
         })
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);
             setAddressUpdateBoxOpen(false);
+            const updatedAddresses = savedAddress.map((addr) => {
+              if (addr._id === addressForDeleteOrUpdate._id)
+                return (addr = address);
+              else return addr;
+            });
+            setSavedAddress(updatedAddresses);
+            setAddressForDeleteOrUpdate(null);
           } else {
             toast.success(res.data.message);
             setAddressUpdateBoxOpen(false);
@@ -80,6 +90,10 @@ function UserProfile() {
             toast.success(res.data.message);
             setIsDialogOpen(false);
             setAddress(null);
+            const savedAddresses = savedAddress.filter((addr) => {
+              if (addr._id != address._id) return addr;
+            });
+            setSavedAddress(savedAddresses);
           } else {
             toast.error(res.data.message);
           }
@@ -110,7 +124,16 @@ function UserProfile() {
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);
-            setAddress(null);
+            setAddress({
+              address1: "",
+              city: "",
+              state: "",
+              pincode: "",
+            });
+            setSavedAddress((prev) => ({
+              ...prev,
+              address,
+            }));
           } else {
             toast.error(res.data.message);
             setTimeout(() => {
@@ -137,9 +160,6 @@ function UserProfile() {
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);
-            setTimeout(() => {
-              window.location.reload();
-            }, 800);
           } else {
             toast.error(res.data.message);
           }
@@ -148,8 +168,6 @@ function UserProfile() {
       console.log("error while updating data", error);
     }
   }
-
-  // console.log(savedAddress);
 
   return (
     <>
@@ -316,6 +334,7 @@ function UserProfile() {
                             name="address1"
                             className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                             placeholder="Street Address"
+                            value={address?.address1}
                             onChange={(e) => {
                               setAddress((prevAddress) => ({
                                 ...prevAddress,
@@ -346,6 +365,7 @@ function UserProfile() {
                             name="city"
                             className="rounded-md  border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none  focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                             placeholder="Your City"
+                            value={address?.city}
                             onChange={(e) => {
                               setAddress((prevAddress) => ({
                                 ...prevAddress,
@@ -365,6 +385,7 @@ function UserProfile() {
                             type="text"
                             name="state"
                             id="state"
+                            value={address?.state}
                             onChange={(e) => {
                               setAddress((prevAddress) => ({
                                 ...prevAddress,
@@ -389,6 +410,7 @@ function UserProfile() {
                             type="Number"
                             name="pincode"
                             id="pincode"
+                            value={address?.pincode}
                             onChange={(e) => {
                               setAddress((prevAddress) => ({
                                 ...prevAddress,
@@ -443,26 +465,27 @@ function UserProfile() {
                             >
                               <div className="relative">
                                 <span className="">
-                                  <span className="absolute left-0">
+                                  <span className="absolute left-0 me-1">
                                     {i + 1}
-                                  </span>{" "}
-                                  {add.address1}
+                                  </span>
+                                  {"  "}
+                                  {add?.address1}
                                 </span>
                               </div>
                               <div className="">
-                                <span className="">{add.city}</span>
+                                <span className="">{add?.city}</span>
                               </div>
                               <div className="">
-                                <span className="">{add.state}</span>
+                                <span className="">{add?.state}</span>
                               </div>
                               <div className="">
-                                <span className="">{add.pincode}</span>
+                                <span className="">{add?.pincode}</span>
                               </div>
                               <div className="flex items-center justify-evenly">
                                 <span
                                   onClick={() => {
                                     setAddressUpdateBoxOpen(true);
-                                    setAddress(add);
+                                    setAddressForDeleteOrUpdate(add);
                                   }}
                                 >
                                   <svg
@@ -480,7 +503,7 @@ function UserProfile() {
                                 <span
                                   className=" cursor-pointer "
                                   onClick={() => {
-                                    setAddress(add);
+                                    setAddressForDeleteOrUpdate(add);
                                     setIsDialogOpen(true);
                                   }}
                                 >
@@ -509,10 +532,10 @@ function UserProfile() {
         {/* Address Update Box */}
         {addressUpdateBoxOpen && (
           <EditAddress
-            address={address}
+            address={addressForDeleteOrUpdate}
             cancelFn={setAddressUpdateBoxOpen}
             updateAddress={handleUpdateAddress}
-            setAddress={setAddress}
+            setAddress={setAddressForDeleteOrUpdate}
           />
         )}
       </div>
@@ -520,7 +543,7 @@ function UserProfile() {
         {/* Dialog box */}
         {isDialogOpen && (
           <DialogBox
-            data={address}
+            data={addressForDeleteOrUpdate}
             onConfirmDelete={handleDeleteAddress}
             onCancel={CancelDelete}
           />

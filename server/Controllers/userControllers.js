@@ -73,6 +73,7 @@ exports.editAddress = async (req, res) => {
   const token = req.cookies.token;
   const address = req.body;
 
+  console.log(address);
   try {
     const user = jwt.verify(token, process.env.MY_SECRET_KEY);
     const result = await UserModel.updateOne(
@@ -288,6 +289,7 @@ exports.verify = async (req, res) => {
 };
 
 exports.getOneUser = async (req, res) => {
+  console.log("here");
   const user = req?.user;
 
   try {
