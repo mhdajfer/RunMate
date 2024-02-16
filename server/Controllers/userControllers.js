@@ -289,7 +289,6 @@ exports.verify = async (req, res) => {
 };
 
 exports.getOneUser = async (req, res) => {
-  console.log("here");
   const user = req?.user;
 
   try {

@@ -127,9 +127,9 @@ exports.add = async (req, res) => {
 
 exports.returnOrder = async (req, res) => {
   const { orderStatus, orderId } = req.body;
-  try {
-    console.log(orderStatus, orderId);
 
+  console.log(orderStatus, orderId);
+  try {
     const order = await orderModel.findOne({ _id: orderId });
 
     const instance = new razorpay({
@@ -154,7 +154,7 @@ exports.returnOrder = async (req, res) => {
         $set: {
           refundStatus: true,
           razor_refundId: response.id,
-          status: orderStatus,
+          status: "Returned",
         },
       }
     );

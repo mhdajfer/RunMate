@@ -8,11 +8,14 @@ function OrderList({ order }) {
   const orderId = order._id;
 
   function handleChangeStatus(orderStatus) {
+    console.log(
+      `${serverUrl}/order/${order?.paymentStatus ? "return" : "status/change"}`
+    );
     try {
       axios
         .post(
           `${serverUrl}/order/${
-            orderStatus === "Returned" ? "return" : "status/change"
+            order?.paymentStatus ? "return" : "status/change"
           }`,
           { orderStatus, orderId },
           { withCredentials: true }
@@ -20,7 +23,7 @@ function OrderList({ order }) {
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);
-            window.location.reload();
+            // window.location.reload();
           } else {
             toast.error(res.data.message);
           }
@@ -56,7 +59,6 @@ function OrderList({ order }) {
       console.log("error while processing invoice", error);
     }
   }
-
   return (
     <>
       <div className="bg-gray-50 p-4 rounded-lg border-md mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-[64rem] text-center">
