@@ -8,6 +8,18 @@ function Dashboard() {
   const [orders, setOrders] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        fill: false,
+        borderColor: "rgba(75,192,192,1)",
+        tension: 0.1,
+      },
+    ],
+  });
+  const [categories, setCategories] = useState([]);
+  const [categryChartData, setCategryChartData] = useState({
     labels: [
       "Sunday",
       "Monday",
@@ -43,6 +55,7 @@ function Dashboard() {
           .then((res) => {
             if (res.data.success) {
               setOrders(res.data.data);
+              setCategories(res.data.categories);
               RevenueChartData(res.data.data);
             }
           });
@@ -51,6 +64,7 @@ function Dashboard() {
       }
     };
     loadData();
+    CategoryChartData();
   }, []);
 
   function MonthlyChartData(ordersData) {
@@ -105,9 +119,7 @@ function Dashboard() {
       const dayOfWeek = orderDate.getDay();
 
       DailySales[dayOfWeek] += order?.total;
-      console.log(order, dayOfWeek, orderDate.getDay(), order?.createdAt);
     });
-    console.log(DailySales);
 
     setChartData((prevData) => ({
       ...prevData,
@@ -158,6 +170,31 @@ function Dashboard() {
           ...prevData.datasets[0],
           data: DailyOrders,
           label: "Orders of current week",
+        },
+      ],
+    }));
+  }
+
+  function CategoryChartData() {
+    const categorySales = Array(categories.length).fill(0);
+
+    orders.forEach((order) => {
+      order.products.forEach((product) => {
+        const categoryIndex = categories.indexOf(product?.productId?.category);
+        if (categoryIndex !== -1) {
+          categorySales[categoryIndex] += product.quantity;
+        }
+      });
+    });
+
+    setCategryChartData((prev) => ({
+      ...prev,
+      labels: categories,
+      datasets: [
+        {
+          ...prev.datasets[0],
+          data: categorySales,
+          label: "Category wise Sales",
         },
       ],
     }));
@@ -266,8 +303,9 @@ function Dashboard() {
               )}
             </div>
           </div>
-          <div className="">
+          <div className="flex">
             <LineChart data={chartData} />
+            <LineChart data={categryChartData} />
           </div>
         </div>
       </div>

@@ -128,7 +128,6 @@ exports.add = async (req, res) => {
 exports.returnOrder = async (req, res) => {
   const { orderStatus, orderId } = req.body;
 
-  console.log(orderStatus, orderId);
   try {
     const order = await orderModel.findOne({ _id: orderId });
 
@@ -304,8 +303,9 @@ exports.getUserOrders = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await orderModel.find();
-    return res.json({ success: true, data: orders });
+    const orders = await orderModel.find().populate("products.productId");
+    const categories = await prodModel.distinct("category");
+    return res.json({ success: true, data: orders, categories: categories });
   } catch (error) {
     console.log("Error getting all orders", error);
   }

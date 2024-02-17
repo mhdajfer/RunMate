@@ -5,7 +5,7 @@ import { Chart } from "chart.js/auto";
 
 function LineChart({ data }) {
   return (
-    <div className="h-[380px] justify-center flex">
+    <div className="h-[270px] justify-center flex">
       <Line data={data} />
     </div>
   );
