@@ -89,7 +89,13 @@ function Cart() {
       <div className="w-3/4  mx-auto bg-white px-10 py-10">
         <div className="flex justify-between border-b pb-8">
           <h1 className="font-semibold text-2xl">Shopping Cart</h1>
-          <h2 className="font-semibold text-2xl">{cartItems.length}</h2>
+          <div className="flex flex-col items-center">
+            <h2 className="font-semibold text-2xl">{cartItems.length}</h2>
+            <h1 className="font-semibold text-2xl">
+              <span className="font-medium"> Cart Value :</span> {"  "}
+              {cartItems.reduce((accum, current) => accum + current.price, 0)}
+            </h1>
+          </div>
         </div>
         <div className="flex mt-10 mb-5">
           <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
