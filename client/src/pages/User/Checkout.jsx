@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import CouponField from "../../Components/couponField";
+import CouponField from "../../Components/CouponField";
 
 function Checkout() {
   const location = useLocation();

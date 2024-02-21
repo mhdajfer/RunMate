@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import AdminLayout from "../pages/Admin/AdminLayout";
 import AddProduct from "../pages/Admin/Products/AddProduct";
-import EditProduct from "../pages/Admin/products/EditProduct";
+import EditProduct from "../pages/Admin/Products/EditProduct";
 import PrivateRoutes from "../Utils/PrivateRoutes";
 import UserLayout from "../Components/Layout/UserLayout";
 import SingleProduct from "../pages/Product/SingleProduct";
