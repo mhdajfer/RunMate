@@ -6,7 +6,7 @@ const fs = require("fs");
 
 exports.allProducts = async (req, res) => {
   try {
-    const products = await prodModel.find({});
+    const products = await prodModel.find({ isDeleted: false });
     res.status(200).json({ success: true, products: products });
   } catch (error) {
     console.log("error in allProducts controller:", error);
@@ -152,6 +152,7 @@ exports.deleteImage = async (req, res) => {
 exports.get = async (req, res) => {
   const { category } = req.body;
   let data;
+  const products = await prodModel.find({ name: "nn" });
   try {
     if (category === "Men") {
       data = await prodModel.find({ category: category }, { isDeleted: false });
