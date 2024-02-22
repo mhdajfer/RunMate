@@ -7,7 +7,7 @@ exports.isUserLoggedIn = async (req, res, next) => {
 
   try {
     if (!token)
-      return req.json({ success: false, message: "user not Authenticated" });
+      return res.json({ success: false, message: "user not Authenticated" });
 
     const jwtUser = jwt.verify(token, process.env.MY_SECRET_KEY);
     const userExist = await UserModel.findOne({ _id: jwtUser.id });
@@ -20,7 +20,8 @@ exports.isUserLoggedIn = async (req, res, next) => {
   } catch (error) {
     if (error.name === "TokenExpiredError")
       return res.json({ success: false, message: "token expired" });
-    else return res.status(404);
+    console.log(error);
+    return res.json({ success: false, message: "Error while user Login" });
   }
 };
 
