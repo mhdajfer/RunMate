@@ -289,8 +289,6 @@ exports.verify = async (req, res) => {
 exports.getOneUser = async (req, res) => {
   const user = req?.user;
 
-  console.log(user);
-
   try {
     const userDetails = await UserModel.find({ _id: user.id });
     res.json({ success: true, message: "got user details", user: userDetails });

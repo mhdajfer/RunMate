@@ -32,7 +32,10 @@ export default function LoginPage() {
           console.log(res);
         } else if (res.data.success) {
           toast.success("login successful");
-          Cookie.set("token", res.data.token, { sameSite: true });
+          Cookie.set("token", res.data.token, {
+            sameSite: "None",
+            secure: true,
+          });
           navigate("/home");
           console.log(res);
         }
