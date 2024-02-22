@@ -51,7 +51,7 @@ export default function Navbar({ role }) {
                 navigate("/home");
               }}
             >
-              RunMateeee
+              RunMate
             </h1>
           </div>
           <div className="flex items-center space-x-2">
