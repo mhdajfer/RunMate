@@ -28,7 +28,7 @@ exports.addOrderforWallet = async (req, res) => {
       });
   });
   try {
-    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const user = jwt.verify(token, "my_secret_key");
     const orderDoc = new orderModel({
       userId: user.id,
       products: productIds.map((product) => ({
@@ -84,7 +84,7 @@ exports.add = async (req, res) => {
         });
     });
 
-    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const user = jwt.verify(token, "my_secret_key");
     const orderDoc = new orderModel({
       userId: user.id,
       products: productIds.map((product) => ({
@@ -132,8 +132,8 @@ exports.returnOrder = async (req, res) => {
     const order = await orderModel.findOne({ _id: orderId });
 
     const instance = new razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID,
-      key_secret: process.env.RAZORPAY_KEY_SECRET,
+      key_id: "rzp_test_NDAKDVOwKPypXl",
+      key_secret: "fdF8jtFTG1vJwyHFthOPFd33",
     });
 
     const response = await instance.payments.refund(order?.razor_paymentId, {
@@ -205,11 +205,11 @@ exports.create = async (req, res) => {
     amount,
   } = req.body;
 
-  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+  const user = jwt.verify(token, "my_secret_key");
 
   var instance = new razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
+    key_id: "rzp_test_NDAKDVOwKPypXl",
+    key_secret: "fdF8jtFTG1vJwyHFthOPFd33",
   });
 
   const options = {
@@ -249,7 +249,7 @@ exports.validatePayment = async (req, res) => {
 
   const body = razorpay_order_id + "|" + razorpay_payment_id;
   const expected_signature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .createHmac("sha256", "fdF8jtFTG1vJwyHFthOPFd33")
     .update(body.toString())
     .digest("hex");
   if (razorpay_signature === expected_signature) {
@@ -286,7 +286,7 @@ exports.validatePayment = async (req, res) => {
 };
 
 exports.getKey = async (req, res) => {
-  res.json({ key: process.env.RAZORPAY_KEY_ID });
+  res.json({ key: "rzp_test_NDAKDVOwKPypXl" });
 };
 
 exports.getUserOrders = async (req, res) => {

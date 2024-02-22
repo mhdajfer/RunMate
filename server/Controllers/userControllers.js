@@ -75,7 +75,7 @@ exports.editAddress = async (req, res) => {
 
   console.log(address);
   try {
-    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const user = jwt.verify(token, "my_secret_key");
     const result = await UserModel.updateOne(
       { _id: user.id, "addresses._id": address._id },
       {
@@ -162,7 +162,7 @@ exports.changePassword = async (req, res) => {
 exports.activate = async (req, res) => {
   const token = req.params?.token;
 
-  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+  const user = jwt.verify(token, "my_secret_key");
 
   const hashedPassword = await bcrypt.hash(user.password, 10);
 
@@ -215,11 +215,11 @@ exports.signUp = async (req, res) => {
       return res.json({ success: false, message: "Referral not found" });
   }
 
-  const token = jwt.sign(user, process.env.MY_SECRET_KEY, {
+  const token = jwt.sign(user, "my_secret_key", {
     expiresIn: "5m",
   });
 
-  const url = `${process.env.SERVER_URL}/user/activate/${token}`;
+  const url = `https//:api.runmate.online/user/activate/${token}`;
 
   sendMail(user.email, url);
 
@@ -231,7 +231,7 @@ exports.login = async (req, res) => {
 
   //check if the input field is empty
   if (!username || !password) {
-    return res.json({ message: "enter username and password" });
+    return res.json({ success: false, message: "enter username and password" });
   }
 
   //get user
@@ -273,7 +273,7 @@ exports.verify = async (req, res) => {
   if (!token) return res.json({ success: false, message: "no token found" });
 
   try {
-    const JwtUser = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const JwtUser = jwt.verify(token, "my_secret_key");
     const user = await UserModel.findOne({ _id: JwtUser.id });
     if (!user)
       return res.json({ success: false, message: "user not Authorized" });
@@ -309,7 +309,7 @@ exports.getOneUser = async (req, res) => {
 
 exports.getAllAddress = async (req, res) => {
   const token = req.cookies.token;
-  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+  const user = jwt.verify(token, "my_secret_key");
 
   try {
     const data = await UserModel.find(

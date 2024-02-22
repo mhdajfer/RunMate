@@ -93,7 +93,7 @@ exports.verify = async (req, res) => {
   if (!token) return res.json({ success: false, message: "no token found" });
 
   try {
-    const JwtUser = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const JwtUser = jwt.verify(token, "my_secret_key");
     const user = await adminModel.findOne({ _id: JwtUser.id });
 
     if (!user)
@@ -126,7 +126,7 @@ exports.isUserBlocked = async (req, res) => {
   const token = req.cookies.token;
 
   try {
-    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const user = jwt.verify(token, "my_secret_key");
     const isBlocked = await adminModel.find(
       { _id: user.id },
       { isBlocked: 1, _id: 0 }

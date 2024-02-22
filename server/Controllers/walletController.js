@@ -40,7 +40,7 @@ exports.getBalance = async (req, res) => {
 exports.getDeducted = async (req, res) => {
   const { amount, token } = req.body;
   try {
-    const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const user = jwt.verify(token, "my_secret_key");
     const currentAmount = await userModel.find(
       { _id: user.id },
       { "wallet.balance": 1, _id: 0 }
