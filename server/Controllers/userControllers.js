@@ -37,7 +37,6 @@ exports.restore = async (req, res) => {
 
 exports.edit = async (req, res) => {
   let user = req.body;
-  console.log(user);
   if (user.password) {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     user = { ...user, password: hashedPassword };
@@ -73,7 +72,6 @@ exports.editAddress = async (req, res) => {
   const token = req.cookies.token;
   const address = req.body;
 
-  console.log(address);
   try {
     const user = jwt.verify(token, "my_secret_key");
     const result = await UserModel.updateOne(
@@ -290,6 +288,8 @@ exports.verify = async (req, res) => {
 
 exports.getOneUser = async (req, res) => {
   const user = req?.user;
+
+  console.log(user);
 
   try {
     const userDetails = await UserModel.find({ _id: user.id });

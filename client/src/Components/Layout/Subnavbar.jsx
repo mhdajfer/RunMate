@@ -17,11 +17,12 @@ export default function Subnavbar() {
             if (res.data.success) {
               const [user] = res.data.user;
               setUser(user);
-            } else {
-              if (res.data.message == "token expired, login again")
-                Cookie.remove("token");
+            } else if (res.data.message == "token expired, login again") {
+              Cookie.remove("token");
               toast.error(res.data.message);
               navigate("/user/home");
+            } else {
+              toast.error(res.data.message || "issue with retrieving user");
             }
           })
       : null;
