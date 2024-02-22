@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 exports.add = async (req, res) => {
   const token = req.cookies.token;
-  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+  const user = jwt.verify(token, "my_secret_key");
 
   const {
     _id: productId,
@@ -48,7 +48,6 @@ exports.add = async (req, res) => {
       .catch((err) => {
         console.log(err);
       });
-
 
     return res.status(200).json({ success: true, message: "Added to cart" });
   } catch (error) {
