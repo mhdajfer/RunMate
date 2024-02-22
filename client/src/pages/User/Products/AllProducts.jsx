@@ -7,9 +7,11 @@ import serverUrl from "../../../server";
 export default function AllProducts({ category }) {
   const [products, setProducts] = useState([]);
 
+  console.log("server", serverUrl);
+
   useEffect(() => {
-     //removing text from search box
-     localStorage.removeItem("search");
+    //removing text from search box
+    localStorage.removeItem("search");
     try {
       axios
         .post(
