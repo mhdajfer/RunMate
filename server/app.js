@@ -13,9 +13,17 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cookieParser());
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//     optionsSuccessStatus: 200,
+//   })
+// );
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://www.runmate.online",
     credentials: true,
     optionsSuccessStatus: 200,
   })
