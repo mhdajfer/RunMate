@@ -1,3 +1,3 @@
-const serverURL = "http://localhost:3000";
+const serverURL = "http://51.20.123.24:3000";
 
 export default serverURL;
