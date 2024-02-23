@@ -10,9 +10,17 @@ export default function Subnavbar() {
   const [user, setUser] = useState("");
   const token = Cookie.get("token");
   useEffect(() => {
+    const axiosInstance = axios.create({
+      baseURL: `${serverURL}`,
+
+      crossDomain: true,
+      withCredentials: true,
+    });
+
     Cookie.get("token")
-      ? axios
-          .get(`${serverURL}/getOneUser`, { withCredentials: true })
+      ? axiosInstance
+
+          .get(`/getOneUser`, { withCredentials: true })
           .then((res) => {
             if (res.data.success) {
               const [user] = res.data.user;
