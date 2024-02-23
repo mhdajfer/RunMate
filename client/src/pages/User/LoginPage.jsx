@@ -33,6 +33,7 @@ export default function LoginPage() {
         } else if (res.data.success) {
           toast.success("login successful");
           Cookie.set("token", res.data.token, {
+            domain: ".runmate.online",
             sameSite: "None",
             secure: true,
           });
