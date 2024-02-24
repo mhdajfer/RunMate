@@ -237,14 +237,12 @@ exports.login = async (req, res) => {
     { email: username },
     { _id: 1, password: 1, isBlocked: 1, isDeleted: 1 }
   );
-   //check user
-   if (!user) return res.json({ success: false, message: "user not found" });
+  //check user
+  if (!user) return res.json({ success: false, message: "user not found" });
 
   //check user deleted
   if (user.isDeleted)
     return res.json({ success: false, message: "User deleted" });
-
- 
 
   //check whether blocked
   if (user.isBlocked)

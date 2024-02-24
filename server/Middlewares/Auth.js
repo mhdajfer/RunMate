@@ -5,7 +5,6 @@ const adminModel = require("../models/admin");
 exports.isUserLoggedIn = async (req, res, next) => {
   const token = req.cookies.token;
 
-  console.log(token);
 
   try {
     if (!token)
