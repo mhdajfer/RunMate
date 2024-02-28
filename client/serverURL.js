@@ -1,3 +1,3 @@
-const serverURL = "http://runmate.online/api";
+const serverURL = "https://runmate.online/api";
 
 export default serverURL;
