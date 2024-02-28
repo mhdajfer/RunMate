@@ -20,7 +20,7 @@ export default function Navbar({ role }) {
   }
 
   const handleLogout = async () => {
-    Cookie.remove("token");
+    Cookie.remove("token", { domain: ".runmate.online" });
     axios
       .get(`${serverURL}/${role === "admin" ? "admin/logout" : "logout"}`, {
         withCredentials: true,
