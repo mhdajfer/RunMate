@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import ProgressBar from "../../Components/ProgressBar";
+import serverURL from "../../../serverURL";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -50,15 +51,13 @@ export default function SignupPage() {
         };
 
     try {
-      await axios
-        .post("http://localhost:3000/user/signup", user)
-        .then((res) => {
-          if (res.data.success) {
-            toast.success(res.data.message);
-          } else {
-            toast.error(res.data.message);
-          }
-        });
+      await axios.post(`${serverURL}/user/signup`, user).then((res) => {
+        if (res.data.success) {
+          toast.success(res.data.message);
+        } else {
+          toast.error(res.data.message);
+        }
+      });
       setTimeout(() => {
         window.location.reload();
       }, 1000);
