@@ -5,12 +5,11 @@ const adminModel = require("../models/admin");
 exports.isUserLoggedIn = async (req, res, next) => {
   const token = req.cookies.token;
 
-
   try {
     if (!token)
       return res.json({ success: false, message: "user not Authenticated" });
 
-    const jwtUser = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const jwtUser = jwt.verify(token, 'my_secret_key');
     const userExist = await UserModel.findOne({ _id: jwtUser.id });
 
     if (!userExist)
@@ -35,14 +34,14 @@ exports.isAdminLoggedIn = async (req, res, next) => {
         .status(401)
         .json({ success: false, message: "user not Authenticateddddd" });
 
-    const jwtUser = jwt.verify(token, process.env.MY_SECRET_KEY);
+    const jwtUser = jwt.verify(token, 'my_secret_key');
     const userExist = await adminModel.findOne({ _id: jwtUser.id });
 
     if (!userExist)
       return res.json({ success: false, message: "user not found" });
-    else {
-      next();
-    }
+
+    req.user = userExist;
+    return next();
   } catch (error) {
     if (error.name === "TokenExpiredError")
       return res.json({ success: false, message: "token expired" });

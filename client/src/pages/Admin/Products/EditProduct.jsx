@@ -129,7 +129,7 @@ export default function EditProduct() {
           navigate("/admin/products");
         });
     } catch (error) {
-      console.log("error while passing the product data");
+      console.log("error while passing the product data", error);
     }
   };
 

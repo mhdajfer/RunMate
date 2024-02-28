@@ -6,7 +6,7 @@ exports.addBanner = async (req, res) => {
     upload.single("image")(req, res, async (err) => {
       if (err) {
         return res.json({ success: false, message: err.message });
-      }
+      } 
 
       const image = req.file?.filename;
       const { caption, url } = req.body;

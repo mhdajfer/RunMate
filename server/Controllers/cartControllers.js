@@ -71,7 +71,7 @@ exports.get = async (req, res) => {
 exports.remove = async (req, res) => {
   const { item } = req.body;
   const token = req.cookies.token;
-  const user = jwt.verify(token, process.env.MY_SECRET_KEY);
+  const user = jwt.verify(token, 'my_secret_key');
 
   try {
     await UserModel.updateOne(

@@ -23,9 +23,8 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://www.runmate.online",
+    origin: ["https://www.runmate.online", "https://runmate.online"],
     credentials: true,
-    optionsSuccessStatus: 200,
   })
 );
 app.use(express.json());
@@ -44,11 +43,11 @@ mongoose
   });
 
 //Routes
-app.use("/product", productRouter);
-app.use("/admin", adminRouter);
-app.use("/order", orderRouter);
-app.use("/coupon/", couponRouter);
-app.use("/", userRouter);
+app.use("/api/product", productRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/order", orderRouter);
+app.use("/api/coupon/", couponRouter);
+app.use("/api/", userRouter);
 
 app.listen(port, () => {
   console.log("listening on port 3000");

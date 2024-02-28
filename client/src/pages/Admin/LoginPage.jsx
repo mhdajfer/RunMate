@@ -31,7 +31,11 @@ export default function LoginPage() {
           console.log(res);
         } else if (res.data.success) {
           toast.success("login successful");
-          Cookie.set("token", res.data.data, { sameSite: true });
+          Cookie.set("token", res.data.data, {
+            sameSite: "None",
+            secure: true,
+            domain: "runmate.online",
+          });
           navigate("/admin/dashboard");
         }
       })

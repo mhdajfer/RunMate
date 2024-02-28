@@ -22,7 +22,7 @@ router.post("/image/delete", isAdminLoggedIn, (req, res) => {
   productController.deleteImage(req, res);
 });
 
-router.post("/edit", isAdminLoggedIn, (req, res) => {
+router.post("/edit", (req, res) => {
   productController.edit(req, res);
 });
 
@@ -38,9 +38,8 @@ router.post("/applyOffer", isAdminLoggedIn, (req, res) => {
   productController.applyProductOffer(req, res);
 });
 
-
-router.post('/cancelOffer', isAdminLoggedIn, (req, res) => {
+router.post("/cancelOffer", isAdminLoggedIn, (req, res) => {
   productController.cancelProductOffer(req, res);
-})
+});
 
 module.exports = router;
