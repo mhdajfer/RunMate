@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 exports.add = async (req, res) => {
   const token = req.cookies.token;
+  if (!token) return res.json({ message: "please login", success: false });
   const user = jwt.verify(token, "my_secret_key");
 
   const {
@@ -71,7 +72,7 @@ exports.get = async (req, res) => {
 exports.remove = async (req, res) => {
   const { item } = req.body;
   const token = req.cookies.token;
-  const user = jwt.verify(token, 'my_secret_key');
+  const user = jwt.verify(token, "my_secret_key");
 
   try {
     await UserModel.updateOne(

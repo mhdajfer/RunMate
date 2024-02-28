@@ -65,7 +65,7 @@ function SingleOrderDetails() {
                     <div className="pb-4 md:pb-8 w-full md:w-40">
                       <img
                         className="w-full hidden md:block"
-                        src={serverUrl + "/" + product?.productId?.images[0]}
+                        src={product?.productId?.images[0]}
                         alt="dress"
                       />
                     </div>

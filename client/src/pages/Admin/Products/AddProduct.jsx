@@ -81,6 +81,7 @@ export default function AddProduct() {
   }
 
   function handleImageChange(file, index) {
+    console.log(file, index);
     setProduct((prevProduct) => {
       const updatedImages = [...prevProduct.images];
       updatedImages[index] = file;
@@ -180,7 +181,7 @@ export default function AddProduct() {
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col my-4">
+              <div className="flex mx-auto flex-col my-4">
                 {/* {[...Array(4)].map((_, index) => (
                   <input
                     key={index}
@@ -201,7 +202,7 @@ export default function AddProduct() {
                   Add Images
                 </a>
                 {isImageUploadModalVisible && (
-                  <div className="fixed  h-[70%] w-[50%] mx-auto top-[20%] left-[35%]">
+                  <div className="self-auto fixed top-[10%] w-[80vw] h-[80vh] left-[10%]">
                     {" "}
                     <ImageUploadModal
                       handleSubmit={setImageUploadModalVisible}

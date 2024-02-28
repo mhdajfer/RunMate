@@ -45,7 +45,7 @@ function BannerBoard() {
         <div className=" bg-white flex rounded-2xl bg-center bg-cover w-fit px-16 m-auto ">
           <a href={urls[currentIndex]}>
             <img
-              src={serverUrl + "/" + images[currentIndex]}
+              src={images[currentIndex]}
               className=" h-[28rem] m-auto object-contain"
             />
           </a>

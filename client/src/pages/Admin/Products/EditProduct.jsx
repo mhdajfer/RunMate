@@ -239,7 +239,7 @@ export default function EditProduct() {
                     <div key={i} className="w-fit relative">
                       <img
                         className="w-10 h-10 object-fit"
-                        src={serverURL + "/" + image}
+                        src={image}
                         alt=""
                       />
                       <a

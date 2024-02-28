@@ -1,5 +1,4 @@
 import Icons from "../assets/Icons";
-import serverUrl from "../server";
 const { heart, cart, star, star_filled } = Icons;
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -48,7 +47,7 @@ export default function ProductCard(item) {
             onClick={() => {
               handleClick(product);
             }}
-            src={serverUrl + "/" + product?.images[0]}
+            src={product.images[0]}
             alt=""
             className="w-full h-[30vh] object-contain rounded-lg"
           />

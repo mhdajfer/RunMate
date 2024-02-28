@@ -92,11 +92,7 @@ function Banner() {
                 {bannerList.map((banner, i) => (
                   <tr key={i}>
                     <td className="p-2">
-                      <img
-                        src={serverUrl + "/" + banner.image}
-                        alt=""
-                        className="w-32"
-                      />
+                      <img src={banner.image} alt="" className="w-32" />
                     </td>
                     <td className="p-2">{banner.caption}</td>
                     <td className="p-2">

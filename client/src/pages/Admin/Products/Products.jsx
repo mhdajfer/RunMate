@@ -158,11 +158,7 @@ export default function Products() {
               return (
                 <tr key={i} className="bg-[#BBE1FA] h-16 hover:bg-gray-100">
                   <td>
-                    <img
-                      className="w-[60px]"
-                      src={serverUrl + "/" + product.images[0]}
-                      alt=""
-                    />
+                    <img className="w-[60px]" src={product.images[0]} alt="" />
                   </td>
                   <td className="p-6">{product._id}</td>
                   <td className="p-2">{product.subDesc}</td>

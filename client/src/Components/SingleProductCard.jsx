@@ -38,15 +38,12 @@ function SingleProductCard(item) {
           <div className=" space-y-3 flex mx-6 flex-col">
             {product.images.map((image, i) => (
               <div key={i} className="bg-white rounded-lg">
-                <img
-                  src={serverURL + "/" + image}
-                  alt=""
-                  className="h-[3rem] object-contain"
-                />
+                <img src={image} alt="" className="h-[3rem] object-contain" />
               </div>
             ))}
           </div>
           <div className="">
+            <img src={product.images[0]} alt="" className="h-[30rem]" />
             <ImageMagnifier image={product.images[0]} />
           </div>
         </div>

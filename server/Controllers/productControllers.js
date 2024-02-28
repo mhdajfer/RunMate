@@ -3,6 +3,7 @@ const categoryModel = require("../models/category");
 const upload = require("../multer");
 const path = require("path");
 const fs = require("fs");
+const uploadToCloudinary = require("../Utils/CloudinaryUpload");
 
 exports.allProducts = async (req, res) => {
   try {
@@ -47,6 +48,15 @@ exports.addProduct = async (req, res) => {
         return res.json({ success: false, message: "fill all fields" });
       }
 
+      var imageUrlList = [];
+      console.log(req.files);
+
+      for (var i = 0; i < req.files.length; i++) {
+        let filepath = "uploads/" + req.files[i].filename;
+        var result = await uploadToCloudinary(filepath);
+        imageUrlList.push(result.url);
+      }
+
       const prodDoc = new prodModel({
         name,
         subDesc,
@@ -55,7 +65,7 @@ exports.addProduct = async (req, res) => {
         stock,
         price,
         category,
-        images: filenames,
+        images: imageUrlList,
       });
       await prodDoc.save();
 
@@ -125,7 +135,6 @@ exports.delete = async (req, res) => {
 exports.deleteImage = async (req, res) => {
   const { image, productId } = req.body;
   const filePath = path.join("uploads", image);
-  console.log("hai");
 
   try {
     if (fs.existsSync(filePath)) {

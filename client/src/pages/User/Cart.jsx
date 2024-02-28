@@ -123,7 +123,7 @@ function Cart() {
                 <div className="w-20">
                   <img
                     className="h-24 object-contain"
-                    src={serverUrl + "/" + item.image}
+                    src={item.image}
                     alt=""
                   />
                 </div>

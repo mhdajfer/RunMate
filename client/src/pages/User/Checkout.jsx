@@ -199,7 +199,7 @@ function Checkout() {
               >
                 <img
                   className="m-2 h-24 w-60 object-contain  rounded-md border "
-                  src={serverUrl + "/" + item.image}
+                  src={item.image}
                   alt=""
                 />
                 <div className="flex w-full flex-col px-4 py-4">

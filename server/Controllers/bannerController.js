@@ -1,14 +1,15 @@
 const bannerModel = require("../models/banner");
 const upload = require("../multer");
+const uploadToCloudinary = require("../Utils/CloudinaryUpload");
 
 exports.addBanner = async (req, res) => {
   try {
     upload.single("image")(req, res, async (err) => {
       if (err) {
         return res.json({ success: false, message: err.message });
-      } 
+      }
 
-      const image = req.file?.filename;
+      const filepath = "uploads/" + req.file?.filename;
       const { caption, url } = req.body;
 
       const existBanner = await bannerModel.findOne({ caption: caption });
@@ -18,8 +19,10 @@ exports.addBanner = async (req, res) => {
           message: "Banner exists with that caption",
         });
 
+      let result = await uploadToCloudinary(filepath);
+
       const bannerDoc = new bannerModel({
-        image,
+        image: result.url,
         caption,
         url,
       });
