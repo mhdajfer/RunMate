@@ -217,7 +217,7 @@ exports.signUp = async (req, res) => {
     expiresIn: "5m",
   });
 
-  const url = `https//:api.runmate.online/user/activate/${token}`;
+  const url = `https//:api.runmate.online/api/user/activate/${token}`;
 
   sendMail(user.email, url);
 
