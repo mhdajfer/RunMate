@@ -194,7 +194,7 @@ exports.activate = async (req, res) => {
 
   const userDoc = new UserModel(userData);
   await userDoc.save();
-  res.redirect("http://localhost:5173/activation");
+  res.redirect("https://runmate.online");
 };
 
 exports.signUp = async (req, res) => {
@@ -217,7 +217,7 @@ exports.signUp = async (req, res) => {
     expiresIn: "5m",
   });
 
-  const url = `https//:api.runmate.online/api/user/activate/${token}`;
+  const url = `https://runmate.online/api/user/activate/${token}`;
 
   sendMail(user.email, url);
 
