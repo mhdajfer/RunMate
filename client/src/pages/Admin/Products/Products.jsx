@@ -22,7 +22,7 @@ export default function Products() {
   useEffect(() => {
     try {
       axios
-        .get(`${serverUrl}/product`)
+        .get(`${serverUrl}/admin/product`)
         .then((res) => {
           setProducts(res.data.products);
         })

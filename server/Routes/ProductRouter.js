@@ -6,6 +6,10 @@ const { isAdminLoggedIn, isUserLoggedIn } = require("../Middlewares/Auth");
 router.get("/", (req, res) => {
   productController.allProducts(req, res);
 });
+
+router.get("/forAdmin", (req, res) => {
+  productController.allProductsForAdmin(req, res);
+});
 router.post("/add", isAdminLoggedIn, (req, res) => {
   productController.addProduct(req, res);
 });

@@ -14,6 +14,15 @@ exports.allProducts = async (req, res) => {
   }
 };
 
+exports.allProductsForAdmin = async (req, res) => {
+  try {
+    const products = await prodModel.find({});
+    res.status(200).json({ success: true, products: products });
+  } catch (error) {
+    console.log("error in allProducts controller:", error);
+  }
+};
+
 exports.getOneProduct = async (req, res) => {
   const { productId } = req.body;
   try {
