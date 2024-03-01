@@ -14,6 +14,7 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [referral, setReferral] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   function handleStrengthCheck(password) {
     setPasswordStrength(0);
@@ -136,7 +137,7 @@ export default function SignupPage() {
               <div className="flex flex-col my-4">
                 <label htmlFor="password">Password</label>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={password}
                   onChange={(e) => {
@@ -147,6 +148,12 @@ export default function SignupPage() {
                   className="bg-[#3282B8] min-w-[310px] w-[34vw] h-[2rem] rounded-xl p-3 text-white"
                 />
                 <ProgressBar progress={passwordStrength} />
+                <span
+                  className="font-light text-sm ms-auto me-6 hover:font-medium cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "hide password" : "show password"}
+                </span>
               </div>
               <div className="flex flex-col my-4">
                 <label htmlFor="password2">Confirm Password</label>
