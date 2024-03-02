@@ -43,7 +43,6 @@ function SingleProductCard(item) {
             ))}
           </div>
           <div className="">
-            <img src={product.images[0]} alt="" className="h-[30rem]" />
             <ImageMagnifier image={product.images[0]} />
           </div>
         </div>

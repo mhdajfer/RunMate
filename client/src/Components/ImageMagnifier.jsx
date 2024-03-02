@@ -29,7 +29,7 @@ function ImageMagnifier({ image }) {
         }}
         onMouseMove={handleMouseHover}
       >
-        <img src={serverURL + "/" + image} alt="" className="h-[30rem]" />
+        <img src={image} alt="" className="h-[30rem]" />
 
         {showMagnifier && (
           <div
@@ -43,7 +43,7 @@ function ImageMagnifier({ image }) {
             <div
               className="w-32 h-32 "
               style={{
-                backgroundImage: `url(${serverURL + "/" + image}) `,
+                backgroundImage: `url(${image}) `,
                 backgroundPosition: `${position.x}% ${position.y}%`,
               }}
             />
