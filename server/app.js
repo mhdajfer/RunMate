@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["https://www.runmate.online", "https://runmate.online"],
+    origin: ["https://www.runmate.mhdajfer.in", "https://runmate.mhdajfer.in"],
     credentials: true,
   })
 );
@@ -42,6 +42,9 @@ mongoose
     console.log("connection error: " + err);
   });
 
+// app.post("/product/get", (req, res) => {
+//   console.log("request is  here");
+// });
 //Routes
 app.use("/api/product", productRouter);
 app.use("/api/admin", adminRouter);
