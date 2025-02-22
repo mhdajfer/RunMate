@@ -2,7 +2,7 @@ const adminModel = require("../models/admin");
 const userModel = require("../models/user");
 const ordersModel = require("../models/order");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { CreateToken } = require("../Utils/Jwt/createToken");
 const fs = require("fs");
 
