@@ -5,7 +5,7 @@ import serverURL from "../../../serverURL";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    Cookie.get("token") ? navigate("/user/home") : null;
+    Cookies.get("token") ? navigate("/user/home") : null;
   });
 
   const handleFormSubmit = async (e) => {
@@ -32,11 +32,7 @@ export default function LoginPage() {
           console.log(res);
         } else if (res.data.success) {
           toast.success("login successful");
-          Cookie.set("token", res.data.token, {
-            domain: ".runmate.online",
-            sameSite: "None",
-            secure: true,
-          });
+          Cookies.set("token", res.data.token);
           navigate("/home");
           console.log(res);
         }
