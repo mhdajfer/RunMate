@@ -21,6 +21,7 @@ export default function Navbar({ role }) {
 
   const handleLogout = async () => {
     Cookies.remove("token");
+    Cookies.remove("token");
     axios
       .get(`${serverURL}/${role === "admin" ? "admin/logout" : "logout"}`, {
         withCredentials: true,
