@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -8,9 +8,9 @@ import serverURL from "../../../serverURL";
 export default function Subnavbar() {
   const navigate = useNavigate();
   const [user, setUser] = useState("");
-  const token = Cookie.get("token");
+  const token = Cookies.get("token");
   useEffect(() => {
-    Cookie.get("token")
+    Cookies.get("token")
       ? axios
           .get(`${serverURL}/getOneUser`, { withCredentials: true })
           .then((res) => {
@@ -18,7 +18,7 @@ export default function Subnavbar() {
               const [user] = res.data.user;
               setUser(user);
             } else if (res.data.message == "token expired, login again") {
-              Cookie.remove("token");
+              Cookies.remove("token");
               toast.error(res.data.message);
               navigate("/user/home");
             } else {
@@ -44,7 +44,7 @@ export default function Subnavbar() {
         </button>
       </div>
       <div>
-        {Cookie.get("token") ? (
+        {Cookies.get("token") ? (
           <button
             type="button"
             onClick={() => {

@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import serverURL from "../../serverURL";
 import toast from "react-hot-toast";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 
 export default function ProductCard(item) {
   const product = item.product;
   const navigate = useNavigate();
 
   function handleCart(product) {
-    if (!Cookie.get("token")) {
+    if (!Cookies.get("token")) {
       toast.error("Not Authenticated");
       return;
     }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import serverUrl from "../../../serverURL";
 import axios from "axios";
 
@@ -20,7 +20,7 @@ function Payment() {
   const subTotal = location.state?.subTotal;
   const quantity = location.state?.quantity;
   const couponId = location.state?.couponId;
-  const token = Cookie.get("token");
+  const token = Cookies.get("token");
 
   function handleCOD() {
     try {

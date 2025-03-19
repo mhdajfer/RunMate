@@ -1,7 +1,7 @@
 import serverURL from "../../../serverURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import Icons from "../../assets/Icons";
 const { cart } = Icons;
 import { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ export default function Navbar({ role }) {
   }
 
   const handleLogout = async () => {
-    Cookie.remove("token", { domain: ".runmate.online" });
+    Cookies.remove("token");
     axios
       .get(`${serverURL}/${role === "admin" ? "admin/logout" : "logout"}`, {
         withCredentials: true,
@@ -96,7 +96,7 @@ export default function Navbar({ role }) {
               className="bg-[#0F4C75] px-4 py-2 rounded-lg font-medium"
               onClick={handleLogout}
             >
-              {Cookie.get("token") ? "Logout" : "Login"}
+              {Cookies.get("token") ? "Logout" : "Login"}
             </button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import axios from "axios";
 import serverUrl from "../server";
 import { useEffect } from "react";
@@ -41,6 +41,6 @@ export default function PrivateRoutes({ role }) {
     }
   }, [navigate, role]);
 
-  if (!Cookie.get("token")) toast.error("Please login");
-  return Cookie.get("token") ? <Outlet /> : <Navigate to={"/user/home"} />;
+  if (!Cookies.get("token")) toast.error("Please login");
+  return Cookies.get("token") ? <Outlet /> : <Navigate to={"/user/home"} />;
 }
