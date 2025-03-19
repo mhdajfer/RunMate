@@ -19,7 +19,7 @@ export default function PrivateRoutes({ role }) {
         .then((res) => {
           if (!res.data.success) {
             toast.error(res.data.message);
-            Cookie.remove("token");
+            Cookies.remove("token");
             axios
               .get(
                 `${serverUrl}/${role === "admin" ? "admin/logout" : "logout"}`,
