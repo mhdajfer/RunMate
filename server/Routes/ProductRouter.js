@@ -1,20 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../Controllers/productControllers");
+const upload = require("../multer");
 const { isAdminLoggedIn, isUserLoggedIn } = require("../Middlewares/Auth");
 
 router.get("/", (req, res) => {
+  console.log("here........1");
   productController.allProducts(req, res);
 });
 
 router.get("/forAdmin", (req, res) => {
   productController.allProductsForAdmin(req, res);
 });
-router.post("/add", isAdminLoggedIn, (req, res) => {
+router.post("/add", isAdminLoggedIn, upload.array("files", 10), (req, res) => {
   productController.addProduct(req, res);
 });
 
 router.post("/get", (req, res) => {
+  console.log("here........2");
   productController.get(req, res);
 });
 
