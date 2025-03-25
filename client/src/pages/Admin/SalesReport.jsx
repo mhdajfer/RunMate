@@ -38,6 +38,9 @@ function SalesReport() {
     navigate("/admin/order/getOne", { state: { order } });
   }
 
+  function generateShortOrderId(mongoId) {
+    return `ORD-${mongoId.slice(-8).toUpperCase()}`;
+  }
   function filterDataByDate() {
     try {
       axios
@@ -175,7 +178,7 @@ function SalesReport() {
                         handleSingleOrderDetails(order);
                       }}
                     >
-                      {order._id}
+                      {generateShortOrderId(order._id)}
                     </td>
                     <td className="p-2">{order.name}</td>
                     <td className="p-2">{order.phone}</td>
