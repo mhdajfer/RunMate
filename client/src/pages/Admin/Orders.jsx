@@ -18,8 +18,7 @@ function Orders() {
     const shortId = generateShortOrderId(order._id);
     return (
       shortId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.phone.includes(searchQuery)
+      order.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
 
