@@ -15,6 +15,7 @@ import BestSelling from "../pages/User/Products/BestSelling";
 import Women from "../pages/User/Products/Women";
 import Sports from "../pages/User/Products/Sports";
 import WalletPage from "../pages/User/WalletPage";
+import Activation from "../Components/Activation";
 
 export default function UserRoutes() {
   return (
@@ -22,6 +23,7 @@ export default function UserRoutes() {
       <Route path="login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
 
+      <Route path="/account/verify" element={<Activation />} />
       <Route element={<UserLayout />}>
         <Route element={<PrivateRoutes role={"user"} />}>
           <Route path="/cart" element={<Cart />} />

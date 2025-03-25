@@ -3,12 +3,13 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { CreateToken } = require("../Utils/Jwt/createToken");
 const sendMail = require("../Utils/NodeMailer/sendMail");
+const StatusCode = require("../Utils/StatusCode");
 
 exports.getUsers = async (req, res) => {
   try {
     const users = await UserModel.find({});
     res
-      .status(200)
+      .status(StatusCode.OK)
       .json({ success: true, message: "retrieved users", users: users });
   } catch (error) {
     console.log("error while getting users", error);
@@ -19,7 +20,7 @@ exports.delete = async (req, res) => {
   const { id } = req.params;
   try {
     await UserModel.updateOne({ _id: id }, { $set: { isDeleted: true } });
-    res.status(200).json({ success: true, message: "user deleted" });
+    res.status(StatusCode.OK).json({ success: true, message: "user deleted" });
   } catch (error) {
     console.log("error while deleting user", error);
   }
@@ -29,7 +30,7 @@ exports.restore = async (req, res) => {
   const { id } = req.params;
   try {
     await UserModel.updateOne({ _id: id }, { $set: { isDeleted: false } });
-    res.status(200).json({ success: true, message: "user restored" });
+    res.status(StatusCode.OK).json({ success: true, message: "user restored" });
   } catch (error) {
     console.log("error while restoring user", error);
   }
@@ -46,7 +47,9 @@ exports.edit = async (req, res) => {
 
   try {
     await UserModel.findOneAndUpdate({ _id: user.id }, { ...user });
-    res.status(200).json({ success: true, message: "updated successfully" });
+    res
+      .status(StatusCode.OK)
+      .json({ success: true, message: "updated successfully" });
   } catch (error) {
     console.log("error while editing user", error);
   }
@@ -160,41 +163,47 @@ exports.changePassword = async (req, res) => {
 exports.activate = async (req, res) => {
   const token = req.params?.token;
 
-  const user = jwt.verify(token, "my_secret_key");
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
 
-  const hashedPassword = await bcrypt.hash(user.password, 10);
+    console.log(user);
 
-  const referral = user?.phone.slice(-4) + user?.name.slice(-4);
-  let referredUser;
-  if (user?.referral) {
-    referredUser = await UserModel.findOne({
-      "referral.myCode": user?.referral,
-    });
-    await UserModel.updateOne(
-      { _id: referredUser._id },
-      { $inc: { "referral.referralAmount": 100, "wallet.balance": 100 } }
-    );
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+
+    const referral = user?.phone.slice(-4) + user?.name.slice(-4);
+    let referredUser;
+    if (user?.referral) {
+      referredUser = await UserModel.findOne({
+        "referral.myCode": user?.referral,
+      });
+      await UserModel.updateOne(
+        { _id: referredUser._id },
+        { $inc: { "referral.referralAmount": 100, "wallet.balance": 100 } }
+      );
+    }
+
+    const userData = user?.referral
+      ? {
+          ...user,
+          password: hashedPassword,
+          "referral.myCode": referral,
+          "referral.referralAmount": 50,
+          "wallet.balance": 50,
+          "referral.signUpViaReferral": true,
+          "referral.usedReferral": user.referral,
+        }
+      : {
+          ...user,
+          password: hashedPassword,
+          "referral.myCode": referral,
+        };
+
+    const userDoc = new UserModel(userData);
+    await userDoc.save();
+    res.redirect(`${process.env.CLIENT_URL}/account/verify`);
+  } catch (error) {
+    console.log("error while activating user ", error.name);
   }
-
-  const userData = user?.referral
-    ? {
-        ...user,
-        password: hashedPassword,
-        "referral.myCode": referral,
-        "referral.referralAmount": 50,
-        "wallet.balance": 50,
-        "referral.signUpViaReferral": true,
-        "referral.usedReferral": user.referral,
-      }
-    : {
-        ...user,
-        password: hashedPassword,
-        "referral.myCode": referral,
-      };
-
-  const userDoc = new UserModel(userData);
-  await userDoc.save();
-  res.redirect("https://runmate.online");
 };
 
 exports.signUp = async (req, res) => {
@@ -213,11 +222,11 @@ exports.signUp = async (req, res) => {
       return res.json({ success: false, message: "Referral not found" });
   }
 
-  const token = jwt.sign(user, "my_secret_key", {
-    expiresIn: "5m",
+  const token = jwt.sign(user, process.env.JWT_SECRET, {
+    expiresIn: "1h",
   });
 
-  const url = `https://runmate.online/api/user/activate/${token}`;
+  const url = `${process.env.BACKEND_URL}/user/activate/${token}`;
 
   sendMail(user.email, url);
 
@@ -249,18 +258,27 @@ exports.login = async (req, res) => {
     return res.json({ success: false, message: "user is blocked" });
 
   try {
-    if (await bcrypt.compare(password, user.password)) {
+    const result = await bcrypt.compare(password, user.password);
+    if (result) {
       //generate token
       const token = CreateToken(user._id.toString());
-      //.cookie("token", token)
-      res.status(200).json({
-        success: true,
-        message: "login successful",
-        token: token,
-      });
+
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "None",
+          path: "/",
+        })
+        .status(StatusCode.OK)
+        .json({
+          success: true,
+          message: "login successful",
+          token: token,
+        });
     } else return res.json({ success: false, message: "Incorrect Password" });
   } catch (error) {
-    console.log("error with bcrypt compare");
+    console.log("error with bcrypt compare", error);
   }
 };
 
@@ -270,7 +288,7 @@ exports.verify = async (req, res) => {
   if (!token) return res.json({ success: false, message: "no token found" });
 
   try {
-    const JwtUser = jwt.verify(token, "my_secret_key");
+    const JwtUser = jwt.verify(token, process.env.JWT_SECRET);
     const user = await UserModel.findOne({ _id: JwtUser.id });
     if (!user)
       return res.json({ success: false, message: "user not Authorized" });
@@ -306,7 +324,7 @@ exports.getOneUser = async (req, res) => {
 
 exports.getAllAddress = async (req, res) => {
   const token = req.cookies.token;
-  const user = jwt.verify(token, "my_secret_key");
+  const user = jwt.verify(token, process.env.JWT_SECRET);
 
   try {
     const data = await UserModel.find(
