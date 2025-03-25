@@ -74,12 +74,6 @@ export default function LoginPage() {
         >
           Log In
         </button>
-        <p className="text-xs">
-          Dont have an account?
-          <span className="text-blue-500 underline">
-            <Link to={"/admin/signup"}>Signup</Link>
-          </span>
-        </p>
       </form>
     </div>
   );

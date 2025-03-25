@@ -5,7 +5,6 @@ const upload = require("../multer");
 const { isAdminLoggedIn, isUserLoggedIn } = require("../Middlewares/Auth");
 
 router.get("/", (req, res) => {
-  console.log("here........1");
   productController.allProducts(req, res);
 });
 
@@ -17,8 +16,11 @@ router.post("/add", isAdminLoggedIn, upload.array("files", 10), (req, res) => {
 });
 
 router.post("/get", (req, res) => {
-  console.log("here........2");
   productController.get(req, res);
+});
+
+router.post("/validateCartProducts", (req, res) => {
+  productController.validateCartProducts(req, res);
 });
 
 router.post("/getOneProduct", (req, res) => {

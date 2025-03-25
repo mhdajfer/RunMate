@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
@@ -7,6 +7,7 @@ import axios from "axios";
 
 function Payment() {
   const [card, setCard] = useState(true);
+  const [isValidatingProducts, setIsValidatingProducts] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const total = location.state?.total;
@@ -21,6 +22,40 @@ function Payment() {
   const quantity = location.state?.quantity;
   const couponId = location.state?.couponId;
   const token = Cookies.get("token");
+
+  useEffect(() => {
+    // Validate products when component mounts
+    const validateProducts = async () => {
+      try {
+        const response = await axios.post(
+          `${serverUrl}/product/validateCartProducts`,
+          { products: productIds },
+          { withCredentials: true }
+        );
+
+        setIsValidatingProducts(false);
+
+        if (!response.data.success) {
+          toast.error("Some products in your cart are no longer available");
+          navigate("/cart");
+        }
+      } catch (error) {
+        console.log("Error validating products:", error);
+        toast.error("Error validating products");
+        navigate("/cart");
+      }
+    };
+
+    validateProducts();
+  }, []);
+
+  if (isValidatingProducts) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Validating your cart...</p>
+      </div>
+    );
+  }
 
   function handleCOD() {
     try {

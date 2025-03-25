@@ -16,6 +16,7 @@ function Checkout() {
   const [phone, setPhone] = useState();
   const [savedAddress, setSavedAddress] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isValidatingProducts, setIsValidatingProducts] = useState(true);
   // for the coupon field
   const [couponList, setCouponList] = useState([]);
   const [discount, setDiscount] = useState(0);
@@ -47,24 +48,51 @@ function Checkout() {
 
   useEffect(() => {
     try {
-      axios
-        .get(`${serverUrl}/coupon/getCoupons`, { withCredentials: true })
-        .then((res) => {
-          if (res.data.success) {
-            setCouponList(res.data.data);
+      // Validate products first
+      const productValidation = axios.post(
+        `${serverUrl}/product/validateCartProducts`,
+        { products: productIds },
+        { withCredentials: true }
+      );
+
+      // Get coupons and addresses in parallel
+      const getCoupons = axios.get(`${serverUrl}/coupon/getCoupons`, {
+        withCredentials: true,
+      });
+      const getAddresses = axios.post(
+        `${serverUrl}/getAllAddress`,
+        {},
+        { withCredentials: true }
+      );
+
+      Promise.all([productValidation, getCoupons, getAddresses])
+        .then(([validationRes, couponsRes, addressesRes]) => {
+          setIsValidatingProducts(false);
+
+          if (!validationRes.data.success) {
+            toast.error("Some products in your cart are no longer available");
+            navigate("/cart");
+            return;
           }
-        });
-      axios
-        .post(`${serverUrl}/getAllAddress`, {}, { withCredentials: true })
-        .then((res) => {
-          if (res.data.success) {
-            setSavedAddress(res.data.data);
+
+          if (couponsRes.data.success) {
+            setCouponList(couponsRes.data.data);
+          }
+
+          if (addressesRes.data.success) {
+            setSavedAddress(addressesRes.data.data);
           } else {
-            toast.error(res.data.message);
+            toast.error(addressesRes.data.message);
           }
+        })
+        .catch((error) => {
+          console.log("Error during checkout initialization:", error);
+          toast.error("Something went wrong. Please try again.");
+          setIsValidatingProducts(false);
         });
     } catch (error) {
-      console.log("error while loading saved address", error);
+      console.log("Error in checkout:", error);
+      setIsValidatingProducts(false);
     }
   }, []);
 
@@ -107,6 +135,15 @@ function Checkout() {
       },
     });
   }
+
+  if (isValidatingProducts) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Validating your cart...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col items-center py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">

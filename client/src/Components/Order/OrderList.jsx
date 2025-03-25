@@ -7,6 +7,10 @@ function OrderList({ order }) {
   const navigate = useNavigate();
   const orderId = order._id;
 
+  const generateShortOrderId = (mongoId) => {
+    return `ORD-${mongoId.slice(-8).toUpperCase()}`;
+  };
+
   function handleChangeStatus(orderStatus) {
     console.log(
       `${serverUrl}/order/${order?.paymentStatus ? "return" : "status/change"}`
@@ -72,7 +76,7 @@ function OrderList({ order }) {
                   navigate("/product/order/getOne", { state: { order } });
                 }}
               >
-                {order._id}
+                {generateShortOrderId(order._id)}
               </span>
             </h3>
             <div className="flex justify-start items-start flex-col space-y-2">

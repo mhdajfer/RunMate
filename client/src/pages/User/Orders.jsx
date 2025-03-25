@@ -37,7 +37,7 @@ function Orders() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [user?._id]);
   return (
     <>
       <div className="container mx-auto my-5 p-5">

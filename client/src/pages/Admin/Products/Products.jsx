@@ -145,7 +145,7 @@ export default function Products() {
             <thead>
               <tr>
                 <th>Product</th>
-                <th>Id</th>
+                <th>Name</th>
                 <th>Description</th>
                 <th>Price</th>
                 <th>Stock</th>
@@ -160,7 +160,7 @@ export default function Products() {
                   <td>
                     <img className="w-[60px]" src={product.images[0]} alt="" />
                   </td>
-                  <td className="p-6">{product._id}</td>
+                  <td className="p-6">{product.name}</td>
                   <td className="p-2">{product.subDesc}</td>
                   <td className="p-2">{product.price}</td>
                   <td className="p-2">{product.stock}</td>
@@ -169,7 +169,7 @@ export default function Products() {
                       className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
                       onClick={() => handleDelete(product)}
                     >
-                      {product.isDeleted ? "Restore" : "Delete"}
+                      {product.isDeleted ? "Restore" : "Unlist"}
                     </button>
                     <button
                       className="bg-green-700 px-2 m-1 rounded-md text-md text-white"

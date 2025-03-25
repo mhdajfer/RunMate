@@ -15,6 +15,33 @@ exports.allProducts = async (req, res) => {
   }
 };
 
+exports.validateCartProducts = async (req, res) => {
+  try {
+    const { products } = req.body;
+
+    // Check each product
+    const productChecks = await prodModel.find({
+      _id: { $in: products.map((p) => p.productId) },
+      isDeleted: true,
+    });
+
+    // If any deleted products found, return false
+    if (productChecks.length > 0) {
+      return res.json({
+        success: false,
+        message: "Some products are no longer available",
+      });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.log("Error in validateCartProducts:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
 exports.allProductsForAdmin = async (req, res) => {
   try {
     const products = await prodModel.find({});
@@ -181,11 +208,11 @@ exports.delete = async (req, res) => {
     res.status(StatusCode.OK).json({
       success: true,
       message: `${
-        product[0].isDeleted ? "Product Restored" : "Product Deleted"
+        product[0].isDeleted ? "Product Restored" : "Product Unlisted"
       }`,
     });
   } catch (error) {
-    console.log("error while deleting product", error);
+    console.log("error while Unlisting product", error);
   }
 };
 

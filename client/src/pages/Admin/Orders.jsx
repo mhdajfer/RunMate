@@ -11,7 +11,7 @@ function Orders() {
   const [clickedOrder, setClickedOrder] = useState();
   const [isOrderStatusOpen, setIsOrderStatusOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  let dataPerPage = 2;
+  let dataPerPage = 5;
 
   const lastDataIndex = currentPage * dataPerPage;
   const firstDataIndex = lastDataIndex - dataPerPage;
@@ -31,7 +31,12 @@ function Orders() {
     }
   }, [isOrderStatusOpen]);
 
+  const generateShortOrderId = (mongoId) => {
+    return `ORD-${mongoId.slice(-8).toUpperCase()}`;
+  };
+
   function handleSingleOrderDetails(order) {
+    console.log(order);
     navigate("/admin/order/getOne", { state: { order } });
   }
 
@@ -72,7 +77,7 @@ function Orders() {
                         handleSingleOrderDetails(order);
                       }}
                     >
-                      {order._id}
+                      {generateShortOrderId(order?._id)}
                     </td>
                     <td className="p-2">{order.name}</td>
                     <td className="p-2">{order.phone}</td>

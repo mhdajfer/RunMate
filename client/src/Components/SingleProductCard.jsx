@@ -1,15 +1,42 @@
+/* eslint-disable react/prop-types */
 import serverURL from "../../serverURL";
 import Icons from "../assets/Icons";
 const { star_filled, heart, star, bag } = Icons;
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import ReactImageMagnify from "react-image-magnify";
 import ImageMagnifier from "./ImageMagnifier";
 
-function SingleProductCard(item) {
+function SingleProductCard({ product }) {
   const [quantity, setQuantity] = useState(1);
+  const [productData, setProductData] = useState();
+
+  useEffect(() => {
+    function getProduct() {
+      try {
+        axios
+          .post(
+            `${serverURL}/product/getOneProduct`,
+            { productId: product?._id },
+            { withCredentials: true }
+          )
+          .then((res) => {
+            if (res.data.success) {
+              setProductData(res.data.data);
+            } else {
+              toast.error(res.data.message);
+            }
+          });
+      } catch (error) {
+        console.log("error while getting single product");
+      }
+    }
+    getProduct();
+  }, [product?._id]);
+
   function handleCart(product, quantity) {
+    if (product.isDeleted) return toast.error("item is removed");
     try {
       axios
         .post(
@@ -29,38 +56,39 @@ function SingleProductCard(item) {
       console.log(error);
     }
   }
+
+  console.log(product);
   // eslint-disable-next-line react/prop-types
-  const product = item.product;
   return (
     <>
       <div className=" w-screen p-12 px-[6rem] flex h-fit justify-evenly space-x-12">
         <div className="flex ">
           <div className=" space-y-3 flex mx-6 flex-col">
-            {product.images.map((image, i) => (
+            {productData?.images.map((image, i) => (
               <div key={i} className="bg-white rounded-lg">
                 <img src={image} alt="" className="h-[3rem] object-contain" />
               </div>
             ))}
           </div>
           <div className="">
-            <ImageMagnifier image={product.images[0]} />
+            <ImageMagnifier image={productData?.images[0]} />
           </div>
         </div>
         <div className=" p-12 w-[50rem]">
-          <h1 className="font-bold text-3xl">{product.brand}</h1>
-          <p className="my-6 ">{product.subDesc}</p>
-          {product?.discountPrice > 0 ? (
+          <h1 className="font-bold text-3xl">{productData?.brand}</h1>
+          <p className="my-6 ">{productData?.subDesc}</p>
+          {productData?.discountPrice > 0 ? (
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-medium  line-through">
-                ₹ {product?.price}
+                ₹ {productData?.price}
               </h1>
               <h1 className="text-6xl font-semibold text-[#003355]">
-                ₹ {product?.discountPrice}
+                ₹ {productData?.discountPrice}
               </h1>
             </div>
           ) : (
             <h1 className="text-6xl font-semibold text-[#003355]">
-              ₹ {product.price}
+              ₹ {productData?.price}
             </h1>
           )}
           {/*  */}
@@ -76,7 +104,7 @@ function SingleProductCard(item) {
             <h3>
               <u>Description</u>
             </h3>
-            <p className="my-4 font-normal">{product.desc}</p>
+            <p className="my-4 font-normal">{productData?.desc}</p>
             <div className="space-y-2">
               <div className="flex space-x-2">
                 <select
@@ -90,7 +118,7 @@ function SingleProductCard(item) {
                 </select>
                 <button
                   className="bg-[#003355] flex items-center justify-center font-semibold text-xl  w-full h-14 py-2 rounded-sm text-white"
-                  onClick={() => handleCart(product, quantity)}
+                  onClick={() => handleCart(productData, quantity)}
                 >
                   <span className="me-4">{bag}</span>Add to Cart
                 </button>

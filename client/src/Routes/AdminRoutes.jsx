@@ -14,6 +14,7 @@ import Dashboard from "../pages/Admin/Dashboard";
 import SalesReport from "../pages/Admin/SalesReport";
 import Banner from "../pages/Admin/Banner";
 import AddBanner from "../pages/Admin/AddBanner";
+import NotFound from "../Components/NotFound";
 
 function AdminRoutes() {
   return (
@@ -35,6 +36,7 @@ function AdminRoutes() {
           <Route path="/banner/add" element={<AddBanner />} />
         </Route>
       </Route>
+      <Route path="/*" element={<NotFound />} />
     </Routes>
   );
 }

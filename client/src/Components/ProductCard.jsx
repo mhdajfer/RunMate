@@ -15,6 +15,8 @@ export default function ProductCard(item) {
       toast.error("Not Authenticated");
       return;
     }
+
+    if (product.isDeleted) return toast.warning("item is removed");
     try {
       axios
         .post(

@@ -2,13 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import serverUrl from "../../server";
-import DialogBox from "../../Components/DialogBox";
 
 export default function Products() {
   const [users, setUsers] = useState([]);
-  const [isBlocked, setIsBlocked] = useState(Boolean);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [Oneuser, setOneUser] = useState("");
 
   useEffect(() => {
     try {
@@ -24,69 +20,33 @@ export default function Products() {
     } catch (error) {
       console.log("error while fetching products", error);
     }
-  }, [isBlocked, Oneuser]);
-
-  function handleCancelDelete() {
-    setIsDialogOpen(false);
-    setOneUser(null);
-  }
-
-  function confirmDelete(user) {
-    axios
-      .get(`${serverUrl}/users/delete/${user._id}`, { withCredentials: true })
-      .then((res) => {
-        if (res.data.success) {
-          setIsDialogOpen(false);
-          setOneUser(null);
-          toast.success(res.data.message);
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-
-  function handleDelete(user) {
-    setOneUser(user);
-    if (user.isDeleted) {
-      try {
-        axios
-          .get(`${serverUrl}/users/restore/${user._id}`, {
-            withCredentials: true,
-          })
-          .then((res) => {
-            if (res.data.success) {
-              toast.success(res.data.message);
-            }
-          })
-          .catch((err) => toast.error(err.message));
-      } catch (error) {
-        console.log("error while restoring user", error);
-      }
-    } else {
-      setIsDialogOpen(true);
-    }
-  }
+  }, []);
 
   const handleBlocks = async (user) => {
-    setIsBlocked(!isBlocked);
     try {
-      await axios
-        .post(
-          `${serverUrl}/admin/block-user`,
-          { user },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          if (res.data.success) {
-            toast.success(res.data.message);
-          } else toast.error(res.data.message);
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
+      const response = await axios.post(
+        `${serverUrl}/admin/block-user`,
+        { user },
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        // Update the users array with the new blocked status
+        setUsers(
+          users.map((u) =>
+            u._id === user._id ? { ...u, isBlocked: !u.isBlocked } : u
+          )
+        );
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
+      toast.error(error.message);
       console.log("error while blocking user", error);
     }
   };
+
   return (
     <>
       <div className="w-full flex flex-col items-center p-16">
@@ -118,12 +78,6 @@ export default function Products() {
                       <td className="p-2">{user.phone}</td>
                       <td className="p-2">
                         <button
-                          className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
-                          onClick={() => handleDelete(user)}
-                        >
-                          {user.isDeleted ? "Restore" : "Delete"}
-                        </button>
-                        <button
                           className="bg-green-700 px-2 m-1 rounded-md text-md text-white"
                           onClick={() => {
                             handleBlocks(user);
@@ -140,16 +94,7 @@ export default function Products() {
           </table>
         </div>
       </div>
-      <div className="fixed top-[20%] right-[25%]">
-        {/* Dialog box */}
-        {isDialogOpen && (
-          <DialogBox
-            data={Oneuser}
-            onConfirmDelete={confirmDelete}
-            onCancel={handleCancelDelete}
-          />
-        )}
-      </div>
+      <div className="fixed top-[20%] right-[25%]"></div>
     </>
   );
 }

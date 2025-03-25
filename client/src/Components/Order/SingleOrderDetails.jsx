@@ -15,15 +15,13 @@ function SingleOrderDetails() {
       })
       .then((res) => {
         if (res.data.success) {
-          setOrderData(res.data.data);
+          setOrderData(res.data.data[0]);
         }
       })
       .catch((error) => {
         console.error("Error while fetching order details", error);
       });
   }, [order._id]);
-
-  console.log({});
 
   return (
     <>
@@ -77,9 +75,9 @@ function SingleOrderDetails() {
                         <div className="flex justify-start items-start flex-col space-y-2">
                           <p className="text-sm dark:text-white leading-none text-gray-800">
                             <span className="dark:text-gray-400 text-gray-300">
-                              Quantity:{" "}
+                              Desc:{" "}
                             </span>{" "}
-                            {product?.productId?._id}
+                            {product?.productId?.subDesc}
                           </p>
                         </div>
                       </div>
