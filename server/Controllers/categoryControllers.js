@@ -1,5 +1,6 @@
 const categoryModel = require("../models/category");
 const prodModel = require("../models/product");
+const StatusCode = require("../Utils/StatusCode");
 
 exports.addCategory = async (req, res) => {
   const { name, desc } = req.body;
@@ -26,9 +27,11 @@ exports.addCategory = async (req, res) => {
 exports.listCategory = async (req, res) => {
   try {
     const data = await categoryModel.find({});
-    res.status(200).json({ success: true, data: data });
+    res.status(StatusCode.OK).json({ success: true, data: data });
   } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    return res
+      .status(StatusCode.INTERNAL_SERVER_ERROR)
+      .json({ success: false, message: error.message });
   }
 };
 
@@ -36,15 +39,48 @@ exports.delete = async (req, res) => {
   const { category } = req.body;
 
   try {
-    await categoryModel.findOneAndDelete({ _id: category._id });
+    // Check if products exist in this category
+    const productsExist = await prodModel.findOne({ category: category.name });
+
+    if (productsExist) {
+      return res.status(StatusCode.OK).json({
+        success: false,
+        message: "Cannot delete category with existing products",
+      });
+    }
+
+    // Soft delete the category
+    await categoryModel.findOneAndUpdate(
+      { _id: category._id },
+      { $set: { isDeleted: true } }
+    );
+
     return res
-      .status(200)
-      .json({ success: true, message: "Category deleted " });
+      .status(StatusCode.OK)
+      .json({ success: true, message: "Category deleted successfully" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
+    return res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Error while deleting category - backend",
+    });
+  }
+};
+
+exports.restore = async (req, res) => {
+  const { category } = req.body;
+  try {
+    await categoryModel.findOneAndUpdate(
+      { _id: category._id },
+      { $set: { isDeleted: false } }
+    );
+    return res
+      .status(StatusCode.OK)
+      .json({ success: true, message: "Category restored successfully" });
+  } catch (error) {
+    return res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Error while restoring category",
     });
   }
 };
@@ -78,7 +114,9 @@ exports.applyOffer = async (req, res) => {
         );
       }
     }
-    return res.status(200).json({ success: true, message: "Offer Applied" });
+    return res
+      .status(StatusCode.OK)
+      .json({ success: true, message: "Offer Applied" });
   } catch (error) {
     console.log("error while applying offer", error);
     return res.json({ success: false, message: "offer not applied" });
@@ -107,7 +145,9 @@ exports.cancelOffer = async (req, res) => {
         );
       }
     }
-    return res.status(200).json({ success: true, message: "Offer Cancelled" });
+    return res
+      .status(StatusCode.OK)
+      .json({ success: true, message: "Offer Cancelled" });
   } catch (error) {
     console.log("error while cancelling offer", error);
     return res.json({ success: false, message: "offer not applied" });

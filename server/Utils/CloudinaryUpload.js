@@ -1,58 +1,40 @@
-// const cloudinary = require("cloudinary").v2;
-// const fs = require("fs");
-
-// cloudinary.config({
-//   cloud_name: "dxsgpowto",
-//   api_key: "758563728588285",
-//   api_secret: "Tkfzwo06QXVhhFu1oMVcE4pL7dM",
-// });
-
-// const uploadToCloudinary = (filePath) => {
-//   var mainFolderName = "main";
-//   var filePathOnCloudinary = mainFolderName + "/" + filePath;
-
-//   return cloudinary.uploader
-//     .upload(filePath, { public_id: filePathOnCloudinary })
-//     .then((result) => {
-//       console.log("images uploaded :", result);
-//       fs.unlinkSync(filePath);
-
-//       return {
-//         message: "Success",
-//         url: result.url,
-//       };
-//     })
-//     .catch((error) => {
-//       fs.unlinkSync(filePath);
-//       return { message: "Fail" };
-//     });
-// };
-
-// module.exports = uploadToCloudinary;
-
 const cloudinary = require("cloudinary").v2;
 
+// Configure cloudinary
 cloudinary.config({
   cloud_name: "dxsgpowto",
   api_key: "758563728588285",
   api_secret: "Tkfzwo06QXVhhFu1oMVcE4pL7dM",
 });
 
-const uploadToCloudinary = (file) => {
-  return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      { folder: "products" }, // Store images in "products" folder
-      (error, result) => {
-        if (error) {
-          console.error("Cloudinary Upload Error:", error);
-          reject(error);
-        } else {
-          resolve({ message: "Success", url: result.secure_url });
-        }
-      }
-    );
-    uploadStream.end(file.buffer);
-  });
+const uploadToCloudinary = async (file) => {
+  try {
+    // Handle both multer file object and direct file path
+    const fileToUpload = file.path || file.buffer;
+
+    // If we have a buffer (from memory), we need to use upload_stream
+    if (file.buffer) {
+      return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: "RunMate" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+
+        uploadStream.end(file.buffer);
+      });
+    }
+
+    // If we have a path, use the regular upload
+    return await cloudinary.uploader.upload(fileToUpload, {
+      folder: "RunMate",
+    });
+  } catch (error) {
+    console.error("Cloudinary Upload Error:", error);
+    throw error;
+  }
 };
 
 module.exports = uploadToCloudinary;

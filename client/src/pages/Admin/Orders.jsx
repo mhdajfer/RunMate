@@ -11,11 +11,21 @@ function Orders() {
   const [clickedOrder, setClickedOrder] = useState();
   const [isOrderStatusOpen, setIsOrderStatusOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   let dataPerPage = 5;
+
+  const filteredOrders = orders.filter((order) => {
+    const shortId = generateShortOrderId(order._id);
+    return (
+      shortId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.phone.includes(searchQuery)
+    );
+  });
 
   const lastDataIndex = currentPage * dataPerPage;
   const firstDataIndex = lastDataIndex - dataPerPage;
-  const orderList = orders.slice(firstDataIndex, lastDataIndex);
+  const orderList = filteredOrders.slice(firstDataIndex, lastDataIndex);
 
   useEffect(() => {
     try {
@@ -31,9 +41,9 @@ function Orders() {
     }
   }, [isOrderStatusOpen]);
 
-  const generateShortOrderId = (mongoId) => {
+  function generateShortOrderId(mongoId) {
     return `ORD-${mongoId.slice(-8).toUpperCase()}`;
-  };
+  }
 
   function handleSingleOrderDetails(order) {
     console.log(order);
@@ -49,6 +59,15 @@ function Orders() {
   return (
     <>
       <div className="w-full flex flex-col items-center p-16">
+        <div className="w-full max-w-2xl mb-4">
+          <input
+            type="text"
+            placeholder="Search by Order ID, Customer Name or Phone"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
         <table className="my-12">
           <thead>
             <tr>

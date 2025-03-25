@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { CreateToken } = require("../Utils/Jwt/createToken");
 const fs = require("fs");
+const StatusCode = require("../Utils/StatusCode");
 
 exports.signup = async (req, res) => {
   const user = req.body;
@@ -39,13 +40,22 @@ exports.login = async (req, res) => {
   );
 
   //check user
-  if (!user) res.json({ success: false, message: "user not found" });
+  if (!user)
+    res
+      
+      .json({ success: false, message: "user not found" });
 
   try {
     if (await bcrypt.compare(password, user.password)) {
       //generate token
       const token = CreateToken(user._id.toString());
-      res.status(200).json({
+      res.cookie("token", token, {
+        httpOnly: true, // Prevents client-side JS from accessing it
+        secure: true, // Send only over HTTPS
+        sameSite: "None", // Required for cross-origin cookies
+        path: "/",
+      })
+      .status(StatusCode.OK).json({
         success: true,
         message: "login successful",
         data: token,
@@ -80,10 +90,12 @@ exports.blockUser = async (req, res) => {
       { _id: user._id },
       { $set: { isBlocked: !user.isBlocked } }
     );
-    res.status(200).json({ success: true, message: msg });
+    res.status(StatusCode.OK).json({ success: true, message: msg });
   } catch (error) {
     console.log("error while block user", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res
+      .status(StatusCode.INTERNAL_SERVER_ERROR)
+      .json({ success: false, message: "Internal Server Error" });
   }
 };
 

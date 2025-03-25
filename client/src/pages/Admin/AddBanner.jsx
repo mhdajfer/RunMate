@@ -13,10 +13,28 @@ function AddBanner() {
   function handleFormSubmit(e) {
     e.preventDefault();
 
+    if (!image) {
+      toast.error("Please select an image");
+      return;
+    }
+
+    if (!caption || !url) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedTypes.includes(image.type)) {
+      toast.error("Please select a valid image file (JPEG, PNG, or GIF)");
+      return;
+    }
+
     const bannerForm = new FormData();
     bannerForm.append("caption", caption);
     bannerForm.append("image", image);
     bannerForm.append("url", url);
+
     try {
       axios
         .post(`${serverUrl}/admin/banner/add`, bannerForm, {
@@ -29,6 +47,10 @@ function AddBanner() {
           } else {
             toast.error(res.data.message);
           }
+        })
+        .catch((error) => {
+          toast.error("Error while uploading banner");
+          console.log(error);
         });
     } catch (error) {
       toast.error("Error while sending data");

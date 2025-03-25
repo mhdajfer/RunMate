@@ -15,7 +15,7 @@ function SingleOrderDetails() {
       })
       .then((res) => {
         if (res.data.success) {
-          setOrderData(res.data.data[0]);
+          setOrderData(res.data.data);
         }
       })
       .catch((error) => {

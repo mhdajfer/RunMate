@@ -55,12 +55,38 @@ function Category() {
             navigate("/admin/category");
             setIsDialogOpen(false);
           } else {
+            setIsDialogOpen(false);
             toast.error(res.data.message);
             categoryList.push(category);
           }
         });
     } catch (error) {
       toast.error("Error while deleting category");
+      console.log(error);
+    }
+  }
+
+  function handleRestore(category) {
+    setCategoryList((prevList) =>
+      prevList.filter((c) => (category._id === c._id ? !c.isDeleted : c))
+    );
+    try {
+      axios
+        .post(
+          `${serverUrl}/admin/category/restore`,
+          { category },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message);
+            navigate("/admin/category");
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+    } catch (error) {
+      toast.error("Error while restoring category");
       console.log(error);
     }
   }
@@ -139,14 +165,21 @@ function Category() {
                   <td className="p-2">{category.name}</td>
                   <td className="p-2">{category.desc}</td>
                   <td className="p-2">
-                    <button
-                      className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
-                      onClick={() => {
-                        handleDelete(category);
-                      }}
-                    >
-                      Delete
-                    </button>
+                    {category.isDeleted ? (
+                      <button
+                        className="bg-green-500 px-2 m-1 rounded-md text-md text-white"
+                        onClick={() => handleRestore(category)}
+                      >
+                        Restore
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-red-500 px-2 m-1 rounded-md text-md text-white"
+                        onClick={() => handleDelete(category)}
+                      >
+                        Delete
+                      </button>
+                    )}
                     {category?.offerInPercentage === 0 ? (
                       <button
                         className="bg-green-700 px-2 m-1 rounded-md text-md text-white relative"

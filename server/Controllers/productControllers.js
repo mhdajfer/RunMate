@@ -63,58 +63,6 @@ exports.getOneProduct = async (req, res) => {
   }
 };
 
-// exports.addProduct = async (req, res) => {
-//   try {
-//     upload.array("files")(req, res, async (err) => {
-//       if (err) {
-//         return res.json({ success: false, message: err.message });
-//       }
-//       const images = req.files;
-//       const filenames = images.map((file) => file.filename);
-//       const { brand, desc, stock, price, category, name, subDesc } = req.body;
-//       if (
-//         !brand ||
-//         !desc ||
-//         !stock ||
-//         !price ||
-//         !category ||
-//         !name ||
-//         !subDesc ||
-//         !filenames
-//       ) {
-//         return res.json({ success: false, message: "fill all fields" });
-//       }
-
-//       var imageUrlList = [];
-//       console.log(req.files);
-
-//       for (var i = 0; i < req.files.length; i++) {
-//         let filepath = "uploads/" + req.files[i].filename;
-//         var result = await uploadToCloudinary(filepath);
-//         imageUrlList.push(result.url);
-//       }
-
-//       const prodDoc = new prodModel({
-//         name,
-//         subDesc,
-//         brand,
-//         desc,
-//         stock,
-//         price,
-//         category,
-//         images: imageUrlList,
-//       });
-//       await prodDoc.save();
-
-//       res
-//         .status(StatusCode.CREATED)
-//         .json({ success: true, message: "Product added successfully" });
-//     });
-//   } catch (error) {
-//     res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
-//   }
-// };
-
 exports.addProduct = async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
@@ -128,10 +76,10 @@ exports.addProduct = async (req, res) => {
 
     let imageUrlList = [];
 
-    // Upload each file to Cloudinary directly from memory
+    // Upload each file to Cloudinary
     for (const file of req.files) {
       try {
-        let result = await uploadToCloudinary(file);
+        const result = await uploadToCloudinary(file);
         imageUrlList.push(result.url);
       } catch (error) {
         console.error("Cloudinary upload failed:", error);

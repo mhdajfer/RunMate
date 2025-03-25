@@ -14,11 +14,18 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [offerProduct, setOfferProduct] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
   let dataPerPage = 3;
 
   const lastDataIndex = currentPage * dataPerPage;
   const firstDataIndex = lastDataIndex - dataPerPage;
-  const productList = products.slice(firstDataIndex, lastDataIndex);
+
+  // Filter products based on search term
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const productList = filteredProducts.slice(firstDataIndex, lastDataIndex);
+
   useEffect(() => {
     try {
       axios
@@ -126,12 +133,21 @@ export default function Products() {
   return (
     <>
       <div className="w-full flex flex-col items-center p-16">
-        <button
-          onClick={AddProduct}
-          className="bg-[#0F4C75] hover:text-teal-600 text-white px-4 py-1 rounded-lg self-end me-6"
-        >
-          New product
-        </button>
+        <div className="w-full flex justify-between px-6 mb-4">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F4C75]"
+          />
+          <button
+            onClick={AddProduct}
+            className="bg-[#0F4C75] hover:text-teal-600 text-white px-4 py-1 rounded-lg"
+          >
+            New product
+          </button>
+        </div>
         <table className="my-12">
           {productList.length == 0 ? (
             <tbody>

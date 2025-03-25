@@ -4,6 +4,7 @@ const bannerController = require("../Controllers/bannerController");
 const express = require("express");
 const router = express.Router();
 const { isAdminLoggedIn } = require("../Middlewares/Auth");
+const upload = require("../multer");
 
 router.post("/login", (req, res) => {
   adminController.login(req, res);
@@ -48,7 +49,11 @@ router.post("/category/cancelOffer", isAdminLoggedIn, (req, res) => {
   categoryController.cancelOffer(req, res);
 });
 
-router.post("/banner/add", (req, res) => {
+router.post("/category/restore", isAdminLoggedIn, (req, res) => {
+  categoryController.restore(req, res);
+});
+
+router.post("/banner/add", upload.single("image"), (req, res) => {
   bannerController.addBanner(req, res);
 });
 

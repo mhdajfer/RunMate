@@ -1,44 +1,67 @@
 const bannerModel = require("../models/banner");
-const upload = require("../multer");
 const uploadToCloudinary = require("../Utils/CloudinaryUpload");
+const StatusCode = require("../Utils/StatusCode");
 
 exports.addBanner = async (req, res) => {
   try {
-    upload.single("image")(req, res, async (err) => {
-      if (err) {
-        return res.json({ success: false, message: err.message });
-      }
+    if (!req.file) {
+      return res.json({ success: false, message: "No image uploaded" });
+    }
 
-      const filepath = "uploads/" + req.file?.filename;
-      const { caption, url } = req.body;
+    console.log("File details:", {
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      buffer: req.file.buffer ? "Buffer exists" : "No buffer",
+    });
 
-      const existBanner = await bannerModel.findOne({ caption: caption });
-      if (existBanner)
-        return res.json({
-          success: false,
-          message: "Banner exists with that caption",
-        });
+    const { caption, url } = req.body;
+    if (!caption || !url) {
+      return res.json({ success: false, message: "All fields are required" });
+    }
 
-      let result = await uploadToCloudinary(filepath);
+    const existBanner = await bannerModel.findOne({ caption: caption });
+    if (existBanner) {
+      return res.json({
+        success: false,
+        message: "Banner exists with that caption",
+      });
+    }
+
+    try {
+      const imageUrlList = [];
+      const result = await uploadToCloudinary(req.file);
+      imageUrlList.push(result.url);
 
       const bannerDoc = new bannerModel({
-        image: result.url,
+        image: imageUrlList[0],
         caption,
         url,
       });
 
       await bannerDoc.save();
-      return res.status(200).json({ success: true, message: "Banner Added" });
-    });
+      return res
+        .status(StatusCode.OK)
+        .json({ success: true, message: "Banner Added" });
+    } catch (uploadError) {
+      console.log("Cloudinary upload error:", uploadError);
+      return res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Error uploading image",
+      });
+    }
   } catch (error) {
     console.log("error while adding banner", error);
+    return res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Error while adding banner",
+    });
   }
 };
 
 exports.getBannerList = async (req, res) => {
   try {
     const bannerList = await bannerModel.find({});
-    return res.status(200).json({ success: true, data: bannerList });
+    return res.status(StatusCode.OK).json({ success: true, data: bannerList });
   } catch (error) {
     console.log("error while getting banner list", error);
     return res.json({
@@ -52,7 +75,9 @@ exports.deleteBanner = async (req, res) => {
   const { banner } = req.body;
   try {
     await bannerModel.deleteOne({ _id: banner._id });
-    return res.status(200).json({ success: true, message: "Banner deleted." });
+    return res
+      .status(StatusCode.OK)
+      .json({ success: true, message: "Banner deleted." });
   } catch (error) {
     console.log("error while deleting banner", error);
     return res.json({ success: false, message: "error while deleting banner" });
